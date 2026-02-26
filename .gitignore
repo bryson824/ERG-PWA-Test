@@ -1,0 +1,17 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.Python
+.env
+
+# IDE / OS
+.vscode/
+.cursor/
+.DS_Store
+*.swp
+*.swo
+
+# Optional: uncomment to avoid committing very large data
+# data_reference/

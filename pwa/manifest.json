@@ -1,0 +1,18 @@
+{
+  "name": "ERG Air Monitoring",
+  "short_name": "ERG Air",
+  "description": "Offline air monitoring table and link to ERG guide",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "scope": "./",
+  "theme_color": "#002868",
+  "background_color": "#e8eef7",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' fill='%23002868'/><text x='24' y='32' font-size='24' fill='white' text-anchor='middle'>ERG</text></svg>",
+      "sizes": "48x48",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,426 @@
+{
+  "displayNameToSensorIds": {
+    "Combustible Gases and Vapors (LEL-1)": [
+      "RAE-LEL-1"
+    ],
+    "Combustible Gases and Vapors (LEL-2)": [
+      "RAE-LEL-2"
+    ],
+    "Oxygen (O2)": [
+      "RAE-O2-1"
+    ],
+    "4R+ EC Liquid Oxygen (O2)": [
+      "RAE-O2-4REC"
+    ],
+    "Ammonia (NH3)": [
+      "RAE-NH3-1"
+    ],
+    "Carbon Monoxide (CO)": [
+      "RAE-CO-1"
+    ],
+    "Carbon Monoxide (CO) - Extended Range": [
+      "RAE-CO-ER"
+    ],
+    "Chlorine (CL2)": [
+      "RAE-CL2-1"
+    ],
+    "CO+H2S Combination Sensor": [
+      "RAE-COSH-CO",
+      "RAE-COSH-H2S"
+    ],
+    "Hydrogen Cyanide (HCN)": [
+      "RAE-HCN-1"
+    ],
+    "Hydrogen Sulfide (H2S)": [
+      "RAE-H2S-1"
+    ],
+    "Hydrogen Sulfide (H2S) Extended Range": [
+      "RAE-H2S-ER"
+    ],
+    "Nitrogen Dioxide (NO2)": [
+      "RAE-NO2-1"
+    ],
+    "Nitric Oxide (NO)": [
+      "RAE-NO-1"
+    ],
+    "Phosphine (PH3) - 1": [
+      "RAE-PH3-1"
+    ],
+    "Phosphine (PH3) - 2": [
+      "RAE-PH3-2"
+    ],
+    "Phosphine (PH3H) - 3": [
+      "RAE-PH3H-3"
+    ],
+    "Sulfur Dioxide (SO2)": [
+      "RAE-SO2-1"
+    ],
+    "Cobalt Chloride (COCl2)": [
+      "RAE-COCL2-1"
+    ],
+    "PID, Parts-Per-Billion (10.6eV)": [
+      "RAE-PID-10.6PPB"
+    ],
+    "PID (10.6 eV) - MultiRAE Extended Range": [
+      "RAE-PIDmRAE-10.6"
+    ],
+    "7R+ PID (10.6 eV), Extended Range": [
+      "RAE-PID7R-10.6ER"
+    ],
+    "4R+ PID (9.8 eV)": [
+      "RAE-PID4R-9.8"
+    ],
+    "7R+ PID (10.6 eV)": [
+      "RAE-PID7R-10.6"
+    ],
+    "Flex CC XP Hydrides": [
+      "SPM-HYDRIDES-1"
+    ],
+    "Flex CC XP Mineral Acids": [
+      "SPM-MINERAL-1"
+    ],
+    "Flex CC-U XP Mineral Acids (export unrestricted)": [
+      "SPM-MINERAL-EU"
+    ]
+  },
+  "bySensorId": {
+    "RAE-O2-1": [
+      {
+        "chemical_id": "Carbon Dioxide",
+        "response_type": "concentration_response",
+        "test_concentration": "2",
+        "test_conc_unit": "%vol",
+        "response_reading": "0",
+        "observed_rdg_unit": "%vol",
+        "filtered_resp_reading": "",
+        "filtered_rdg_unit": "",
+        "notes": "Double check"
+      },
+      {
+        "chemical_id": "Hydrogen",
+        "response_type": "concentration_response",
+        "test_concentration": "1",
+        "test_conc_unit": "%vol",
+        "response_reading": "-2",
+        "observed_rdg_unit": "%vol",
+        "filtered_resp_reading": "",
+        "filtered_rdg_unit": "",
+        "notes": "Double check"
+      }
+    ],
+    "RAE-O2-4REC": [
+      {
+        "chemical_id": "Carbon Dioxide",
+        "response_type": "concentration_response",
+        "test_concentration": "2",
+        "test_conc_unit": "%vol",
+        "response_reading": "0",
+        "observed_rdg_unit": "%vol",
+        "filtered_resp_reading": "",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Hydrogen",
+        "response_type": "concentration_response",
+        "test_concentration": "1",
+        "test_conc_unit": "%vol",
+        "response_reading": "-2",
+        "observed_rdg_unit": "%vol",
+        "filtered_resp_reading": "",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      }
+    ],
+    "RAE-NH3-1": [
+      {
+        "chemical_id": "Alcohols",
+        "response_type": "concentration_response",
+        "test_concentration": "1000",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Carbon Monoxide",
+        "response_type": "concentration_response",
+        "test_concentration": "100",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Carbon Dioxide",
+        "response_type": "concentration_response",
+        "test_concentration": "5000",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Hydrogen",
+        "response_type": "concentration_response",
+        "test_concentration": "10000",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Hydrogen Sulfide",
+        "response_type": "concentration_response",
+        "test_concentration": "20",
+        "test_conc_unit": "ppm",
+        "response_reading": "About 2",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "",
+        "filtered_rdg_unit": "",
+        "notes": "Short exposures of less than few minutes"
+      },
+      {
+        "chemical_id": "Hydrocarbons",
+        "response_type": "concentration_response",
+        "test_concentration": "% range",
+        "test_conc_unit": "",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      }
+    ],
+    "RAE-CO-1": [
+      {
+        "chemical_id": "Acetylene",
+        "response_type": "conc_response_filter",
+        "test_concentration": "250",
+        "test_conc_unit": "ppm",
+        "response_reading": "250",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "NT",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Butane\n(n-butane)",
+        "response_type": "conc_response_filter",
+        "test_concentration": "100",
+        "test_conc_unit": "ppm",
+        "response_reading": "1",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "1",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Chlorine",
+        "response_type": "conc_response_filter",
+        "test_concentration": "10",
+        "test_conc_unit": "ppm",
+        "response_reading": "0-1",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "NT",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Ethanol\n(ethyl alcohol)",
+        "response_type": "conc_response_filter",
+        "test_concentration": "200",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "0",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Ethylene",
+        "response_type": "conc_response_filter",
+        "test_concentration": "100",
+        "test_conc_unit": "ppm",
+        "response_reading": "16",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "NT",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Ethylene Oxide",
+        "response_type": "conc_response_filter",
+        "test_concentration": "125",
+        "test_conc_unit": "ppm",
+        "response_reading": ">40",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "NT",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Hydrogen",
+        "response_type": "conc_response_filter",
+        "test_concentration": "100",
+        "test_conc_unit": "ppm",
+        "response_reading": "40",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "40",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Hydrogen Sulfide",
+        "response_type": "conc_response_filter",
+        "test_concentration": "10",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "0",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Hydrochloric Acid \n(Hydrogen Chloride)",
+        "response_type": "conc_response_filter",
+        "test_concentration": "10",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "0",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Hexane",
+        "response_type": "conc_response_filter",
+        "test_concentration": "500",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "0",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Isobutylene",
+        "response_type": "conc_response_filter",
+        "test_concentration": "100",
+        "test_conc_unit": "ppm",
+        "response_reading": "9",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "4",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Isobutylene",
+        "response_type": "conc_response_filter",
+        "test_concentration": "1000",
+        "test_conc_unit": "ppm",
+        "response_reading": "30",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "22",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Methyl Ethyl Ketone (MEK)\n(2-butanone)",
+        "response_type": "conc_response_filter",
+        "test_concentration": "100",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "0",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Ammonia",
+        "response_type": "conc_response_filter",
+        "test_concentration": "100",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "0",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Nitrogen",
+        "response_type": "conc_response_filter",
+        "test_concentration": "100",
+        "test_conc_unit": "%vol",
+        "response_reading": "0-4",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "NT",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Nitrous Oxide",
+        "response_type": "conc_response_filter",
+        "test_concentration": "35",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "0",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Nitrogen Dioxide",
+        "response_type": "conc_response_filter",
+        "test_concentration": "5",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "0",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Propane",
+        "response_type": "conc_response_filter",
+        "test_concentration": "100",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "0",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "Sulfur Dioxide",
+        "response_type": "conc_response_filter",
+        "test_concentration": "5",
+        "test_conc_unit": "ppm",
+        "response_reading": "0",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "0",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      },
+      {
+        "chemical_id": "*Trichloro-\nethylene\n(TCE)",
+        "response_type": "conc_response_filter",
+        "test_concentration": "100",
+        "test_conc_unit": "ppm",
+        "response_reading": "25",
+        "observed_rdg_unit": "ppm",
+        "filtered_resp_reading": "15",
+        "filtered_rdg_unit": "",
+        "notes": ""
+      }
+    ]
+  }
+}

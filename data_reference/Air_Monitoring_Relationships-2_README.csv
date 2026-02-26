@@ -1,0 +1,51 @@
+Air Monitoring Reference Database — Excel Template
+""
+PURPOSE
+This workbook is the authoring environment and source of truth for the air monitoring
+reference database. Each tab represents one table. Data validation dropdowns on foreign
+key columns enforce referential integrity during data entry.
+""
+TAB OVERVIEW
+"  Chemicals          — Core chemical records (anchor table, populate first)"
+  Devices            — Physical instruments only
+"  Sensors            — Detection elements (PID, EC, FID, NDIR, etc.)"
+  Sampling_Methods   — NIOSH/OSHA/EPA collection methods
+"  Documents          — Reference materials (SDSs, ERGs, tech bulletins)"
+  Device_Sensor      — Junction: which sensors fit in which devices
+"  Sensor_Chemical    — Junction: intended detection (correction factors, ranges)"
+  Sensor_CrossSens   — Junction: unintended interference data
+  Chemical_Method    — Junction: which methods apply to which chemicals
+  Chemical_Document  — Junction: which documents relate to which chemicals
+""
+KEY STRATEGY
+All tables use human-readable natural keys:
+"  Chemicals:   CAS number (e.g., 7783-06-4)"
+"  Devices:     MFG-MODEL slug (e.g., RAE-MULTIRAE-LITE)"
+"  Sensors:     MFG-TARGET-TECH slug (e.g., RAE-PID-10.6EV)"
+"  Methods:     AGENCY-NUMBER (e.g., NIOSH-6013)"
+"  Documents:   TYPE-SUBJECT slug (e.g., SDS-H2S-AIRGAS)"
+""
+COLOR CODING
+  Blue bold text     = Primary key (unique identifier for this record)
+  Orange text        = Foreign key (must match a PK in another table)
+  Dropdown columns   = Foreign keys with data validation from parent table
+""
+DATA ENTRY WORKFLOW
+1. Populate Chemicals first (everything references this table)
+2. Work device-by-device: add Device → add its Sensors → link in Device_Sensor
+"3. For each sensor: add Sensor_Chemical rows, then Sensor_CrossSens rows"
+4. Add Sampling_Methods and link via Chemical_Method
+5. Add Documents and link via Chemical_Document
+""
+SLUG CONVENTIONS
+  - ALL CAPS with hyphens as separators
+"  - No spaces, no special characters"
+"  - Device: MANUFACTURER-MODEL  (e.g., TSI-DUSTTRAK-8530)"
+"  - Sensor: MANUFACTURER-TARGET-TECHNOLOGY  (e.g., CITY-CO-EC)"
+  - Keep them short but unambiguous
+""
+NOTES
+  - Dropdown lists auto-populate from the PK columns of parent tables
+"  - If you add a new chemical/device/sensor, it becomes available in dropdowns"
+  - Pre-formatted for 200 data rows per tab; extend as needed
+  - Python upload notebook will validate all FKs before publishing to AGOL

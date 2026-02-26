@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#002868" />
+  <title>Air Monitoring Table — ERG</title>
+  <link rel="manifest" href="./manifest.json" />
+  <style>
+    /* --- EPA blue #002868 throughout --- */
+    :root {
+      --epa-blue: #002868;
+      --epa-blue-hover: #003580;
+      --epa-blue-light: #e8eef7;
+      --epa-blue-highlight: #c5d4ed;
+    }
+    html, body { height: 100%; margin: 0; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #e8eef7;
+      color: #1c1c1c;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+    .shell { max-width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+
+    .erg-link-block {
+      flex-shrink: 0;
+      background: #002868;
+      color: #fff;
+      padding: 0.625rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    .erg-link-block a {
+      display: inline-block;
+      color: #fff;
+      background: #003580;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.25);
+      transition: background 0.15s ease;
+    }
+    .erg-link-block a:hover, .erg-link-block a:focus {
+      background: #004099;
+      color: #fff;
+      outline: 2px solid rgba(255,255,255,0.5);
+      outline-offset: 2px;
+    }
+
+    .filter-bar {
+      flex-shrink: 0;
+      padding: 0.75rem 1rem;
+      background: #fff;
+      border-bottom: 1px solid #c5d4ed;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    .filter-bar { flex-direction: column; align-items: stretch; }
+    .filter-text-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+    .filter-bar label { font-size: 0.875rem; font-weight: 600; color: #002868; }
+    .filter-bar input[type="text"] {
+      padding: 0.35rem 0.5rem;
+      border: 1px solid #002868;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      min-width: 10rem;
+    }
+    .filter-bar input::placeholder { color: #888; }
+    .filter-checkboxes { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #d0d8e0; }
+    .filter-check-col { display: flex; flex-direction: column; min-width: 12rem; max-width: 20rem; }
+    .filter-check-title { font-size: 0.75rem; font-weight: 600; color: #002868; margin-bottom: 0.25rem; }
+    .filter-check-col div { max-height: 8rem; overflow-y: auto; font-size: 0.8125rem; }
+    .filter-list-single-col { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 0.2rem; }
+    .filter-check-col label { display: flex; align-items: center; gap: 0.35rem; font-weight: normal; cursor: pointer; }
+    .filter-check-col input[type="checkbox"] { margin: 0; }
+
+    .air-sheet-wrap {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+    }
+    .air-sheet-scroll {
+      flex: 1 1 0;
+      min-height: 0;
+      overflow: auto;
+      padding: 1rem;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+    }
+    .air-table {
+      width: max-content;
+      min-width: 100%;
+      border-spacing: 0;
+      font-size: 0.875rem;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-radius: 4px;
+    }
+    .air-table th, .air-table td {
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #d0d8e0;
+      border-right: 1px solid #e0e8f0;
+    }
+    .air-table thead { position: sticky; top: 0; z-index: 20; background: #002868; }
+    .air-table th {
+      white-space: nowrap;
+      background: #002868;
+      color: #fff;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 2px 2px rgba(0,0,0,0.15);
+    }
+    .air-table th.col-frozen { left: 0; z-index: 21; min-width: 0; max-width: 8rem; box-shadow: 2px 0 4px rgba(0,0,0,0.12); }
+    .air-table td.col-frozen {
+      position: sticky;
+      left: 0;
+      z-index: 5;
+      font-weight: 500;
+      min-width: 0;
+      max-width: 8rem;
+      white-space: normal;
+      word-wrap: break-word;
+      word-break: break-word;
+      box-shadow: 2px 0 4px rgba(0,0,0,0.08);
+    }
+    .air-table td[rowspan] { vertical-align: top; }
+    .air-table td:not(.col-frozen) { white-space: normal; max-width: 14rem; }
+
+    .air-table tbody tr.chem-alt-0 td { background: #fff; }
+    .air-table tbody tr.chem-alt-1 td { background: #e8eef7; }
+    .air-table tbody tr.chem-alt-0 td.col-frozen { background: #fff; }
+    .air-table tbody tr.chem-alt-1 td.col-frozen { background: #e8eef7; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-0 td { background: #f0f4fa; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-0 td.col-frozen { background: #f0f4fa; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-1 td { background: #dce4f0; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-1 td.col-frozen { background: #dce4f0; }
+    .air-table tbody tr.highlight-chemical td,
+    .air-table tbody tr.highlight-device td { background: #c5d4ed !important; }
+    .air-table tbody tr.highlight-chemical td.col-frozen,
+    .air-table tbody tr.highlight-device td.col-frozen { background: #a8c4e8 !important; }
+
+    .load-msg { padding: 1rem; color: #444; font-size: 0.9375rem; }
+    .load-err { color: #b00; font-weight: 500; }
+    .filter-no-match { padding: 1rem; color: #666; font-size: 0.9375rem; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="erg-link-block" role="banner">
+      <a href="./index.html">← ERG Home</a>
+      <a href="https://r9data.response.epa.gov/r9responseguide/MainPage/AirMonitoringTables.html" id="erg-guide-link" target="_blank" rel="noopener noreferrer">Open ERG Guide</a>
+    </header>
+
+    <div class="filter-bar" id="filter-bar" style="display: none;">
+      <div class="filter-text-row">
+        <label for="filter-chemical">Chemical:</label>
+        <input type="text" id="filter-chemical" placeholder="Search…" aria-label="Filter by chemical name" />
+        <label for="filter-device">Device:</label>
+        <input type="text" id="filter-device" placeholder="Search…" aria-label="Filter by device" />
+        <label for="filter-sensor">Sensor:</label>
+        <input type="text" id="filter-sensor" placeholder="Search…" aria-label="Filter by sensor" />
+      </div>
+      <div class="filter-checkboxes" id="filter-checkboxes">
+        <div class="filter-check-col"><span class="filter-check-title">Chemical (select first)</span><div id="filter-chem-list" class="filter-list-single-col"></div></div>
+        <div class="filter-check-col"><span class="filter-check-title">Device (only compatible with selected chemical(s))</span><div id="filter-device-list"></div></div>
+        <div class="filter-check-col"><span class="filter-check-title">Sensor (only compatible with selected chemical(s) and device(s))</span><div id="filter-sensor-list" class="filter-list-single-col"></div></div>
+      </div>
+    </div>
+
+    <main class="air-sheet-wrap" role="main">
+      <p class="load-msg" id="load-msg">Loading air monitoring table…</p>
+      <div class="air-sheet-scroll" id="air-sheet-scroll" aria-hidden="true">
+        <div id="table-container"></div>
+        <p class="filter-no-match" id="filter-no-match" style="display: none;">No rows match the filter.</p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const TABLE_URL = './air_monitoring_table.json';
+      const loadMsg = document.getElementById('load-msg');
+      const tableContainer = document.getElementById('table-container');
+      const airSheetScroll = document.getElementById('air-sheet-scroll');
+      const filterBar = document.getElementById('filter-bar');
+      const filterNoMatch = document.getElementById('filter-no-match');
+      let allRows = [];
+      const ONCE_PER_CHEMICAL = ['Target Compound', 'Ionization Potential (eV)', 'PEL', 'REL', 'TLV', 'IDLH', 'PAC-1', 'PAC-2', 'PAC-3'];
+      const ONCE_PER_DEVICE = ['Device'];
+
+      function escapeAttr(s) {
+        if (s == null) return '';
+        var str = String(s);
+        return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+      function escapeHtml(s) {
+        var div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+      }
+
+      function getCheckedValues(idPrefix) {
+        var list = document.getElementById(idPrefix);
+        if (!list) return null;
+        var checked = [];
+        list.querySelectorAll('input[type="checkbox"]:checked').forEach(function (cb) {
+          if (cb.value) checked.push(cb.value);
+        });
+        return checked.length ? checked : null;
+      }
+
+      function getDevicesForChemicals(chemicals) {
+        var devices = {};
+        var allDevices = {};
+        allRows.forEach(function (r) {
+          var c = r['Target Compound'];
+          var d = r['Device'];
+          if (d != null && d !== '') allDevices[d] = true;
+          if (!chemicals || !chemicals.length) return;
+          if (c != null && c !== '' && chemicals.indexOf(c) !== -1) devices[d] = true;
+        });
+        var list = Object.keys(chemicals && chemicals.length ? devices : allDevices);
+        return list.sort();
+      }
+
+      function getSensorsForChemicalsAndDevices(chemicals, devices) {
+        if (!chemicals || !chemicals.length || !devices || !devices.length) return [];
+        var sensors = {};
+        allRows.forEach(function (r) {
+          var c = r['Target Compound'];
+          var d = r['Device'];
+          var s = r['Sensor'];
+          if (s == null || s === '') return;
+          if (chemicals.indexOf(c) !== -1 && devices.indexOf(d) !== -1) sensors[s] = true;
+        });
+        return Object.keys(sensors).sort();
+      }
+
+      function applyFilter() {
+        var chemText = (document.getElementById('filter-chemical').value || '').trim().toLowerCase();
+        var devText = (document.getElementById('filter-device').value || '').trim().toLowerCase();
+        var sensText = (document.getElementById('filter-sensor').value || '').trim().toLowerCase();
+        var chemChecked = getCheckedValues('filter-chem-list');
+        var devChecked = getCheckedValues('filter-device-list');
+        var sensChecked = getCheckedValues('filter-sensor-list');
+        var filtered = allRows.filter(function (r) {
+          var c = (r['Target Compound'] || '').toLowerCase();
+          var d = (r['Device'] || '').toLowerCase();
+          var s = (r['Sensor'] || '').toLowerCase();
+          var textOk = (!chemText || c.indexOf(chemText) !== -1) && (!devText || d.indexOf(devText) !== -1) && (!sensText || s.indexOf(sensText) !== -1);
+          var chemOk = !chemChecked || chemChecked.indexOf(r['Target Compound']) !== -1;
+          var devOk = !devChecked || devChecked.indexOf(r['Device']) !== -1;
+          var sensOk = !sensChecked || sensChecked.indexOf(r['Sensor']) !== -1;
+          return textOk && chemOk && devOk && sensOk;
+        });
+        renderTable(filtered);
+      }
+      function buildCheckboxLists() {
+        var chemChecked = getCheckedValues('filter-chem-list') || [];
+        var devChecked = getCheckedValues('filter-device-list') || [];
+        var sensChecked = getCheckedValues('filter-sensor-list') || [];
+
+        var chemicals = {};
+        allRows.forEach(function (r) {
+          var c = r['Target Compound']; if (c != null && c !== '') chemicals[c] = true;
+        });
+        var chemList = Object.keys(chemicals).sort();
+
+        var devList = getDevicesForChemicals(chemChecked.length ? chemChecked : null);
+        var sensList = getSensorsForChemicalsAndDevices(chemChecked, devChecked);
+
+        var devCheckedPreserved = devChecked.filter(function (d) { return devList.indexOf(d) !== -1; });
+        var sensCheckedPreserved = sensChecked.filter(function (s) { return sensList.indexOf(s) !== -1; });
+
+        function renderList(containerId, values, nameAttr, preserveChecked) {
+          var container = document.getElementById(containerId);
+          if (!container) return;
+          container.innerHTML = '';
+          var keepChecked = preserveChecked || [];
+          values.forEach(function (v) {
+            var id = nameAttr + '-' + escapeAttr(v).replace(/\s/g, '_').substring(0, 40);
+            var label = document.createElement('label');
+            label.htmlFor = id;
+            var cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.id = id;
+            cb.value = v;
+            if (keepChecked.indexOf(v) !== -1) cb.checked = true;
+            cb.addEventListener('change', onFilterCheckboxChange);
+            label.appendChild(cb);
+            label.appendChild(document.createTextNode(v.length > 35 ? v.substring(0, 35) + '…' : v));
+            container.appendChild(label);
+          });
+        }
+
+        renderList('filter-chem-list', chemList, 'chem', chemChecked);
+        renderList('filter-device-list', devList, 'dev', devCheckedPreserved);
+        renderList('filter-sensor-list', sensList, 'sens', sensCheckedPreserved);
+      }
+
+      function onFilterCheckboxChange() {
+        buildCheckboxLists();
+        applyFilter();
+      }
+
+      function renderTable(rows) {
+        filterNoMatch.style.display = 'none';
+        if (!rows || !rows.length) {
+          tableContainer.innerHTML = '';
+          filterNoMatch.style.display = 'block';
+          filterNoMatch.textContent = allRows.length ? 'No rows match the filter.' : 'No rows in table.';
+          return;
+        }
+        loadMsg.style.display = 'none';
+        airSheetScroll.setAttribute('aria-hidden', 'false');
+        var keys = Object.keys(rows[0]);
+        var hasDeviceAndSensor = keys.indexOf('Device') !== -1 && keys.indexOf('Sensor') !== -1;
+
+        var html = '<table class="air-table" aria-label="Air monitoring reference"><thead><tr>';
+        keys.forEach(function (k, i) {
+          var cls = i === 0 ? ' class="col-frozen"' : '';
+          html += '<th scope="col"' + cls + '>' + escapeHtml(k) + '</th>';
+        });
+        html += '</tr></thead><tbody>';
+
+        if (hasDeviceAndSensor) {
+          var firstInChemical = [], firstInDevice = [], chemicalRowspan = [], deviceRowspan = [];
+          var i, r, n = rows.length;
+          for (i = 0; i < rows.length; i++) {
+            r = rows[i];
+            firstInChemical[i] = (i === 0 || rows[i - 1]['Target Compound'] !== r['Target Compound']);
+            firstInDevice[i] = (i === 0 || rows[i - 1]['Target Compound'] !== r['Target Compound'] || rows[i - 1]['Device'] !== r['Device']);
+            chemicalRowspan[i] = 0;
+            deviceRowspan[i] = 0;
+          }
+          for (i = 0; i < n; i++) {
+            if (firstInChemical[i]) {
+              var count = 1;
+              while (i + count < n && rows[i + count]['Target Compound'] === rows[i]['Target Compound']) count++;
+              chemicalRowspan[i] = count;
+            }
+            if (firstInDevice[i]) {
+              var dcount = 1;
+              while (i + dcount < n && rows[i + dcount]['Target Compound'] === rows[i]['Target Compound'] && rows[i + dcount]['Device'] === rows[i]['Device']) dcount++;
+              deviceRowspan[i] = dcount;
+            }
+          }
+          var chemIndex = -1, sensorIndexInChem = 0;
+          for (i = 0; i < rows.length; i++) {
+            r = rows[i];
+            if (firstInChemical[i]) {
+              chemIndex++;
+              sensorIndexInChem = 0;
+            } else {
+              sensorIndexInChem++;
+            }
+            var chemAlt = chemIndex % 2;
+            var sensorAlt = sensorIndexInChem % 2;
+            var compound = r['Target Compound'] != null ? String(r['Target Compound']) : '';
+            var device = r['Device'] != null ? String(r['Device']) : '';
+            html += '<tr class="chem-alt-' + chemAlt + ' sensor-alt-' + sensorAlt + '" data-chemical="' + escapeAttr(compound) + '" data-device="' + escapeAttr(device) + '">';
+            keys.forEach(function (k, colIndex) {
+              var isFrozen = colIndex === 0;
+              var cls = isFrozen ? ' class="col-frozen"' : '';
+              var val = r[k] != null ? String(r[k]) : '';
+              var colAttr = ' data-column-name="' + escapeAttr(k) + '"';
+              if (ONCE_PER_CHEMICAL.indexOf(k) !== -1) {
+                if (!firstInChemical[i]) return;
+                html += '<td' + cls + colAttr + ' rowspan="' + chemicalRowspan[i] + '">' + escapeHtml(val) + '</td>';
+                return;
+              }
+              if (ONCE_PER_DEVICE.indexOf(k) !== -1) {
+                if (!firstInDevice[i]) return;
+                html += '<td' + cls + colAttr + ' rowspan="' + deviceRowspan[i] + '">' + escapeHtml(val) + '</td>';
+                return;
+              }
+              html += '<td' + cls + colAttr + '>' + escapeHtml(val) + '</td>';
+            });
+            html += '</tr>';
+          }
+        } else {
+          rows.forEach(function (row, idx) {
+            var chemAlt = 0, sensorAlt = idx % 2;
+            html += '<tr class="chem-alt-' + chemAlt + ' sensor-alt-' + sensorAlt + '">';
+            keys.forEach(function (k, i) {
+              var cls = i === 0 ? ' class="col-frozen"' : '';
+              var val = row[k] != null ? String(row[k]) : '';
+              html += '<td' + cls + '>' + escapeHtml(val) + '</td>';
+            });
+            html += '</tr>';
+          });
+        }
+        html += '</tbody></table>';
+        tableContainer.innerHTML = html;
+        attachGroupHover(tableContainer.querySelector('.air-table'));
+      }
+
+      function attachGroupHover(tableEl) {
+        if (!tableEl) return;
+        var tbody = tableEl.querySelector('tbody');
+        if (!tbody) return;
+        var trs = tbody.querySelectorAll('tr');
+        tableEl.addEventListener('mouseover', function (e) {
+          var td = e.target.closest('td');
+          if (!td) return;
+          var colName = td.getAttribute('data-column-name');
+          var tr = td.closest('tr');
+          if (!tr) return;
+          trs.forEach(function (row) { row.classList.remove('highlight-chemical', 'highlight-device'); });
+          if (colName === 'Target Compound') {
+            var chem = tr.getAttribute('data-chemical');
+            trs.forEach(function (row) {
+              row.classList.toggle('highlight-chemical', row.getAttribute('data-chemical') === chem);
+            });
+          } else if (colName === 'Device') {
+            var dev = tr.getAttribute('data-device');
+            trs.forEach(function (row) {
+              row.classList.toggle('highlight-device', row.getAttribute('data-device') === dev);
+            });
+          }
+        });
+        tableEl.addEventListener('mouseout', function (e) {
+          var related = e.relatedTarget;
+          if (related && tableEl.contains(related)) return;
+          trs.forEach(function (row) { row.classList.remove('highlight-chemical', 'highlight-device'); });
+        });
+      }
+
+      document.getElementById('filter-chemical').addEventListener('input', applyFilter);
+      document.getElementById('filter-device').addEventListener('input', applyFilter);
+      document.getElementById('filter-sensor').addEventListener('input', applyFilter);
+
+      fetch(TABLE_URL)
+        .then(function (r) {
+          if (!r.ok) throw new Error(r.status + ' ' + r.statusText);
+          return r.json();
+        })
+        .then(function (data) {
+          allRows = Array.isArray(data) ? data : (data.rows != null ? data.rows : []);
+          filterBar.style.display = 'flex';
+          buildCheckboxLists();
+          renderTable(allRows);
+        })
+        .catch(function (err) {
+          loadMsg.textContent = 'Could not load table: ' + err.message;
+          loadMsg.classList.add('load-err');
+        });
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(function () {});
+      }
+    })();
+  </script>
+</body>
+</html>
