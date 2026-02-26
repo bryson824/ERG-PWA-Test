@@ -89,11 +89,12 @@
       flex-direction: column;
       padding: 0;
     }
+    /* No top/left padding: otherwise content reappears in the gap above the sticky header or left of the frozen column as you scroll */
     .air-sheet-scroll {
       flex: 1 1 0;
       min-height: 0;
       overflow: auto;
-      padding: 1rem;
+      padding: 0 1rem 1rem 0;
       -webkit-overflow-scrolling: touch;
       position: relative;
     }
@@ -105,6 +106,12 @@
       background: #fff;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       border-radius: 4px;
+      position: relative;
+    }
+    /* Keep body under sticky header/column so scrolling text doesn’t paint on top */
+    .air-table tbody {
+      position: relative;
+      z-index: 0;
     }
     .air-table th, .air-table td {
       padding: 0.5rem 0.75rem;
@@ -128,7 +135,8 @@
       position: sticky;
       top: 0;
       z-index: 20;
-      box-shadow: 0 2px 2px rgba(0,0,0,0.15);
+      /* Solid bar below so body text doesn’t bleed at bottom edge when scrolling down */
+      box-shadow: 0 2px 2px rgba(0,0,0,0.15), 0 2px 0 0 #002868;
       isolation: isolate;
       transform: translateZ(0);
     }
@@ -137,7 +145,8 @@
       z-index: 21;
       min-width: 0;
       max-width: 8rem;
-      box-shadow: 2px 0 4px rgba(0,0,0,0.12);
+      /* Solid bar to the right so adjacent header/cells don’t bleed when scrolling right */
+      box-shadow: 2px 0 4px rgba(0,0,0,0.12), 3px 0 0 0 #002868;
     }
     .air-table td.col-frozen {
       position: sticky;
@@ -149,7 +158,8 @@
       white-space: normal;
       word-wrap: break-word;
       word-break: break-word;
-      box-shadow: 2px 0 4px rgba(0,0,0,0.08);
+      /* Solid bar to the right so adjacent cells don’t bleed when scrolling right */
+      box-shadow: 2px 0 4px rgba(0,0,0,0.08), 3px 0 0 0 var(--frozen-bg, #fff);
       isolation: isolate;
       transform: translateZ(0);
     }
@@ -158,16 +168,16 @@
 
     .air-table tbody tr.chem-alt-0 td { background: #fff; }
     .air-table tbody tr.chem-alt-1 td { background: #e8eef7; }
-    .air-table tbody tr.chem-alt-0 td.col-frozen { background: #fff; }
-    .air-table tbody tr.chem-alt-1 td.col-frozen { background: #e8eef7; }
+    .air-table tbody tr.chem-alt-0 td.col-frozen { background: #fff; --frozen-bg: #fff; }
+    .air-table tbody tr.chem-alt-1 td.col-frozen { background: #e8eef7; --frozen-bg: #e8eef7; }
     .air-table tbody tr.sensor-alt-1.chem-alt-0 td { background: #f0f4fa; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-0 td.col-frozen { background: #f0f4fa; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-0 td.col-frozen { background: #f0f4fa; --frozen-bg: #f0f4fa; }
     .air-table tbody tr.sensor-alt-1.chem-alt-1 td { background: #dce4f0; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-1 td.col-frozen { background: #dce4f0; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-1 td.col-frozen { background: #dce4f0; --frozen-bg: #dce4f0; }
     .air-table tbody tr.highlight-chemical td,
     .air-table tbody tr.highlight-device td { background: #c5d4ed !important; }
     .air-table tbody tr.highlight-chemical td.col-frozen,
-    .air-table tbody tr.highlight-device td.col-frozen { background: #a8c4e8 !important; }
+    .air-table tbody tr.highlight-device td.col-frozen { background: #a8c4e8 !important; --frozen-bg: #a8c4e8; }
 
     .load-msg { padding: 1rem; color: #444; font-size: 0.9375rem; }
     .load-err { color: #b00; font-weight: 500; }
