@@ -3,7 +3,7 @@
  * Cache strategy: cache-first for shell + air_monitoring_table.json.
  * Bump CACHE_VERSION when deploying to invalidate old caches.
  */
-const CACHE_VERSION = 'erg-pwa-v3';
+const CACHE_VERSION = 'erg-pwa-v4';
 const CACHE_SHELL = `${CACHE_VERSION}-shell`;
 const CACHE_TABLE = `${CACHE_VERSION}-table`;
 
@@ -15,12 +15,18 @@ const SHELL_URLS = [
   './manifest.json'
 ];
 
-const TABLE_URL = './air_monitoring_table.json';
-const SENSOR_PART_URL = './sensor_part_numbers.json';
+const TABLE_DATA_URLS = [
+  './air_monitoring_table.json',
+  './sensor_part_numbers.json',
+  './sensor_cross_sens.json'
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_SHELL).then((cache) => cache.addAll(SHELL_URLS)).then(() => self.skipWaiting())
+    caches.open(CACHE_SHELL).then((cache) => cache.addAll(SHELL_URLS))
+      .then(() => caches.open(CACHE_TABLE).then((cache) => cache.addAll(TABLE_DATA_URLS)))
+      .then(() => self.skipWaiting())
+      .catch((err) => console.warn('PWA pre-cache failed:', err))
   );
 });
 
@@ -55,8 +61,14 @@ self.addEventListener('fetch', (event) => {
   }
 
   const path = url.pathname;
-  const shellMatch = path === '/' || path === '/index.html' || path === '/table.html' || path === '/hasp.html' ||
-    SHELL_URLS.some((u) => path === new URL(u, self.location.origin).pathname);
+  // Match shell pages whether app is at root or subpath (e.g. /pwa/table.html)
+  const shellMatch =
+    path === '/' ||
+    path.endsWith('/') ||
+    path.endsWith('index.html') ||
+    path.endsWith('table.html') ||
+    path.endsWith('hasp.html') ||
+    path.endsWith('manifest.json');
   if (shellMatch) {
     event.respondWith(
       caches.match(request).then((cached) => cached || fetch(request))
