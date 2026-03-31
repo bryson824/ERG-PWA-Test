@@ -562,17 +562,18 @@
           var tr = td.closest('tr');
           if (!tr) return;
           trs.forEach(function (row) { row.classList.remove('highlight-chemical', 'highlight-device'); });
-          if (colName === 'Target Compound') {
-            var chem = tr.getAttribute('data-chemical');
+          var chem = tr.getAttribute('data-chemical');
+          if (colName === 'Target Compound' || td.getAttribute('data-method-cell') === '1') {
+            // Whole chemical (frozen column or chemical-level method block).
             trs.forEach(function (row) {
               row.classList.toggle('highlight-chemical', row.getAttribute('data-chemical') === chem);
             });
-          } else if (colName === 'Device') {
-            // Same device name can appear for many chemicals — scope to this chemical + device.
-            var chemForDev = tr.getAttribute('data-chemical');
+          } else {
+            // Same device name can repeat across chemicals; Device column is rowspanned so
+            // continuation rows only have Sensor / other cols — use row's chemical + device.
             var dev = tr.getAttribute('data-device');
             trs.forEach(function (row) {
-              var sameChem = row.getAttribute('data-chemical') === chemForDev;
+              var sameChem = row.getAttribute('data-chemical') === chem;
               var sameDev = row.getAttribute('data-device') === dev;
               row.classList.toggle('highlight-device', sameChem && sameDev);
             });
