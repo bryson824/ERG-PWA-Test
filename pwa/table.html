@@ -468,7 +468,7 @@
             var sensorAlt = sensorIndexInChem % 2;
             var compound = r['Target Compound'] != null ? String(r['Target Compound']) : '';
             var device = r['Device'] != null ? String(r['Device']) : '';
-            html += '<tr class="chem-alt-' + chemAlt + ' sensor-alt-' + sensorAlt + '" data-chemical="' + escapeAttr(compound) + '" data-device="' + escapeAttr(device) + '">';
+            html += '<tr class="chem-alt-' + chemAlt + ' sensor-alt-' + sensorAlt + '" data-chemical="' + escapeAttr(compound) + '" data-device="' + escapeAttr(device) + '" data-chem-group="' + chemIndex + '">';
             keys.forEach(function (k, colIndex) {
               var isFrozen = colIndex === 0;
               var cls = isFrozen ? ' class="col-frozen"' : '';
@@ -477,7 +477,10 @@
               var colAttr = ' data-column-name="' + escapeAttr(k) + '"';
               if (ONCE_PER_CHEMICAL.indexOf(k) !== -1) {
                 if (!firstInChemical[i]) return;
-                html += '<td' + cls + colAttr + ' rowspan="' + chemicalRowspan[i] + '">' + renderedVal + '</td>';
+                var methodAttrs = METHOD_COLUMNS.indexOf(k) !== -1
+                  ? ' data-method-cell="1" data-chem-group="' + chemIndex + '"'
+                  : '';
+                html += '<td' + cls + colAttr + methodAttrs + ' rowspan="' + chemicalRowspan[i] + '">' + renderedVal + '</td>';
                 return;
               }
               if (ONCE_PER_DEVICE.indexOf(k) !== -1) {
@@ -503,7 +506,47 @@
         }
         html += '</tbody></table>';
         tableContainer.innerHTML = html;
-        attachGroupHover(tableContainer.querySelector('.air-table'));
+        var tableEl = tableContainer.querySelector('.air-table');
+        syncMethodLineHeights(tableEl);
+        attachGroupHover(tableEl);
+      }
+
+      function syncMethodLineHeights(tableEl) {
+        if (!tableEl) return;
+        var methodCells = tableEl.querySelectorAll('td[data-method-cell="1"]');
+        if (!methodCells.length) return;
+        var groupMap = {};
+        methodCells.forEach(function (cell) {
+          var g = cell.getAttribute('data-chem-group');
+          if (!g) return;
+          if (!groupMap[g]) groupMap[g] = [];
+          groupMap[g].push(cell);
+        });
+        Object.keys(groupMap).forEach(function (g) {
+          var cells = groupMap[g];
+          var maxRows = 0;
+          cells.forEach(function (cell) {
+            var lines = cell.querySelectorAll('.method-line');
+            if (lines.length > maxRows) maxRows = lines.length;
+          });
+          if (!maxRows) return;
+          for (var idx = 0; idx < maxRows; idx++) {
+            var maxHeight = 0;
+            var linesAtIdx = [];
+            cells.forEach(function (cell) {
+              var lines = cell.querySelectorAll('.method-line');
+              if (lines[idx]) {
+                lines[idx].style.minHeight = '';
+                linesAtIdx.push(lines[idx]);
+                var h = lines[idx].offsetHeight;
+                if (h > maxHeight) maxHeight = h;
+              }
+            });
+            linesAtIdx.forEach(function (lineEl) {
+              lineEl.style.minHeight = maxHeight + 'px';
+            });
+          }
+        });
       }
 
       function attachGroupHover(tableEl) {
