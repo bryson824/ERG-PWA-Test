@@ -201,6 +201,16 @@
     }
     .air-table td[rowspan] { vertical-align: top; }
     .air-table td:not(.col-frozen) { white-space: normal; max-width: 14rem; }
+    .method-stack { display: flex; flex-direction: column; }
+    .method-stack .method-line {
+      padding: 0.15rem 0;
+      line-height: 1.25;
+    }
+    .method-stack .method-line + .method-line {
+      border-top: 1px solid rgba(0, 40, 104, 0.18);
+      margin-top: 0.15rem;
+      padding-top: 0.25rem;
+    }
 
     .air-table tbody tr.chem-alt-0 td { background: #fff; }
     .air-table tbody tr.chem-alt-1 td { background: #e8eef7; }
@@ -294,7 +304,9 @@
           : text.split('|').map(function (p) { return p.trim(); }).filter(Boolean);
         if (!pieces.length) return '—';
         if (pieces.length === 1) return escapeHtml(pieces[0]);
-        return pieces.map(function (p) { return escapeHtml(p); }).join('<br>');
+        return '<div class="method-stack">' + pieces.map(function (p) {
+          return '<div class="method-line">' + escapeHtml(p) + '</div>';
+        }).join('') + '</div>';
       }
 
       function getCheckedValues(idPrefix) {
