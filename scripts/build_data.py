@@ -72,18 +72,33 @@ def safe_str(val):
     # Collapse newlines for display
     return " ".join(s.split())
 
-def combine_unique(series):
-    """Combine unique non-empty values while preserving first-seen order."""
+def summarize_methods_group(group):
+    """Keep method rows aligned across columns for chemical-level rendering."""
     seen = set()
-    vals = []
-    for v in series:
-        s = safe_str(v)
-        if s == "—":
+    rows = []
+    for _, row in group.iterrows():
+        rec = (
+            safe_str(row.get("method_id")),
+            safe_str(row.get("sample_volume")),
+            safe_str(row.get("flow_rate")),
+            safe_str(row.get("media_type")),
+            safe_str(row.get("hold_time")),
+        )
+        # De-duplicate exact repeated method rows while preserving order.
+        if rec in seen:
             continue
-        if s not in seen:
-            seen.add(s)
-            vals.append(s)
-    return " | ".join(vals) if vals else "—"
+        seen.add(rec)
+        rows.append(rec)
+    if not rows:
+        rows = [("—", "—", "—", "—", "—")]
+    # " || " is a row delimiter for renderer split.
+    return pd.Series({
+        "method_id": " || ".join(r[0] for r in rows),
+        "sample_volume": " || ".join(r[1] for r in rows),
+        "flow_rate": " || ".join(r[2] for r in rows),
+        "media_type": " || ".join(r[3] for r in rows),
+        "hold_time": " || ".join(r[4] for r in rows),
+    })
 
 def build_merged_table():
     data_ref = _data_ref()
@@ -122,14 +137,8 @@ def build_merged_table():
     # - From Sampling_Methods: media_type, hold_time
     cm_sm = cm.merge(sm[["method_id", "media_type", "hold_time"]], on="method_id", how="left")
     cm_summary = (
-        cm_sm.groupby("chemical_id", dropna=False)
-        .agg({
-            "method_id": combine_unique,
-            "sample_volume": combine_unique,
-            "flow_rate": combine_unique,
-            "media_type": combine_unique,
-            "hold_time": combine_unique,
-        })
+        cm_sm.groupby("chemical_id", dropna=False, sort=False)[["method_id", "sample_volume", "flow_rate", "media_type", "hold_time"]]
+        .apply(summarize_methods_group)
         .reset_index()
     )
 

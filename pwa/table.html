@@ -289,7 +289,9 @@
       function renderSplitCellValue(columnName, value) {
         if (METHOD_COLUMNS.indexOf(columnName) === -1) return escapeHtml(value);
         var text = value == null ? '' : String(value);
-        var pieces = text.split('|').map(function (p) { return p.trim(); }).filter(Boolean);
+        var pieces = text.indexOf('||') !== -1
+          ? text.split('||').map(function (p) { return p.trim(); }).filter(Boolean)
+          : text.split('|').map(function (p) { return p.trim(); }).filter(Boolean);
         if (!pieces.length) return '—';
         if (pieces.length === 1) return escapeHtml(pieces[0]);
         return pieces.map(function (p) { return escapeHtml(p); }).join('<br>');
