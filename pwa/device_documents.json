@@ -1,0 +1,22 @@
+{
+  "_notes": [
+    "Map each device name to an array of document links.",
+    "Device names must match the Device values in air_monitoring_table.json exactly."
+  ],
+  "AreaRAE Plus": [
+    {
+      "title": "AreaRAE Plus SOP",
+      "type": "SOP",
+      "url": "https://example.sharepoint.com/path/to/AreaRAE-Plus-SOP.pdf",
+      "version": "1.0",
+      "lastUpdated": "2026-03-30"
+    },
+    {
+      "title": "PID Sensor Method Guidance",
+      "type": "Method",
+      "url": "https://example.sharepoint.com/path/to/PID-Method-Guidance.pdf",
+      "version": "1.0",
+      "lastUpdated": "2026-03-30"
+    }
+  ]
+}

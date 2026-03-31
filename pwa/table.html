@@ -212,6 +212,18 @@
       margin-top: 0.15rem;
       padding-top: 0.25rem;
     }
+    .cell-link {
+      color: #003580;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+    .cell-link:hover,
+    .cell-link:focus {
+      color: #002868;
+      outline: 2px solid rgba(0, 40, 104, 0.25);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
 
     .air-table tbody tr.chem-alt-0 td { background: #fff; }
     .air-table tbody tr.chem-alt-1 td { background: #e8eef7; }
@@ -308,6 +320,20 @@
         return '<div class="method-stack">' + pieces.map(function (p) {
           return '<div class="method-line">' + escapeHtml(p) + '</div>';
         }).join('') + '</div>';
+      }
+      function buildCellLink(columnName, value, row) {
+        var text = value == null ? '' : String(value);
+        if (!text) return '—';
+        if (columnName === 'Device') {
+          return '<a class="cell-link" href="./device.html?device=' + encodeURIComponent(text) + '">' + escapeHtml(text) + '</a>';
+        }
+        if (columnName === 'Sensor') {
+          var device = row && row['Device'] != null ? String(row['Device']) : '';
+          var href = './sensor.html?sensor=' + encodeURIComponent(text);
+          if (device) href += '&device=' + encodeURIComponent(device);
+          return '<a class="cell-link" href="' + href + '">' + escapeHtml(text) + '</a>';
+        }
+        return renderSplitCellValue(columnName, text);
       }
 
       function getCheckedValues(idPrefix) {
@@ -474,7 +500,7 @@
               var isFrozen = colIndex === 0;
               var cls = isFrozen ? ' class="col-frozen"' : '';
               var val = r[k] != null ? String(r[k]) : '';
-              var renderedVal = renderSplitCellValue(k, val);
+              var renderedVal = buildCellLink(k, val, r);
               var colAttr = ' data-column-name="' + escapeAttr(k) + '"';
               if (ONCE_PER_CHEMICAL.indexOf(k) !== -1) {
                 if (!firstInChemical[i]) return;
@@ -500,7 +526,7 @@
             keys.forEach(function (k, i) {
               var cls = i === 0 ? ' class="col-frozen"' : '';
               var val = row[k] != null ? String(row[k]) : '';
-              html += '<td' + cls + '>' + escapeHtml(val) + '</td>';
+              html += '<td' + cls + '>' + buildCellLink(k, val, row) + '</td>';
             });
             html += '</tr>';
           });

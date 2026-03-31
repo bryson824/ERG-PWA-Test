@@ -3,7 +3,7 @@
  * Cache strategy: cache-first for shell + air_monitoring_table.json.
  * Bump CACHE_VERSION when deploying to invalidate old caches.
  */
-const CACHE_VERSION = 'erg-pwa-v5';
+const CACHE_VERSION = 'erg-pwa-v6';
 const CACHE_SHELL = `${CACHE_VERSION}-shell`;
 const CACHE_TABLE = `${CACHE_VERSION}-table`;
 
@@ -11,6 +11,8 @@ const SHELL_URLS = [
   './',
   './index.html',
   './table.html',
+  './device.html',
+  './sensor.html',
   './hasp.html',
   './manifest.json'
 ];
@@ -18,7 +20,8 @@ const SHELL_URLS = [
 const TABLE_DATA_URLS = [
   './air_monitoring_table.json',
   './sensor_part_numbers.json',
-  './sensor_cross_sens.json'
+  './sensor_cross_sens.json',
+  './device_documents.json'
 ];
 
 self.addEventListener('install', (event) => {
@@ -45,7 +48,12 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  if (url.pathname.endsWith('air_monitoring_table.json') || url.pathname.endsWith('sensor_part_numbers.json') || url.pathname.endsWith('sensor_cross_sens.json')) {
+  if (
+    url.pathname.endsWith('air_monitoring_table.json') ||
+    url.pathname.endsWith('sensor_part_numbers.json') ||
+    url.pathname.endsWith('sensor_cross_sens.json') ||
+    url.pathname.endsWith('device_documents.json')
+  ) {
     event.respondWith(
       caches.open(CACHE_TABLE).then((cache) =>
         cache.match(request).then((cached) => {
@@ -67,6 +75,8 @@ self.addEventListener('fetch', (event) => {
     path.endsWith('/') ||
     path.endsWith('index.html') ||
     path.endsWith('table.html') ||
+    path.endsWith('device.html') ||
+    path.endsWith('sensor.html') ||
     path.endsWith('hasp.html') ||
     path.endsWith('manifest.json');
   if (shellMatch) {
