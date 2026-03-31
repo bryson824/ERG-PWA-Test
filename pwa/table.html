@@ -152,6 +152,7 @@
     .air-table th, .air-table td {
       padding: 0.5rem 0.75rem;
       text-align: left;
+      vertical-align: middle;
       border-bottom: 1px solid #d0d8e0;
       border-right: 1px solid #e0e8f0;
     }
@@ -199,7 +200,7 @@
       isolation: isolate;
       transform: translateZ(0);
     }
-    .air-table td[rowspan] { vertical-align: top; }
+    .air-table td[rowspan] { vertical-align: middle; }
     .air-table td:not(.col-frozen) { white-space: normal; max-width: 14rem; }
     .method-stack { display: flex; flex-direction: column; }
     .method-stack .method-line {
