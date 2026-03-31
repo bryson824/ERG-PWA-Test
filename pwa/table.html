@@ -568,9 +568,13 @@
               row.classList.toggle('highlight-chemical', row.getAttribute('data-chemical') === chem);
             });
           } else if (colName === 'Device') {
+            // Same device name can appear for many chemicals — scope to this chemical + device.
+            var chemForDev = tr.getAttribute('data-chemical');
             var dev = tr.getAttribute('data-device');
             trs.forEach(function (row) {
-              row.classList.toggle('highlight-device', row.getAttribute('data-device') === dev);
+              var sameChem = row.getAttribute('data-chemical') === chemForDev;
+              var sameDev = row.getAttribute('data-device') === dev;
+              row.classList.toggle('highlight-device', sameChem && sameDev);
             });
           }
         });
