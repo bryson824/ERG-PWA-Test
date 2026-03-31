@@ -509,7 +509,6 @@
         tableContainer.innerHTML = html;
         var tableEl = tableContainer.querySelector('.air-table');
         syncMethodLineHeights(tableEl);
-        attachGroupHover(tableEl);
       }
 
       function syncMethodLineHeights(tableEl) {
@@ -547,42 +546,6 @@
               lineEl.style.minHeight = maxHeight + 'px';
             });
           }
-        });
-      }
-
-      function attachGroupHover(tableEl) {
-        if (!tableEl) return;
-        var tbody = tableEl.querySelector('tbody');
-        if (!tbody) return;
-        var trs = tbody.querySelectorAll('tr');
-        tableEl.addEventListener('mouseover', function (e) {
-          var td = e.target.closest('td');
-          if (!td) return;
-          var colName = td.getAttribute('data-column-name');
-          var tr = td.closest('tr');
-          if (!tr) return;
-          trs.forEach(function (row) { row.classList.remove('highlight-chemical', 'highlight-device'); });
-          var chem = tr.getAttribute('data-chemical');
-          if (colName === 'Target Compound' || td.getAttribute('data-method-cell') === '1') {
-            // Whole chemical (frozen column or chemical-level method block).
-            trs.forEach(function (row) {
-              row.classList.toggle('highlight-chemical', row.getAttribute('data-chemical') === chem);
-            });
-          } else {
-            // Same device name can repeat across chemicals; Device column is rowspanned so
-            // continuation rows only have Sensor / other cols — use row's chemical + device.
-            var dev = tr.getAttribute('data-device');
-            trs.forEach(function (row) {
-              var sameChem = row.getAttribute('data-chemical') === chem;
-              var sameDev = row.getAttribute('data-device') === dev;
-              row.classList.toggle('highlight-device', sameChem && sameDev);
-            });
-          }
-        });
-        tableEl.addEventListener('mouseout', function (e) {
-          var related = e.relatedTarget;
-          if (related && tableEl.contains(related)) return;
-          trs.forEach(function (row) { row.classList.remove('highlight-chemical', 'highlight-device'); });
         });
       }
 
