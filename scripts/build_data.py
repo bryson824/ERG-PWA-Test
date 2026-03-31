@@ -72,6 +72,19 @@ def safe_str(val):
     # Collapse newlines for display
     return " ".join(s.split())
 
+def combine_unique(series):
+    """Combine unique non-empty values while preserving first-seen order."""
+    seen = set()
+    vals = []
+    for v in series:
+        s = safe_str(v)
+        if s == "—":
+            continue
+        if s not in seen:
+            seen.add(s)
+            vals.append(s)
+    return " | ".join(vals) if vals else "—"
+
 def build_merged_table():
     data_ref = _data_ref()
     base = "Air_Monitoring_Relationships-2"
@@ -85,9 +98,13 @@ def build_merged_table():
     ds = read_csv_with_title_row(path("Device_Sensor"))
     dev = read_csv_with_title_row(path("Devices"))
     chem = read_csv_with_title_row(path("Chemicals"))
+    cm = read_csv_with_title_row(path("Chemical_Method"))
+    sm = read_csv_with_title_row(path("Sampling_Methods"))
 
     # Normalize join keys
     for df in (sc, sens, ds, dev, chem):
+        df.columns = [c.strip() for c in df.columns]
+    for df in (cm, sm):
         df.columns = [c.strip() for c in df.columns]
 
     # Drop rows where key join columns are missing
@@ -96,12 +113,32 @@ def build_merged_table():
     ds = ds.dropna(subset=["device_id", "sensor_id"])
     dev = dev.dropna(subset=["device_id"])
     chem = chem.dropna(subset=["cas_number"])
+    cm = cm.dropna(subset=["chemical_id", "method_id"])
+    sm = sm.dropna(subset=["method_id"])
+
+    # Build per-chemical method metadata from Chemical_Method (junction) plus Sampling_Methods.
+    # Requested source split:
+    # - From Chemical_Method: method_id, sample_volume, flow_rate
+    # - From Sampling_Methods: media_type, hold_time
+    cm_sm = cm.merge(sm[["method_id", "media_type", "hold_time"]], on="method_id", how="left")
+    cm_summary = (
+        cm_sm.groupby("chemical_id", dropna=False)
+        .agg({
+            "method_id": combine_unique,
+            "sample_volume": combine_unique,
+            "flow_rate": combine_unique,
+            "media_type": combine_unique,
+            "hold_time": combine_unique,
+        })
+        .reset_index()
+    )
 
     # Join: Sensor_Chemical -> Sensors (sensor_id); then Device_Sensor (sensor_id) -> Devices (device_id); then Chemicals (chemical_id -> cas_number)
     m = sc.merge(sens, on="sensor_id", how="left")
     m = m.merge(ds, on="sensor_id", how="left")
     m = m.merge(dev, on="device_id", how="left", suffixes=("", "_dev"))
     m = m.merge(chem, left_on="chemical_id", right_on="cas_number", how="left", suffixes=("", "_chem"))
+    m = m.merge(cm_summary, on="chemical_id", how="left")
 
     # Drop rows that didn't match (e.g. chemical_id not in Chemicals)
     m = m.dropna(subset=["chemical_name", "model", "plain_name"])
@@ -142,7 +179,12 @@ def build_merged_table():
     m["PAC-1"] = m.get("aegl_1", pd.Series(["—"] * len(m))).apply(safe_str)
     m["PAC-2"] = m.get("aegl_2", pd.Series(["—"] * len(m))).apply(safe_str)
     m["PAC-3"] = m.get("aegl_3", pd.Series(["—"] * len(m))).apply(safe_str)
-    m["Air Sampling Method"] = "—"
+    m["method_id"] = m.get("method_id", pd.Series(["—"] * len(m))).apply(safe_str)
+    m["sample_volume"] = m.get("sample_volume", pd.Series(["—"] * len(m))).apply(safe_str)
+    m["flow_rate"] = m.get("flow_rate", pd.Series(["—"] * len(m))).apply(safe_str)
+    m["media_type"] = m.get("media_type", pd.Series(["—"] * len(m))).apply(safe_str)
+    m["hold_time"] = m.get("hold_time", pd.Series(["—"] * len(m))).apply(safe_str)
+    m["Air Sampling Method"] = m["method_id"]
 
     # Target Compound = chemical_name
     m["Target Compound"] = m["chemical_name"].astype(str).apply(lambda x: " ".join(x.split()))
@@ -153,7 +195,8 @@ def build_merged_table():
     # Build output rows: Target Compound, Device, Sensor, Detection Level, Ionization Potential (eV), Correction Factor, then regulatory
     columns_order = [
         "Target Compound", "Device", "Sensor", "Detection Level", "Ionization Potential (eV)", "Correction Factor",
-        "PEL", "REL", "TLV", "IDLH", "PAC-1", "PAC-2", "PAC-3", "Air Sampling Method"
+        "PEL", "REL", "TLV", "IDLH", "PAC-1", "PAC-2", "PAC-3",
+        "method_id", "sample_volume", "flow_rate", "media_type", "hold_time", "Air Sampling Method"
     ]
     out = []
     for _, row in m.iterrows():
@@ -178,8 +221,38 @@ def build_merged_table():
             "PAC-1": safe_str(row.get("aegl_1")),
             "PAC-2": safe_str(row.get("aegl_2")),
             "PAC-3": safe_str(row.get("aegl_3")),
+            "method_id": "—",
+            "sample_volume": "—",
+            "flow_rate": "—",
+            "media_type": "—",
+            "hold_time": "—",
             "Air Sampling Method": "—",
         })
+    # Fill chemical-only rows with method data where available.
+    chem_method_map = cm_summary.set_index("chemical_id").to_dict(orient="index") if len(cm_summary) else {}
+    for row in out:
+        if row["method_id"] != "—":
+            continue
+        key = row.get("Target Compound")
+        # chemical_id values align to Chemicals.cas_number, while Target Compound is name;
+        # map by chemical_name -> cas_number first for reliable lookup.
+        # Build this map once lazily.
+        if "_chem_name_to_cas" not in locals():
+            _chem_name_to_cas = {}
+            for _, cr in chem.iterrows():
+                nm = " ".join(str(cr.get("chemical_name", "") or "").split())
+                cas = safe_str(cr.get("cas_number"))
+                if nm and cas != "—":
+                    _chem_name_to_cas[nm] = cas
+        cas = _chem_name_to_cas.get(key)
+        method_meta = chem_method_map.get(cas) if cas else None
+        if method_meta:
+            row["method_id"] = safe_str(method_meta.get("method_id"))
+            row["sample_volume"] = safe_str(method_meta.get("sample_volume"))
+            row["flow_rate"] = safe_str(method_meta.get("flow_rate"))
+            row["media_type"] = safe_str(method_meta.get("media_type"))
+            row["hold_time"] = safe_str(method_meta.get("hold_time"))
+            row["Air Sampling Method"] = row["method_id"]
     # Re-sort so all rows are by Target Compound, then Device, then Sensor (chemicals-without-sensors end up as single-row blocks)
     out.sort(key=lambda r: (r["Target Compound"], r["Device"], r["Sensor"]))
     return out

@@ -269,8 +269,12 @@
       const filterNoMatch = document.getElementById('filter-no-match');
       const FILTER_COLLAPSED_KEY = 'air-table-filters-collapsed';
       let allRows = [];
-      const ONCE_PER_CHEMICAL = ['Target Compound', 'Ionization Potential (eV)', 'PEL', 'REL', 'TLV', 'IDLH', 'PAC-1', 'PAC-2', 'PAC-3'];
+      const ONCE_PER_CHEMICAL = [
+        'Target Compound', 'Ionization Potential (eV)', 'PEL', 'REL', 'TLV', 'IDLH', 'PAC-1', 'PAC-2', 'PAC-3',
+        'method_id', 'sample_volume', 'flow_rate', 'media_type', 'hold_time', 'Air Sampling Method'
+      ];
       const ONCE_PER_DEVICE = ['Device'];
+      const METHOD_COLUMNS = ['method_id', 'sample_volume', 'flow_rate', 'media_type', 'hold_time', 'Air Sampling Method'];
 
       function escapeAttr(s) {
         if (s == null) return '';
@@ -281,6 +285,14 @@
         var div = document.createElement('div');
         div.textContent = s;
         return div.innerHTML;
+      }
+      function renderSplitCellValue(columnName, value) {
+        if (METHOD_COLUMNS.indexOf(columnName) === -1) return escapeHtml(value);
+        var text = value == null ? '' : String(value);
+        var pieces = text.split('|').map(function (p) { return p.trim(); }).filter(Boolean);
+        if (!pieces.length) return '—';
+        if (pieces.length === 1) return escapeHtml(pieces[0]);
+        return pieces.map(function (p) { return escapeHtml(p); }).join('<br>');
       }
 
       function getCheckedValues(idPrefix) {
@@ -447,18 +459,19 @@
               var isFrozen = colIndex === 0;
               var cls = isFrozen ? ' class="col-frozen"' : '';
               var val = r[k] != null ? String(r[k]) : '';
+              var renderedVal = renderSplitCellValue(k, val);
               var colAttr = ' data-column-name="' + escapeAttr(k) + '"';
               if (ONCE_PER_CHEMICAL.indexOf(k) !== -1) {
                 if (!firstInChemical[i]) return;
-                html += '<td' + cls + colAttr + ' rowspan="' + chemicalRowspan[i] + '">' + escapeHtml(val) + '</td>';
+                html += '<td' + cls + colAttr + ' rowspan="' + chemicalRowspan[i] + '">' + renderedVal + '</td>';
                 return;
               }
               if (ONCE_PER_DEVICE.indexOf(k) !== -1) {
                 if (!firstInDevice[i]) return;
-                html += '<td' + cls + colAttr + ' rowspan="' + deviceRowspan[i] + '">' + escapeHtml(val) + '</td>';
+                html += '<td' + cls + colAttr + ' rowspan="' + deviceRowspan[i] + '">' + renderedVal + '</td>';
                 return;
               }
-              html += '<td' + cls + colAttr + '>' + escapeHtml(val) + '</td>';
+              html += '<td' + cls + colAttr + '>' + renderedVal + '</td>';
             });
             html += '</tr>';
           }
