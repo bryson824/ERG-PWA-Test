@@ -3,7 +3,7 @@ device_id (PK),manufacturer,model,device_type,sensor_slots,intrinsically_safe,sw
 RAE-MULTIRAE-PRO,RAE Systems,MultiRAE Pro,Multi-gas,,,Yes,IP65,0.68 kg,"UL, CSA, ATEX",Pumped multi-gas with PID
 RAE-AREARAE-PRO,RAE Systems,AreaRAE Pro,Multi-gas,,,,,,,
 TSI-DUSTTRAK-8533,TSI,DustTrak DRX 8533 with 8535 enclosure,,,,,,,,
-TSI-DUSTTRAK-8530,TSI,DustTrak DRX 8534,Dust monitor,,,No,IP54,1.5 kg,,Real-time aerosol monitor
+TSI-DUSTTRAK-8534,TSI,DustTrak DRX 8534,Dust monitor,,,No,IP54,1.5 kg,,Real-time aerosol monitor
 DRAGER-XAM-8000,Drager,XAM-8000,Multi-gas,,,Yes,IP65,0.64 kg,"UL, CSA, ATEX",Up to 6 gas sensors
 DRAGER-TUBE,Drager,Gas Detector Tube,,,,,,,,
 DRAGER-CHIP,Drager,Chip Measurement System,,,,,,,,

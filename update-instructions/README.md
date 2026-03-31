@@ -7,11 +7,13 @@ This document explains how to update the app, how the Excel data ties in, how to
 ## Table of contents
 
 1. [Quick reference: pushing updates to GitHub](#1-quick-reference-pushing-updates-to-github)
+1a. [Operator quickstart: local commit, GitHub auth, push, and cache refresh](#1a-operator-quickstart-local-commit-github-auth-push-and-cache-refresh)
 2. [How the app works](#2-how-the-app-works)
-3. [How the Excel ties in and gets updated](#3-how-the-excel-ties-in-and-gets-updated)
-4. [Deployment: GitHub and GitHub Pages](#4-deployment-github-and-github-pages)
-5. [How it was built (architecture)](#5-how-it-was-built-architecture)
-6. [Troubleshooting](#6-troubleshooting)
+3. [Editing copy (splash, hints, placeholders)](#3-editing-copy-splash-hints-placeholders)
+4. [How the Excel ties in and gets updated](#4-how-the-excel-ties-in-and-gets-updated)
+5. [Deployment: GitHub and GitHub Pages](#5-deployment-github-and-github-pages)
+6. [How it was built (architecture)](#6-how-it-was-built-architecture)
+7. [Troubleshooting](#7-troubleshooting)
 
 ---
 
@@ -19,7 +21,42 @@ This document explains how to update the app, how the Excel data ties in, how to
 
 **To publish app or data changes so the live PWA updates:**
 
-1. **Make your changes** in this repo (code, content, or run the build script with new Excel — see §3).
+### Fast path (copy/paste) — most common update flow
+
+Use this exact sequence when you changed text/UI and want it live.
+
+```bash
+# 1) Go to repo
+cd "/Users/bryson/Documents/Cursor Testing/Full ERG App Rebuild v1"
+
+# 2) Check what changed
+git status
+
+# 3) Stage files you want in this commit (example file shown)
+git add "pwa/index.html"
+
+# 4) Commit locally (this saves only on your computer)
+git commit -m "Update home page text"
+
+# 5) Push to GitHub (this makes it online and triggers deploy)
+git push origin main
+```
+
+After push:
+1. Open GitHub -> **Actions**.
+2. Wait for **Deploy to GitHub Pages** to succeed.
+3. Open the site URL and hard refresh once.
+
+If push fails on a new computer, run this once:
+
+```bash
+gh auth login
+gh auth status
+```
+
+If users still see old content, bump `CACHE_VERSION` in `pwa/sw.js`, then commit and push again.
+
+1. **Make your changes** in this repo (code, content, or run the build script with new Excel — see §4).
 2. **Commit** everything you want to go live:
    ```bash
    git add -A
@@ -33,7 +70,92 @@ This document explains how to update the app, how the Excel data ties in, how to
 4. **GitHub Actions** runs automatically on push to `main` and deploys the **`pwa/`** folder to GitHub Pages. No extra step needed.
 5. **Live site** (once Pages is configured): e.g. `https://<org>.github.io/<repo>/` — users get the new version on next load (and cache refresh).
 
-**If you only changed data (e.g. updated `pwa/air_monitoring_table.json`):** Same flow — commit and push. The workflow does *not* run the Python build; it only uploads whatever is in `pwa/` at push time. So either run the build locally first (see §3) and commit the new JSON, or use a CI build step (see `docs/SharePoint_GitHub_ArcGIS_Pipeline.md` Option B).
+**If you only changed data (e.g. updated `pwa/air_monitoring_table.json`):** Same flow — commit and push. The workflow does *not* run the Python build; it only uploads whatever is in `pwa/` at push time. So either run the build locally first (see §4) and commit the new JSON, or use a CI build step (see `docs/SharePoint_GitHub_ArcGIS_Pipeline.md` Option B).
+
+## 1a. Operator quickstart: local commit, GitHub auth, push, and cache refresh
+
+Use this when you just changed text/UI/data and want to get it live safely.
+
+### A) Commit locally (save snapshot on your computer)
+
+1. Make sure you are in the repo root.
+   ```bash
+   cd "/path/to/Full ERG App Rebuild v1"
+   ```
+2. See what changed:
+   ```bash
+   git status
+   ```
+3. Stage only what you want in this commit (example: home page text):
+   ```bash
+   git add "pwa/index.html"
+   ```
+4. Verify staged vs unstaged:
+   ```bash
+   git status
+   ```
+5. Commit locally:
+   ```bash
+   git commit -m "Update home page text"
+   ```
+6. Confirm commit exists locally:
+   ```bash
+   git log --oneline -3
+   ```
+
+### B) First-time setup on a new computer (GitHub authentication)
+
+If `git push` fails with an auth prompt/error, authenticate once on that machine.
+
+```bash
+gh auth login
+gh auth status
+```
+
+Notes:
+- This repo uses an HTTPS remote (`https://github.com/...`).
+- If `gh` is not installed, install it (macOS/Homebrew):
+  ```bash
+  brew install gh
+  ```
+
+### C) Push to GitHub (publish your local commits)
+
+```bash
+git push origin main
+```
+
+Then verify:
+1. GitHub repo -> **Actions** tab.
+2. Confirm **Deploy to GitHub Pages** runs successfully.
+3. Open the Pages URL and hard refresh once.
+
+### D) Force users to get latest PWA assets (cache refresh)
+
+If users still see stale UI/data due to service worker cache, bump cache version in `pwa/sw.js`:
+
+```js
+const CACHE_VERSION = 'erg-pwa-v4';
+```
+
+Change `v4` -> `v5` (or next value), then commit and push.
+
+Why this works:
+- `install` pre-caches shell + table JSON files.
+- `activate` deletes old `erg-pwa-*` caches.
+- New version name forces clients onto fresh caches after update.
+
+### E) Data-specific reminder (Excel is source of truth)
+
+For table data updates, run the build before committing:
+
+```bash
+python scripts/build_data.py
+```
+
+This rebuilds from the Excel/CSV pipeline and updates:
+- `data_reference/out/air_monitoring_table.json`
+- `pwa/air_monitoring_table.json` (the deployed file)
 
 ---
 
@@ -61,7 +183,54 @@ This document explains how to update the app, how the Excel data ties in, how to
 
 ---
 
-## 3. How the Excel ties in and gets updated
+## 3. Editing copy (splash, hints, placeholders)
+
+Misc. text—splash page heading/subtitle, nav card labels, hint text, input placeholders, and button labels—lives in the PWA HTML files and the manifest. Edit the files directly; no build step is required.
+
+### Splash / home page — `pwa/index.html`
+
+| What | Where (approx. lines) |
+|------|------------------------|
+| **Page title** (browser tab) | Line 7: `<title>ERG Air Monitoring — Home</title>` |
+| **Header button** | Line 108: `Open ERG Guide` (and the `href` for the link) |
+| **Main heading** | Line 112: `<h1>ERG Air Monitoring</h1>` |
+| **Subtitle under heading** | Line 114: `<p class="subtitle">Region 9 — Reference table, loadout tool, and links.</p>` |
+| **Nav card titles & descriptions** | Lines 116–127: each `<h2>` and `<p>` inside the `.nav-card` links (Air Monitoring Table, Experience Builder, HASP / Loadout PDF Tool) |
+
+### HASP / Loadout PDF tool — `pwa/hasp.html`
+
+| What | Where (approx. lines) |
+|------|------------------------|
+| **Page title** | Line 7: `<title>HASP / Loadout PDF Tool — ERG</title>` |
+| **Loading message** | Line 183: `Loading reference data…` |
+| **Page heading & subtitle** | Lines 186–187: `<h1>` and `<p class="subtitle">` |
+| **Hint text** (all `<p class="hint">`) | Lines 199, 204, 209, 217, 222, 227 — one per form section |
+| **Placeholders** (input hints) | Lines 237, 241, 245: Site/Incident, Incident #, Generated by |
+| **Header links** | Line 181: `← ERG Home` and `Open ERG Guide` |
+
+### Air Monitoring Table — `pwa/table.html`
+
+| What | Where (approx. lines) |
+|------|------------------------|
+| **Page title** | Line 7: `<title>Air Monitoring Table — ERG</title>` |
+| **Header links** | Line 225: `← ERG Home`, `Open ERG Guide` |
+| **Filter button** | Line 231: `Hide filters` (toggle label) |
+| **Filter placeholders** | Lines 237, 239, 241: `placeholder="Search…"` on Chemical, Device, Sensor inputs |
+| **Filter column titles** | Lines 244–246: "Chemical (select first)", "Device (only compatible…)", "Sensor (only compatible…)" |
+| **Loading message** | Line 253: `Loading air monitoring table…` |
+| **No-results message** | Line 256: `No rows match the filter.` |
+
+### App name / install — `pwa/manifest.json`
+
+- **name**: `"ERG Air Monitoring"`
+- **short_name**: `"ERG Air"`
+- **description**: `"Offline air monitoring table and link to ERG guide"`
+
+After editing, commit and push; the next deploy will serve the updated copy.
+
+---
+
+## 4. How the Excel ties in and gets updated
 
 ### Source of truth
 
@@ -111,7 +280,7 @@ This document explains how to update the app, how the Excel data ties in, how to
 
 ---
 
-## 4. Deployment: GitHub and GitHub Pages
+## 5. Deployment: GitHub and GitHub Pages
 
 ### Repo and branch
 
@@ -142,7 +311,7 @@ So the live site is exactly the contents of the `pwa/` directory at the time of 
 
 ---
 
-## 5. How it was built (architecture)
+## 6. How it was built (architecture)
 
 ### Repo layout
 
@@ -175,7 +344,7 @@ So the live site is exactly the contents of the `pwa/` directory at the time of 
 
 ---
 
-## 6. Troubleshooting
+## 7. Troubleshooting
 
 | Issue | What to check |
 |-------|----------------|
