@@ -129,36 +129,34 @@
       <p class="crumbs"><a href="./beta/">Beta</a> · PID calculator</p>
       <h1>PID correction factor calculator <span class="muted" style="font-weight:400;font-size:1rem;">(draft)</span></h1>
 
+      <div class="panel" style="font-size:0.875rem;">
+        <strong style="color:#002868;">How this works</strong>
+        <ol style="margin:0.5rem 0 0 1.1rem;padding:0;line-height:1.45;">
+          <li>All correction factors in the sheet are on the <strong>same relative scale</strong> (typically vs isobutylene). Ratios between chemicals stay the same no matter which one you treat as “1”. If A, B, C have CFs <strong>1, 2, 4</strong>, then relative to B: C is 4÷2 = <strong>2×</strong>; relative to A: C is 4÷1 = <strong>4×</strong> — exactly as you described.</li>
+          <li>Pick a <strong>reference gas</strong> that matches how you read the screen: either <strong>Isobutylene scale (CF = 1)</strong> for the usual ppm display, or <strong>another listed compound</strong> if you want the reading to mean “ppm of that reference.”</li>
+          <li><strong>Equivalent ppm</strong> for each row (pure vapor scenario): <strong>reading × CF<sub>ref</sub> ÷ CF<sub>compound</sub></strong>. When the reference is isobutylene (CF<sub>ref</sub> = 1), that is the same as <strong>reading ÷ CF<sub>compound</sub></strong>.</li>
+          <li>Only chemicals with a usable CF for this <strong>device + PID sensor</strong> are listed. The <strong>CF ÷ ref</strong> column is CF<sub>compound</sub> ÷ CF<sub>ref</sub> (how many times more sensitive than the reference, on this scale).</li>
+          <li>Real air is often a <strong>mixture</strong>; each row is still a what-if, not a species ID.</li>
+        </ol>
+      </div>
+
       <div class="panel warn" role="note">
         <strong>Beta — verify before relying on this.</strong>
-        Uses correction factors from the ERG air monitoring table. Assumes a typical PID <strong>calibrated to isobutylene equivalents</strong> and applies the usual RAE-style rule:
-        <strong>implied true ppm ≈ reading ÷ correction factor</strong> (see your instrument manual; conventions vary).
-        A single reading does not identify which vapor is present — each row is “if the response were from this compound alone.” Mixtures, humidity, and lamp condition are not modeled.
+        Mixtures, humidity, lamp aging, and manufacturer-specific CF definitions are not modeled. Compare “equivalent ppm” to PEL / REL / TLV / IDLH / PAC for context only.
       </div>
 
       <div class="panel">
-        <fieldset style="border:0;margin:0 0 0.75rem 0;padding:0;">
-          <legend class="muted" style="font-size:0.8125rem;font-weight:600;margin-bottom:0.35rem;">What the number means</legend>
-          <label style="flex-direction:row;align-items:center;font-weight:500;gap:0.5rem;">
-            <input type="radio" name="inMode" id="modeReading" value="reading" checked />
-            PID reading in isobutylene-equivalent ppm (typical)
-          </label>
-          <label style="flex-direction:row;align-items:center;font-weight:500;gap:0.5rem;margin-top:0.35rem;">
-            <input type="radio" name="inMode" id="modeTrue" value="true" />
-            True ppm of the reference compound (convert using its CF)
-          </label>
-        </fieldset>
         <div class="controls">
           <label>Device
             <select id="deviceSel" aria-label="Device"></select>
           </label>
-          <label>PID sensor
+          <label>PID sensor <span class="muted" style="font-weight:400;">(only sensors with CFs in the sheet)</span>
             <select id="sensorSel" aria-label="PID sensor"></select>
           </label>
-          <label>Reference compound
-            <select id="refGasSel" aria-label="Reference compound"></select>
+          <label>Reference for the reading <span class="muted" style="font-weight:400;">(CF<sub>ref</sub>)</span>
+            <select id="refGasSel" aria-label="Reference gas for reading scale"></select>
           </label>
-          <label><span id="valueLabelText">PID reading (ppm, isobutylene equivalent)</span>
+          <label>Reading on PID screen (ppm)
             <input type="text" id="readingIn" class="mono" inputmode="decimal" placeholder="e.g. 25" autocomplete="off" />
           </label>
         </div>
@@ -173,7 +171,8 @@
               <th>Compound</th>
               <th>IP (eV)</th>
               <th>CF</th>
-              <th>Implied ppm</th>
+              <th>CF ÷ ref</th>
+              <th>ppm if 100% that vapor</th>
               <th>PEL</th>
               <th>REL</th>
               <th>TLV</th>
@@ -192,7 +191,7 @@
   <script>
 (function () {
   var rows = [];
-  var pidRows = [];
+  var pidRowsWithCf = [];
 
   function isPidRow(r) {
     return r && r.Sensor && /pid/i.test(String(r.Sensor));
@@ -214,6 +213,10 @@
     return { kind: 'single', value: n };
   }
 
+  function rowHasCf(r) {
+    return parseCf(r['Correction Factor']).kind !== 'none';
+  }
+
   function formatNum(x) {
     if (!isFinite(x)) return '—';
     var ax = Math.abs(x);
@@ -221,13 +224,17 @@
     return x.toFixed(d);
   }
 
-  function impliedPpm(reading, cf) {
+  var REF_ISO = '__iso__';
+
+  /** Equivalent ppm if that compound alone: reading × CF_ref ÷ CF_compound. */
+  function impliedPpmFromRef(reading, cfCompound, cfRefValue) {
     if (!isFinite(reading) || reading < 0) return null;
-    if (cf.kind === 'single') return reading / cf.value;
-    if (cf.kind === 'range') {
+    if (!isFinite(cfRefValue) || cfRefValue <= 0) return null;
+    if (cfCompound.kind === 'single') return reading * cfRefValue / cfCompound.value;
+    if (cfCompound.kind === 'range') {
       return {
-        lo: reading / cf.high,
-        hi: reading / cf.low
+        lo: reading * cfRefValue / cfCompound.high,
+        hi: reading * cfRefValue / cfCompound.low
       };
     }
     return null;
@@ -257,9 +264,6 @@
   var sensorSel = document.getElementById('sensorSel');
   var refGasSel = document.getElementById('refGasSel');
   var readingIn = document.getElementById('readingIn');
-  var modeReading = document.getElementById('modeReading');
-  var modeTrue = document.getElementById('modeTrue');
-  var valueLabelText = document.getElementById('valueLabelText');
   var tbody = document.getElementById('tbody');
   var rowStatus = document.getElementById('rowStatus');
   var loadErr = document.getElementById('loadErr');
@@ -267,57 +271,71 @@
   function currentSubset() {
     var d = deviceSel.value;
     var s = sensorSel.value;
-    return pidRows.filter(function (r) {
+    return pidRowsWithCf.filter(function (r) {
       return r.Device === d && r.Sensor === s;
     });
   }
 
-  function refGasCf() {
-    var name = refGasSel.value;
-    var subset = currentSubset();
-    var row = subset.find(function (r) { return r['Target Compound'] === name; });
-    if (!row) return { kind: 'single', value: 1 };
-    var cf = parseCf(row['Correction Factor']);
-    if (cf.kind === 'single') return cf;
-    if (cf.kind === 'range') return cf;
-    if (/^isobutylene$/i.test(String(name).trim())) return { kind: 'single', value: 1 };
-    return { kind: 'none' };
-  }
-
-  /** PID response in isobutylene-equivalent ppm (for divide-by-CF step). */
-  function normalizedReading() {
+  function screenReadingPpm() {
     var raw = parseFloat(String(readingIn.value).replace(/,/g, ''));
     if (!isFinite(raw) || raw < 0) return NaN;
-    if (modeReading.checked) return raw;
-    var ref = refGasCf();
-    if (ref.kind === 'range') return NaN;
-    if (ref.kind === 'none') return NaN;
-    return raw * ref.value;
+    return raw;
+  }
+
+  function getRefCfValue() {
+    var v = refGasSel.value;
+    if (v === REF_ISO) return 1;
+    var subset = currentSubset();
+    var row = subset.find(function (r) { return r['Target Compound'] === v; });
+    if (!row) return 1;
+    var cf = parseCf(row['Correction Factor']);
+    if (cf.kind === 'single') return cf.value;
+    return 1;
   }
 
   function renderRefGasOptions() {
     var subset = currentSubset();
     var prev = refGasSel.value;
     refGasSel.innerHTML = '';
-    var iso = subset.filter(function (r) { return /^isobutylene$/i.test(String(r['Target Compound']).trim()); });
-    var opts = uniqueSorted(subset.map(function (r) { return r['Target Compound']; }));
-    if (opts.length === 0) return;
-    var defaultName = iso.length ? 'Isobutylene' : opts[0];
-    opts.forEach(function (name) {
+    var o0 = document.createElement('option');
+    o0.value = REF_ISO;
+    o0.textContent = 'Isobutylene scale (CF_ref = 1)';
+    refGasSel.appendChild(o0);
+    var names = uniqueSorted(subset.map(function (r) { return r['Target Compound']; }));
+    names.forEach(function (name) {
+      var row = subset.find(function (r) { return r['Target Compound'] === name; });
+      if (!row) return;
+      if (parseCf(row['Correction Factor']).kind !== 'single') return;
       var o = document.createElement('option');
       o.value = name;
-      o.textContent = name;
+      o.textContent = name + ' (CF ' + String(row['Correction Factor']).trim() + ')';
       refGasSel.appendChild(o);
     });
-    if (opts.indexOf(prev) >= 0) refGasSel.value = prev;
-    else refGasSel.value = defaultName;
+    var ok = false;
+    for (var i = 0; i < refGasSel.options.length; i++) {
+      if (refGasSel.options[i].value === prev) {
+        ok = true;
+        break;
+      }
+    }
+    refGasSel.value = ok ? prev : REF_ISO;
+  }
+
+  function ratioCell(cfCompound, cfRefVal) {
+    if (!isFinite(cfRefVal) || cfRefVal <= 0) return '<td class="num">—</td>';
+    if (cfCompound.kind === 'single') {
+      return '<td class="num mono">' + formatNum(cfCompound.value / cfRefVal) + '</td>';
+    }
+    if (cfCompound.kind === 'range') {
+      return '<td class="num mono">' + formatNum(cfCompound.low / cfRefVal) + ' – ' + formatNum(cfCompound.high / cfRefVal) + '</td>';
+    }
+    return '<td class="num">—</td>';
   }
 
   function renderTable() {
     var subset = currentSubset();
-    var ref = refGasCf();
-    var modeErr = modeTrue.checked && (ref.kind === 'range' || ref.kind === 'none');
-    var reading = modeErr ? NaN : normalizedReading();
+    var reading = screenReadingPpm();
+    var cfRefVal = getRefCfValue();
     var byCompound = {};
     subset.forEach(function (r) {
       var c = r['Target Compound'];
@@ -327,31 +345,26 @@
       return a.localeCompare(b, undefined, { sensitivity: 'base' });
     });
 
-    var baseMsg = list.length
-      ? list.length + ' compound' + (list.length === 1 ? '' : 's') + ' for this device and PID sensor.'
-      : 'No rows for this selection.';
-    if (modeErr) {
-      if (ref.kind === 'range') {
-        rowStatus.textContent = baseMsg + ' Reference compound has a range CF — use isobutylene-equivalent mode or pick another reference.';
-      } else {
-        rowStatus.textContent = baseMsg + ' No single correction factor for the reference compound in this table — use isobutylene-equivalent mode or pick a reference with a numeric CF.';
-      }
+    if (!list.length) {
+      rowStatus.textContent = 'No correction factors in the sheet for this device and PID sensor — pick another sensor or update the data.';
     } else {
-      rowStatus.textContent = baseMsg;
+      var refLabel = refGasSel.value === REF_ISO ? 'isobutylene scale (CF_ref = 1)' : refGasSel.value;
+      rowStatus.innerHTML = list.length + ' chemical' + (list.length === 1 ? '' : 's') + ' with a CF. Reading = ppm on the <strong>' + esc(refLabel) + '</strong> basis. Enter a value to fill “ppm if 100% that vapor”.';
     }
 
     tbody.innerHTML = list.map(function (name) {
       var r = byCompound[name];
       var cf = parseCf(r['Correction Factor']);
       var impliedTd = '<td class="num muted">—</td>';
-      if (isFinite(reading) && reading >= 0 && cf.kind !== 'none' && !modeErr) {
-        var imp = impliedPpm(reading, cf);
+      if (isFinite(reading) && reading >= 0 && cf.kind !== 'none') {
+        var imp = impliedPpmFromRef(reading, cf, cfRefVal);
         if (typeof imp === 'number') impliedTd = '<td class="num mono">' + formatNum(imp) + '</td>';
         else if (imp && imp.lo != null) impliedTd = '<td class="num mono">' + formatNum(imp.lo) + ' – ' + formatNum(imp.hi) + '</td>';
       }
       return '<tr><th scope="row">' + esc(name) + '</th>' +
         cell(r['Ionization Potential (eV)']) +
         cell(r['Correction Factor']) +
+        ratioCell(cf, cfRefVal) +
         impliedTd +
         cell(r['PEL']) + cell(r['REL']) + cell(r['TLV']) + cell(r['IDLH']) +
         cell(r['PAC-1']) + cell(r['PAC-2']) + cell(r['PAC-3']) +
@@ -359,18 +372,9 @@
     }).join('');
   }
 
-  function updateValueLabel() {
-    if (!valueLabelText) return;
-    if (modeReading.checked) {
-      valueLabelText.textContent = 'PID reading (ppm, isobutylene equivalent)';
-    } else {
-      valueLabelText.textContent = 'True ppm of reference compound';
-    }
-  }
-
   function onDeviceChange() {
     var d = deviceSel.value;
-    var sensors = uniqueSorted(pidRows.filter(function (r) { return r.Device === d; }).map(function (r) { return r.Sensor; }));
+    var sensors = uniqueSorted(pidRowsWithCf.filter(function (r) { return r.Device === d; }).map(function (r) { return r.Sensor; }));
     sensorSel.innerHTML = '';
     sensors.forEach(function (s) {
       var o = document.createElement('option');
@@ -389,8 +393,6 @@
   });
   refGasSel.addEventListener('change', renderTable);
   readingIn.addEventListener('input', renderTable);
-  modeReading.addEventListener('change', function () { updateValueLabel(); renderTable(); });
-  modeTrue.addEventListener('change', function () { updateValueLabel(); renderTable(); });
 
   fetch('./air_monitoring_table.json')
     .then(function (res) {
@@ -399,11 +401,11 @@
     })
     .then(function (data) {
       rows = Array.isArray(data) ? data : [];
-      pidRows = rows.filter(isPidRow);
-      var devices = uniqueSorted(pidRows.map(function (r) { return r.Device; }));
+      pidRowsWithCf = rows.filter(isPidRow).filter(rowHasCf);
+      var devices = uniqueSorted(pidRowsWithCf.map(function (r) { return r.Device; }));
       if (!devices.length) {
         loadErr.hidden = false;
-        loadErr.textContent = 'No PID rows found in air_monitoring_table.json.';
+        loadErr.textContent = 'No PID rows with a numeric correction factor were found in air_monitoring_table.json.';
         return;
       }
       devices.forEach(function (d) {
@@ -413,7 +415,6 @@
         deviceSel.appendChild(o);
       });
       onDeviceChange();
-      updateValueLabel();
     })
     .catch(function (e) {
       loadErr.hidden = false;
