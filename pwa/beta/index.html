@@ -64,6 +64,11 @@
       margin-bottom: 1.5rem;
     }
     .subtitle { color: #555; font-size: 0.9375rem; margin: 0 0 1.5rem 0; }
+    .nav-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
     .nav-card {
       display: block;
       background: #fff;
@@ -86,7 +91,7 @@
 <body>
   <div class="shell">
     <header class="erg-link-block" role="banner">
-      <a href="https://r9data.response.epa.gov/r9responseguide/MainPage/AirMonitoringTables.html" target="_blank" rel="noopener noreferrer">Open ERG Guide</a>
+      <a href="https://experience.arcgis.com/experience/0d211e826b3e4d089aea9f43b01f4ba5" target="_blank" rel="noopener noreferrer">Open ERG Guide</a>
     </header>
     <main role="main">
       <h1>Beta</h1>
@@ -94,10 +99,14 @@
         This area is not linked from the public home page. Use the URL path <strong>/beta/</strong> (this folder) or <strong>beta.html</strong> next to <code>index.html</code> if your host does not serve directory indexes.
       </p>
       <p class="subtitle">Experimental tools — verify results against instrument manuals and site safety limits.</p>
-      <nav aria-label="Beta navigation">
+      <nav class="nav-cards" aria-label="Beta navigation">
         <a href="../pid-calculator.html" class="nav-card">
           <h2>PID correction factor calculator</h2>
           <p>Pick device, PID sensor, and reference gas for the reading scale (isobutylene = CF 1, or any listed compound). Equivalent ppm uses reading × CF_ref ÷ CF — plus relative CF and exposure columns.</p>
+        </a>
+        <a href="../hasp.html" class="nav-card">
+          <h2>Chemical/Instrument Selection Tool</h2>
+          <p>Build a field-ready PDF by chemical(s) or instrument(s): detection levels, chemical info, and device loadout for your HASP or case.</p>
         </a>
       </nav>
       <p style="margin-top: 2rem; font-size: 0.875rem;">
