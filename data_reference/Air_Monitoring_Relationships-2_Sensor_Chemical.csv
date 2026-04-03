@@ -588,6 +588,190 @@ o-Xylene",,,,1000,,,
 DRAG-PID-HC10.6,"Xylene:
 p-Xylene",,,,1000,,,
 DRAG-PID-LC10.6,Incomplete,,,,,,,No
+LUMEX-RA915M,Mercury,,,,,,,
+TSI-DUSTTRAK-8533,"*Arsenic
+(inorganic compounds)",,,,,,,
+TSI-DUSTTRAK-8533,Asbestos,,,,,,,
+TSI-DUSTTRAK-8533,*Cadmium,,,,,,,
+TSI-DUSTTRAK-8533,Chromium,,,,,,,
+TSI-DUSTTRAK-8533,Chromium II,,,,,,,
+TSI-DUSTTRAK-8533,Chromium III,,,,,,,
+TSI-DUSTTRAK-8533,*Chromium VI,,,,,,,
+TSI-DUSTTRAK-8533,*Chromic Acid,,,,,,,
+TSI-DUSTTRAK-8533,Copper,,,,,,,
+TSI-DUSTTRAK-8533,Lead,,,,,,,
+TSI-DUSTTRAK-8533,Lithium,,,,,,,
+TSI-DUSTTRAK-8533,Magnesium Oxide,,,,,,,
+TSI-DUSTTRAK-8533,*Nickel,,,,,,,
+TSI-DUSTTRAK-8533,"*PAHs 
+(coal tar pitch volatiles) 
+NOTE: PAHs include the following species: anthracene, benzo(a)pyrene, chrysene, naphthalene, phenanthrene, pyrene.",,,,,,,
+TSI-DUSTTRAK-8533,"Pentachloro-
+phenol",,,,,,,
+TSI-DUSTTRAK-8533,"Phosphorus (elemental)
+Note: emits phosphorus oxides and may re-ignite upon exposure to air",,,,,,,
+TSI-DUSTTRAK-8533,Phosphorus Pentoxide,,,,,,,
+TSI-DUSTTRAK-8533,"Zinc 
+(Zinc Oxide)",,,,,,,
+TSI-DUSTTRAK-8533,Particulate,,,,,,,
+TSI-DUSTTRAK-8534,"*Arsenic
+(inorganic compounds)",,,,,,,
+TSI-DUSTTRAK-8534,Asbestos,,,,,,,
+TSI-DUSTTRAK-8534,*Cadmium,,,,,,,
+TSI-DUSTTRAK-8534,Chromium,,,,,,,
+TSI-DUSTTRAK-8534,Chromium II,,,,,,,
+TSI-DUSTTRAK-8534,Chromium III,,,,,,,
+TSI-DUSTTRAK-8534,*Chromium VI,,,,,,,
+TSI-DUSTTRAK-8534,*Chromic Acid,,,,,,,
+TSI-DUSTTRAK-8534,Copper,,,,,,,
+TSI-DUSTTRAK-8534,Lead,,,,,,,
+TSI-DUSTTRAK-8534,Lithium,,,,,,,
+TSI-DUSTTRAK-8534,Magnesium Oxide,,,,,,,
+TSI-DUSTTRAK-8534,*Nickel,,,,,,,
+TSI-DUSTTRAK-8534,"*PAHs 
+(coal tar pitch volatiles) 
+NOTE: PAHs include the following species: anthracene, benzo(a)pyrene, chrysene, naphthalene, phenanthrene, pyrene.",,,,,,,
+TSI-DUSTTRAK-8534,"Pentachloro-
+phenol",,,,,,,
+TSI-DUSTTRAK-8534,"Phosphorus (elemental)
+Note: emits phosphorus oxides and may re-ignite upon exposure to air",,,,,,,
+TSI-DUSTTRAK-8534,Phosphorus Pentoxide,,,,,,,
+TSI-DUSTTRAK-8534,"Zinc 
+(Zinc Oxide)",,,,,,,
+TSI-DUSTTRAK-8534,Particulate,,,,,,,
+TSI-SIDEPACK-AM520,"*Arsenic
+(inorganic compounds)",,,,,,,
+TSI-SIDEPACK-AM520,Asbestos,,,,,,,
+TSI-SIDEPACK-AM520,*Cadmium,,,,,,,
+TSI-SIDEPACK-AM520,Chromium,,,,,,,
+TSI-SIDEPACK-AM520,Chromium II,,,,,,,
+TSI-SIDEPACK-AM520,Chromium III,,,,,,,
+TSI-SIDEPACK-AM520,*Chromium VI,,,,,,,
+TSI-SIDEPACK-AM520,*Chromic Acid,,,,,,,
+TSI-SIDEPACK-AM520,Copper,,,,,,,
+TSI-SIDEPACK-AM520,Lead,,,,,,,
+TSI-SIDEPACK-AM520,Lithium,,,,,,,
+TSI-SIDEPACK-AM520,Magnesium Oxide,,,,,,,
+TSI-SIDEPACK-AM520,*Nickel,,,,,,,
+TSI-SIDEPACK-AM520,"*PAHs 
+(coal tar pitch volatiles) 
+NOTE: PAHs include the following species: anthracene, benzo(a)pyrene, chrysene, naphthalene, phenanthrene, pyrene.",,,,,,,
+TSI-SIDEPACK-AM520,"Pentachloro-
+phenol",,,,,,,
+TSI-SIDEPACK-AM520,"Phosphorus (elemental)
+Note: emits phosphorus oxides and may re-ignite upon exposure to air",,,,,,,
+TSI-SIDEPACK-AM520,Phosphorus Pentoxide,,,,,,,
+TSI-SIDEPACK-AM520,"Zinc 
+(Zinc Oxide)",,,,,,,
+TSI-SIDEPACK-AM520,Particulate,,,,,,,
+THERMO-PDR-1000,"*Arsenic
+(inorganic compounds)",,,,,,,
+THERMO-PDR-1000,Asbestos,,,,,,,
+THERMO-PDR-1000,*Cadmium,,,,,,,
+THERMO-PDR-1000,Chromium,,,,,,,
+THERMO-PDR-1000,Chromium II,,,,,,,
+THERMO-PDR-1000,Chromium III,,,,,,,
+THERMO-PDR-1000,*Chromium VI,,,,,,,
+THERMO-PDR-1000,*Chromic Acid,,,,,,,
+THERMO-PDR-1000,Copper,,,,,,,
+THERMO-PDR-1000,Lead,,,,,,,
+THERMO-PDR-1000,Lithium,,,,,,,
+THERMO-PDR-1000,Magnesium Oxide,,,,,,,
+THERMO-PDR-1000,*Nickel,,,,,,,
+THERMO-PDR-1000,"*PAHs 
+(coal tar pitch volatiles) 
+NOTE: PAHs include the following species: anthracene, benzo(a)pyrene, chrysene, naphthalene, phenanthrene, pyrene.",,,,,,,
+THERMO-PDR-1000,"Pentachloro-
+phenol",,,,,,,
+THERMO-PDR-1000,"Phosphorus (elemental)
+Note: emits phosphorus oxides and may re-ignite upon exposure to air",,,,,,,
+THERMO-PDR-1000,Phosphorus Pentoxide,,,,,,,
+THERMO-PDR-1000,"Zinc 
+(Zinc Oxide)",,,,,,,
+THERMO-PDR-1000,Particulate,,,,,,,
+TVA-2020-FID,*Benzene,,,,,,,
+TVA-2020-FID,"Butane
+(n-butane)",,,,,,,
+TVA-2020-FID,Cyclohexane,,,,,,,
+TVA-2020-FID,"Ethanol
+(ethyl alcohol)",,,,,,,
+TVA-2020-FID,Ethylbenzene,,,,,,,
+TVA-2020-FID,*Formaldehyde,,,,,,,
+TVA-2020-FID,Freon 113,,,,,,,
+TVA-2020-FID,*Gasoline,,,,,,,
+TVA-2020-FID,Leaded Gasoline,,,,,,,
+TVA-2020-FID,Methane,,,,,,,
+TVA-2020-FID,Methanol,,,,,,,
+TVA-2020-FID,"Methyl Ethyl Ketone (MEK)
+(2-butanone)",,,,,,,
+TVA-2020-FID,Propane,,,,,,,
+TVA-2020-FID,Styrene,,,,,,,
+TVA-2020-FID,"*Tetrachloro-
+ethylene
+(PCE)",,,,,,,
+TVA-2020-FID,Toluene,,,,,,,
+TVA-2020-FID,"*Trichloro-
+ethylene
+(TCE)",,,,,,,
+TVA-2020-FID,*Vinyl Chloride,,,,,,,
+TVA-2020-FID,"Xylenes:
+m-Xylene",,,,,,,
+TVA-2020-FID,"Xylenes:
+o-Xylene",,,,,,,
+TVA-2020-FID,"Xylene:
+p-Xylene",,,,,,,
+TVA-2020-PID,Ammonia,,,,,,,
+TVA-2020-PID,*Benzene,,,,,,,
+TVA-2020-PID,Cyclohexane,,,,,,,
+TVA-2020-PID,"Ethanol
+(ethyl alcohol)",,,,,,,
+TVA-2020-PID,Ethylbenzene,,,,,,,
+TVA-2020-PID,Hydrogen Sulfide,,,,,,,
+TVA-2020-PID,*Methyl Bromide,,,,,,,
+TVA-2020-PID,"Methyl Ethyl Ketone (MEK)
+(2-butanone)",,,,,,,
+TVA-2020-PID,"Phosphine
+Note: reacts photochemically to form products that can coat a PID lamp over time.",,,,,,,
+TVA-2020-PID,Styrene,,,,,,,
+TVA-2020-PID,"*Tetrachloro-
+ethylene
+(PCE)",,,,,,,
+TVA-2020-PID,Toluene,,,,,,,
+TVA-2020-PID,"*Trichloro-
+ethylene
+(TCE)",,,,,,,
+TVA-2020-PID,*Vinyl Chloride,,,,,,,
+TVA-2020-PID,"Xylenes:
+m-Xylene",,,,,,,
+TVA-2020-PID,"Xylenes:
+o-Xylene",,,,,,,
+TVA-2020-PID,"Xylene:
+p-Xylene",,,,,,,
+LUDLUM-192,Radiation,,,,,,,
+LUDLUM-19,Radiation,,,,,,,
+BNC-SAM-950,Radiation,,,,,,,
+LUDLUM-44-9,Radiation,,,,,,,
+LUDLUM-44-2,Radiation,,,,,,,
+LUDLUM-43-90,Radiation,,,,,,,
+LUDLUM-133-7,Radiation,,,,,,,
+LUDLUM-43-90,Radiation-Alpha,,,,,,,
+LUDLUM-44-9,Radiation-Alpha,,,,,,,
+LUDLUM-44-9,Radiation-Beta,,,,,,,
+LUDLUM-133-7,Radiation-Gamma,,,,,,,
+LUDLUM-44-9,Radiation-Gamma,,,,,,,
+LUDLUM-44-2,Radiation-Gamma,,,,,,,
+LUDLUM-192,Radiation-Gamma,,,,,,,
+LUDLUM-19,Radiation-Gamma,,,,,,,
+BNC-SAM-950,Radiation-Gamma,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
 ,,,,,,,,
 ,,,,,,,,
 ,,,,,,,,
