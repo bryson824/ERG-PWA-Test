@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#002868" />
-  <title>Sensor Cross-Sensitivities — ERG</title>
+  <title>Sensor — ERG</title>
   <link rel="manifest" href="./manifest.json" />
   <style>
     :root {
@@ -68,6 +68,12 @@
     .load-msg { padding: 1rem 0; color: #444; }
     .load-err { color: #b00; font-weight: 500; }
     h1 { margin: 0 0 0.5rem 0; color: #002868; font-size: 1.35rem; }
+    h2.section-title {
+      margin: 0 0 0.35rem 0;
+      color: #002868;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
     .muted { color: #555; font-size: 0.9rem; }
     table {
       width: 100%;
@@ -108,7 +114,7 @@
       <a href="./index.html">ERG Home</a>
     </header>
     <main role="main">
-      <p id="load-msg" class="load-msg">Loading sensor cross-sensitivities…</p>
+      <p id="load-msg" class="load-msg">Loading sensor…</p>
       <div id="content" style="display:none;">
         <section class="card">
           <h1 id="sensor-name">Sensor</h1>
@@ -118,6 +124,13 @@
           </p>
         </section>
         <section class="card">
+          <h2 class="section-title">Target compounds (monitored)</h2>
+          <p class="muted">Correction factor and detection range from the air monitoring reference table.</p>
+          <div id="monitor-wrap"></div>
+        </section>
+        <section class="card">
+          <h2 class="section-title">Cross-sensitivities (interferents)</h2>
+          <p class="muted">Unintended response to other chemicals at test conditions.</p>
           <div id="table-wrap"></div>
         </section>
       </div>
@@ -125,6 +138,7 @@
   </div>
   <script>
     (function () {
+      var TABLE_URL = './air_monitoring_table.json';
       var CROSS_SENS_URL = './sensor_cross_sens.json';
       var SENSOR_PART_URL = './sensor_part_numbers.json';
       var loadMsg = document.getElementById('load-msg');
@@ -175,6 +189,42 @@
         return [];
       }
 
+      function rowsForSensorDisplayName(tableRows, displayName, deviceFilter) {
+        if (!Array.isArray(tableRows) || !displayName) return [];
+        var t = norm(displayName);
+        var df = deviceFilter ? norm(deviceFilter) : '';
+        return tableRows.filter(function (r) {
+          if (norm(r['Sensor']) !== t) return false;
+          if (df && norm(r['Device']) !== df) return false;
+          return true;
+        });
+      }
+
+      function uniqueMonitorRows(rows) {
+        var seen = {};
+        var out = [];
+        rows.forEach(function (r) {
+          var key = [
+            r['Target Compound'] || '',
+            r['Device'] || '',
+            r['Correction Factor'] || '',
+            r['Detection Level'] || '',
+            r['Ionization Potential (eV)'] || ''
+          ].join('|');
+          if (!seen[key]) {
+            seen[key] = true;
+            out.push(r);
+          }
+        });
+        out.sort(function (a, b) {
+          var ca = String(a['Target Compound'] || '');
+          var cb = String(b['Target Compound'] || '');
+          if (ca !== cb) return ca.localeCompare(cb);
+          return String(a['Device'] || '').localeCompare(String(b['Device'] || ''));
+        });
+        return out;
+      }
+
       var sensor = getParam('sensor');
       var device = getParam('device');
       if (!sensor) {
@@ -184,11 +234,13 @@
       }
 
       Promise.all([
+        fetch(TABLE_URL).then(function (r) { if (!r.ok) throw new Error(r.status + ' ' + r.statusText); return r.json(); }),
         fetch(CROSS_SENS_URL).then(function (r) { if (!r.ok) throw new Error(r.status + ' ' + r.statusText); return r.json(); }),
         fetch(SENSOR_PART_URL).then(function (r) { if (!r.ok) return {}; return r.json(); }).catch(function () { return {}; })
       ]).then(function (results) {
-        var crossSens = results[0] || {};
-        var partNumbers = results[1] || {};
+        var tableRows = results[0] || [];
+        var crossSens = results[1] || {};
+        var partNumbers = results[2] || {};
         var mapObj = crossSens.displayNameToSensorIds || {};
         var bySensorId = crossSens.bySensorId || {};
         var sensorIds = resolveSensorIds(sensor, mapObj);
@@ -212,6 +264,32 @@
           var link = document.getElementById('device-back-link');
           link.href = './device.html?device=' + encodeURIComponent(device);
           wrap.style.display = 'block';
+        }
+
+        var monitorWrap = document.getElementById('monitor-wrap');
+        var monitorRows = uniqueMonitorRows(rowsForSensorDisplayName(tableRows, sensor, device));
+        if (!monitorRows.length) {
+          var emptyMsg = device
+            ? 'No target compound rows found for this sensor on this device in the air monitoring table.'
+            : 'No target compound rows found for this sensor in the air monitoring table.';
+          monitorWrap.innerHTML = '<p class="muted">' + emptyMsg + '</p>';
+        } else {
+          var monHtml = '<table aria-label="Target compounds for this sensor">';
+          monHtml += '<thead><tr><th>Target compound</th>';
+          if (!device) monHtml += '<th>Device</th>';
+          monHtml += '<th>Correction factor</th><th>Detection range</th><th>Ionization potential (eV)</th></tr></thead><tbody>';
+          monitorRows.forEach(function (r) {
+            var ip = r['Ionization Potential (eV)'];
+            monHtml += '<tr><td>' + escapeHtml(r['Target Compound'] || '—') + '</td>';
+            if (!device) monHtml += '<td>' + escapeHtml(r['Device'] || '—') + '</td>';
+            monHtml +=
+              '<td>' + escapeHtml(r['Correction Factor'] != null && String(r['Correction Factor']).trim() !== '' ? r['Correction Factor'] : '—') + '</td>' +
+              '<td>' + escapeHtml(r['Detection Level'] != null && String(r['Detection Level']).trim() !== '' ? r['Detection Level'] : '—') + '</td>' +
+              '<td>' + escapeHtml(ip != null && String(ip).trim() !== '' ? ip : '—') + '</td>' +
+            '</tr>';
+          });
+          monHtml += '</tbody></table>';
+          monitorWrap.innerHTML = monHtml;
         }
 
         var tableWrap = document.getElementById('table-wrap');
