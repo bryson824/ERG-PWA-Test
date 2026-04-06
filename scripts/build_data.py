@@ -71,24 +71,27 @@ def _include_column_name(df):
     return None
 
 
-def filter_rows_by_include(df):
+def filter_rows_by_include(df, table_label=None):
     """
-    Rows with Include = no (case-insensitive; also n, false, 0) are dropped from merges.
-    If the column is missing, all rows are kept. The Include column is removed after filtering.
+    Column **include** (case-insensitive header): only **No** excludes a row; **Yes**, blank, or anything else keeps it.
+    If the column is missing, all rows are kept. The column is dropped after filtering.
     """
     import pandas as pd
 
     col = _include_column_name(df)
     if col is None:
+        if table_label == "Sensors":
+            print(
+                "Note: Sensors table has no Include column in the CSV — all sensor rows are included. "
+                "Save the Excel file and run the build so sheets re-export if you added Include.",
+                file=sys.stderr,
+            )
         return df
 
     def keep(val):
         if val is None or (isinstance(val, float) and pd.isna(val)):
             return True
-        t = str(val).strip().lower()
-        if t in ("no", "n", "false", "0"):
-            return False
-        return True
+        return str(val).strip().lower() != "no"
 
     out = df[df[col].apply(keep)].copy()
     out = out.drop(columns=[col], errors="ignore")
@@ -153,13 +156,13 @@ def build_merged_table():
     for df in (cm, sm):
         df.columns = [c.strip() for c in df.columns]
 
-    sc = filter_rows_by_include(sc)
-    sens = filter_rows_by_include(sens)
-    ds = filter_rows_by_include(ds)
-    dev = filter_rows_by_include(dev)
-    chem = filter_rows_by_include(chem)
-    cm = filter_rows_by_include(cm)
-    sm = filter_rows_by_include(sm)
+    sc = filter_rows_by_include(sc, "Sensor_Chemical")
+    sens = filter_rows_by_include(sens, "Sensors")
+    ds = filter_rows_by_include(ds, "Device_Sensor")
+    dev = filter_rows_by_include(dev, "Devices")
+    chem = filter_rows_by_include(chem, "Chemicals")
+    cm = filter_rows_by_include(cm, "Chemical_Method")
+    sm = filter_rows_by_include(sm, "Sampling_Methods")
 
     # Drop rows where key join columns are missing
     sc = sc.dropna(subset=["sensor_id", "chemical_id"])
@@ -305,6 +308,76 @@ def build_merged_table():
     out.sort(key=lambda r: (r["Target Compound"], r["Device"], r["Sensor"]))
     return out
 
+
+def build_matrix_sampling_rows():
+    """
+    Contaminant / matrix / sampling media reference from Matrix_Sampling.csv.
+    Truncates before the in-sheet footnote (row starting with 'Note:'); forward-fills Contaminant.
+    """
+    path = os.path.join(_data_ref(), "Matrix_Sampling.csv")
+    if not os.path.isfile(path):
+        return []
+
+    df = pd.read_csv(path, encoding="utf-8", on_bad_lines="skip")
+    df.columns = [normalize_header(c) for c in df.columns]
+    drop_cols = [c for c in df.columns if str(c).startswith("Unnamed")]
+    if drop_cols:
+        df = df.drop(columns=drop_cols, errors="ignore")
+
+    col_cont = "Contaminant"
+    if col_cont not in df.columns:
+        print("Matrix_Sampling.csv: missing Contaminant column", file=sys.stderr)
+        return []
+
+    cut = len(df)
+    for i, val in enumerate(df[col_cont].astype(str)):
+        s = str(val).strip() if pd.notna(val) and str(val) != "nan" else ""
+        if s.lower().startswith("note:"):
+            cut = i
+            break
+    df = df.iloc[:cut].copy()
+    df = df.dropna(how="all")
+
+    method_col = "Analytical Method"
+    matrix_col = "Matrix"
+    media_col = "Sampling Media"
+
+    def row_has_sampling_info(row):
+        for c in (method_col, matrix_col, media_col):
+            if c not in df.columns:
+                continue
+            v = row.get(c)
+            if v is None or (isinstance(v, float) and pd.isna(v)):
+                continue
+            if str(v).strip():
+                return True
+        return False
+
+    df = df[df.apply(row_has_sampling_info, axis=1)].copy()
+    df[col_cont] = df[col_cont].apply(
+        lambda x: x if (pd.notna(x) and str(x).strip() and str(x).strip().lower() != "nan") else pd.NA
+    )
+    df[col_cont] = df[col_cont].ffill()
+    df = df.dropna(subset=[col_cont])
+    df[col_cont] = df[col_cont].apply(lambda x: str(x).strip())
+
+    rows_out = []
+    for _, row in df.iterrows():
+        rec = {}
+        for c in df.columns:
+            rec[c] = safe_str(row.get(c))
+        rows_out.append(rec)
+
+    rows_out.sort(
+        key=lambda r: (
+            r.get(col_cont, "").lower(),
+            r.get(method_col, "").lower(),
+            r.get(matrix_col, "").lower(),
+        )
+    )
+    return rows_out
+
+
 def main():
     if pd is None:
         print("Need pandas. Run: pip install -r requirements.txt")
@@ -340,6 +413,19 @@ def main():
         with open(pwa_path, "w", encoding="utf-8") as f:
             json.dump(rows, f, indent=2, ensure_ascii=False)
         print(f"Copied to {pwa_path}")
+
+    print("Building matrix / sampling reference...")
+    matrix_rows = build_matrix_sampling_rows()
+    matrix_out = os.path.join(_out_dir(), "matrix_sampling.json")
+    with open(matrix_out, "w", encoding="utf-8") as f:
+        json.dump(matrix_rows, f, indent=2, ensure_ascii=False)
+    print(f"Wrote {len(matrix_rows)} rows to {matrix_out}")
+    matrix_pwa = os.path.join(_pwa_dir(), "matrix_sampling.json")
+    if os.path.isdir(_pwa_dir()):
+        with open(matrix_pwa, "w", encoding="utf-8") as f:
+            json.dump(matrix_rows, f, indent=2, ensure_ascii=False)
+        print(f"Copied to {matrix_pwa}")
+
     print("Done.")
 
 if __name__ == "__main__":

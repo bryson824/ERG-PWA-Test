@@ -3,7 +3,7 @@
  * Cache strategy: cache-first for shell + air_monitoring_table.json.
  * Bump CACHE_VERSION when deploying to invalidate old caches.
  */
-const CACHE_VERSION = 'erg-pwa-v14';
+const CACHE_VERSION = 'erg-pwa-v15';
 const CACHE_SHELL = `${CACHE_VERSION}-shell`;
 const CACHE_TABLE = `${CACHE_VERSION}-table`;
 
@@ -11,6 +11,7 @@ const SHELL_URLS = [
   './',
   './index.html',
   './table.html',
+  './matrix-sampling.html',
   './device.html',
   './sensor.html',
   './hasp.html',
@@ -22,6 +23,7 @@ const SHELL_URLS = [
 
 const TABLE_DATA_URLS = [
   './air_monitoring_table.json',
+  './matrix_sampling.json',
   './sensor_part_numbers.json',
   './sensor_cross_sens.json',
   './device_documents.json'
@@ -53,6 +55,7 @@ self.addEventListener('fetch', (event) => {
 
   if (
     url.pathname.endsWith('air_monitoring_table.json') ||
+    url.pathname.endsWith('matrix_sampling.json') ||
     url.pathname.endsWith('sensor_part_numbers.json') ||
     url.pathname.endsWith('sensor_cross_sens.json') ||
     url.pathname.endsWith('device_documents.json')
@@ -78,6 +81,7 @@ self.addEventListener('fetch', (event) => {
     path.endsWith('/') ||
     path.endsWith('index.html') ||
     path.endsWith('table.html') ||
+    path.endsWith('matrix-sampling.html') ||
     path.endsWith('device.html') ||
     path.endsWith('sensor.html') ||
     path.endsWith('hasp.html') ||

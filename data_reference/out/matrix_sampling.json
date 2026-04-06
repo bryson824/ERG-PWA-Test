@@ -1,0 +1,830 @@
+[
+  {
+    "Contaminant": "1,3 Butadiene",
+    "Analytical Method": "NIOSH Method 1024",
+    "Matrix": "Air",
+    "Sampling Media": "Solid sorbent tube (coconut charcoal, 400 and 200 mg in separate tubes)",
+    "Holding Times": "60 days in freezer",
+    "Flow Rate": "0.01 to 0.5 L/min",
+    "Sample Volume": "5-L @ 100 ppm - 25L"
+  },
+  {
+    "Contaminant": "1,3 Butadiene",
+    "Analytical Method": "OSHA Method 56",
+    "Matrix": "Air",
+    "Sampling Media": "CSC tube (100/50 mg) coated with 10% t-butylcatechol, SKC part # 226-73",
+    "Holding Times": "18 days @ refrigerated temperatures",
+    "Flow Rate": "0.05 L/min",
+    "Sample Volume": "3 L"
+  },
+  {
+    "Contaminant": "Acetic Acid",
+    "Analytical Method": "NIOSH Method 1603",
+    "Matrix": "Air",
+    "Sampling Media": "Anasorb CSC Sorbent Tube, SKC part # 226-01",
+    "Holding Times": "at least 7 days @ 25 °C",
+    "Flow Rate": "0.01-1 L/min",
+    "Sample Volume": "20-300 L @ 10 ppm"
+  },
+  {
+    "Contaminant": "Ammonia (Anhydrous)",
+    "Analytical Method": "NIOSH Method 6015",
+    "Matrix": "Air",
+    "Sampling Media": "Sulfuric Acid-Treated Silica Gel Sorbent Tube, SKC part # 226-10-06",
+    "Holding Times": "not determined",
+    "Flow Rate": "0.1-0.2 L/min",
+    "Sample Volume": "0.1-96 L @ 50 ppm"
+  },
+  {
+    "Contaminant": "Ammonium Sulfamate",
+    "Analytical Method": "OSHA ID-188",
+    "Matrix": "Air",
+    "Sampling Media": "Sorbent Tube, Anasorb 747 (sulfuric acid, 226-29",
+    "Holding Times": "at least 29 days @ 25 °C",
+    "Flow Rate": "0.1 L/min",
+    "Sample Volume": "24 L"
+  },
+  {
+    "Contaminant": "Arsenic (organic), as particulates",
+    "Analytical Method": "NIOSH Method 5022",
+    "Matrix": "Air",
+    "Sampling Media": "PTFE Filter (1.0-µm pore size), SKC part # 225-17-01",
+    "Holding Times": "Stable",
+    "Flow Rate": "1-3 L/min",
+    "Sample Volume": "50-1000 L @ 0.01 mg/m3"
+  },
+  {
+    "Contaminant": "Arsenic and compounds (except AsH3 and As2O3), as particulates",
+    "Analytical Method": "NIOSH Method 7900",
+    "Matrix": "Air",
+    "Sampling Media": "Cassette (SKC part # 225-3-01) containing one MCE filter (37 mm, 0.8-μm pore size)",
+    "Holding Times": "Stable if refrigerated",
+    "Flow Rate": "1-3 L/min",
+    "Sample Volume": "30-1000 L @ 0.002 mg/m3"
+  },
+  {
+    "Contaminant": "Arsine",
+    "Analytical Method": "NIOSH Method 6001",
+    "Matrix": "Air",
+    "Sampling Media": "Anasorb CSC Sorbent Tube, SKC part # 226-01",
+    "Holding Times": "at least 6 days @ 25 °C",
+    "Flow Rate": "0.01-0.2 L/min",
+    "Sample Volume": "0.1-10 L @ 0.05 ppm"
+  },
+  {
+    "Contaminant": "Asbestos",
+    "Analytical Method": "EPA Method 600/R-93/116",
+    "Matrix": "Solid",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "—",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Asbestos (by phase contrast microscopy)",
+    "Analytical Method": "NIOSH Method 7400",
+    "Matrix": "Air",
+    "Sampling Media": "25-mm PCM cassette with 0.8-µm MCE filter",
+    "Holding Times": "Stable",
+    "Flow Rate": "0.5-16 L/min",
+    "Sample Volume": "Use equation in Step 4 of Sampling in Method to collect a fiber density of 100 to 1300 fibers/mm2."
+  },
+  {
+    "Contaminant": "Asbestos (by transmission electron microscopy)",
+    "Analytical Method": "NIOSH Method 7402",
+    "Matrix": "Air",
+    "Sampling Media": "25-mm PCM cassette with 0.8-µm MCE filter",
+    "Holding Times": "Stable",
+    "Flow Rate": "0.5-16 L/min",
+    "Sample Volume": "Use equation in Step 4 of Sampling in Method to collect a fiber density of 100 to 1300 fibers/mm2."
+  },
+  {
+    "Contaminant": "Cadmium, as particulates",
+    "Analytical Method": "NIOSH Method 7048",
+    "Matrix": "Air",
+    "Sampling Media": "Cassette (SKC part # 225-3-01) containing one MCE filter (37 mm, 0.8-μm pore size)",
+    "Holding Times": "stable",
+    "Flow Rate": "1-3 L/min",
+    "Sample Volume": "25-1500 L @ 0.1 mg/m3"
+  },
+  {
+    "Contaminant": "Carbon Monoxide",
+    "Analytical Method": "OSHA Method ID-209",
+    "Matrix": "Air",
+    "Sampling Media": "Direct-reading instrument with data logger",
+    "Holding Times": "—",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Chlordane",
+    "Analytical Method": "NIOSH Method 5510",
+    "Matrix": "Air",
+    "Sampling Media": "Filter and Solid Sorbent Tube: (0.8-µm cellulose ester membrane; Chromosorb 102, 100/50 mg)",
+    "Holding Times": "> 1 week @ 25 °C",
+    "Flow Rate": "0.5-1 L/min",
+    "Sample Volume": "10-200 L@0.5 mg/m³"
+  },
+  {
+    "Contaminant": "Chlordane (technical grade)",
+    "Analytical Method": "OSHA Method 67",
+    "Matrix": "Air",
+    "Sampling Media": "OSHA Versatile Sampler tubes containing a glass fiber filter and two sections of XAD-2 adsorbent (OVS-2)",
+    "Holding Times": "15 days @ 22 ⁰C",
+    "Flow Rate": "1.0 L/min",
+    "Sample Volume": "480 L"
+  },
+  {
+    "Contaminant": "Chlorine",
+    "Analytical Method": "NIOSH Method 6011",
+    "Matrix": "Air",
+    "Sampling Media": "Carbon-filled cassette with 0.5-μm PTFE pre-filter and 0.45-μm silver membrane filter, SKC part # 225-9006",
+    "Holding Times": "at least 30 days @ 25 ⁰C",
+    "Flow Rate": "0.3-1.0 L/min",
+    "Sample Volume": "8-360 L @ 0.1 ppm"
+  },
+  {
+    "Contaminant": "Chromium VI (hexavalent chromium)",
+    "Analytical Method": "EPA Method 7196A",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "30 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Chromium VI (hexavalent chromium)",
+    "Analytical Method": "EPA Method 7196A",
+    "Matrix": "Water",
+    "Sampling Media": "500-mL poly",
+    "Holding Times": "24 hours @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Chromium VI (hexavalent chromium)",
+    "Analytical Method": "NIOSH Method 7605",
+    "Matrix": "Air",
+    "Sampling Media": "37-mm cassette with 5-μm PVC filter, SKC part # 225-803",
+    "Holding Times": "2 weeks @ room temp., 4 weeks refrigerated",
+    "Flow Rate": "1-4 L/min",
+    "Sample Volume": "1-400 L @ 0.05 mg/m3"
+  },
+  {
+    "Contaminant": "Chromium, Chromium II, and Chromium III compounds, as particulates",
+    "Analytical Method": "NIOSH Method 7024",
+    "Matrix": "Air",
+    "Sampling Media": "Cassette (SKC part # 225-3-01) containing one MCE filter (37 mm, 0.8-μm pore size)",
+    "Holding Times": "Stable",
+    "Flow Rate": "1-3 L/min",
+    "Sample Volume": "10-1000 L @ 0.5 mg/m3"
+  },
+  {
+    "Contaminant": "Coal Tar Pitch Volatiles",
+    "Analytical Method": "EPA Method TO-15",
+    "Matrix": "Air",
+    "Sampling Media": "Summa Canister",
+    "Holding Times": "up to 30 days @ ambient temperatures",
+    "Flow Rate": "Consult Lab for specific instructions for collecting grab, 8-hour or 24-hour collection times.",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Coal Tar Pitch Volatiles",
+    "Analytical Method": "EPA Method TO-17",
+    "Matrix": "Air",
+    "Sampling Media": "Sorbent Tube (CarboTrap 300)",
+    "Holding Times": "up to 30 days @ <4 °C",
+    "Flow Rate": "10-200 mL/min",
+    "Sample Volume": "Calculate volume to achieve final RL."
+  },
+  {
+    "Contaminant": "Coal Tar Pitch Volatiles",
+    "Analytical Method": "NIOSH Method 5023",
+    "Matrix": "Air",
+    "Sampling Media": "37-mm cassette with PTFE Filter (2.0-µm pore size), SKC part # 225-1713",
+    "Holding Times": "analyze sample ASAP",
+    "Flow Rate": "1-4 L/min",
+    "Sample Volume": "500-2400 L @ 0.2 mg/m3"
+  },
+  {
+    "Contaminant": "Copper (Dust and Fume)",
+    "Analytical Method": "NIOSH Method 7029",
+    "Matrix": "Air",
+    "Sampling Media": "Cassette (SKC part # 225-3-01) containing one MCE filter (37 mm, 0.8-μm pore size)",
+    "Holding Times": "Stable",
+    "Flow Rate": "1-3 L/min",
+    "Sample Volume": "50-1500 L @ 0.1 mg/m3"
+  },
+  {
+    "Contaminant": "Cyanide",
+    "Analytical Method": "EPA Method 9010C/9014",
+    "Matrix": "Water",
+    "Sampling Media": "250-mL poly preserved with NaOH",
+    "Holding Times": "14 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Cyanide",
+    "Analytical Method": "EPA Methods 9013+9010C/9014",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8 oz. amber glass/plastic jar (or jar covered with aluminum foil)",
+    "Holding Times": "14 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Cyanide (HCN and Salts)",
+    "Analytical Method": "NIOSH Method 7904",
+    "Matrix": "Air",
+    "Sampling Media": "37-mm cassette (SKC part # 225-2LF) with 1.0-μm pore PTFE filter (SKC part # 225-3705) and impinger (SKC part #s 225-36-2 and 225-2) with 15 mL of 0.1 N KOH",
+    "Holding Times": "5 days; particulates on filter may liberate HCN gas",
+    "Flow Rate": "0.5-1 L/min",
+    "Sample Volume": "10 L @ 0.5 mg/m3 to 180 L @ 11 mg/m3"
+  },
+  {
+    "Contaminant": "Cyclohexane",
+    "Analytical Method": "NIOSH Method 1500",
+    "Matrix": "Air",
+    "Sampling Media": "Anasorb CSC Sorbent Tube, SKC part # 226-01",
+    "Holding Times": "30 days @ 5 ⁰C",
+    "Flow Rate": "0.01 -0.2 L/min",
+    "Sample Volume": "2.5-5 L"
+  },
+  {
+    "Contaminant": "Fluorides (including HF)",
+    "Analytical Method": "NIOSH Method 7906",
+    "Matrix": "Air",
+    "Sampling Media": "37-mm cellulose ester membrane filter (0.8-μm pore size) with Na2CO3-treated cellulose pad (SKC part # 225-9031)",
+    "Holding Times": "at least 7 day @ 20 °C; or 14 days (particulate fluorides) or 28 days (HF) @ 4 °C",
+    "Flow Rate": "1-2 L/min",
+    "Sample Volume": "15-1000 L"
+  },
+  {
+    "Contaminant": "Hydrazine",
+    "Analytical Method": "NIOSH Method 3503",
+    "Matrix": "Air",
+    "Sampling Media": "Bubbler with 15 mL of 0.1 M HCl, SKC part #s 225-36-2 and 225-22",
+    "Holding Times": "at least 6 days @ 25 °C",
+    "Flow Rate": "0.2-1.0 L/min",
+    "Sample Volume": "7-100 L @ 1 ppm"
+  },
+  {
+    "Contaminant": "Hydrogen Cyanide",
+    "Analytical Method": "NIOSH Method 6010",
+    "Matrix": "Air",
+    "Sampling Media": "Solid Sorbent Soda Lime Tube, SKC part # 226-210",
+    "Holding Times": "at least 14 days @ 25 °C",
+    "Flow Rate": "0.025-0.05 L/min",
+    "Sample Volume": "2-90 L @ 5 ppm"
+  },
+  {
+    "Contaminant": "Hydrogen Sulfide",
+    "Analytical Method": "OSHA Method 1008",
+    "Matrix": "Air",
+    "Sampling Media": "Sorbent tube specific to hydrogen sulfide determination, SKC part # 226-177",
+    "Holding Times": "at least 17 days @ ambient temperatures",
+    "Flow Rate": "0.05-0.5 L/min",
+    "Sample Volume": "5-12 L"
+  },
+  {
+    "Contaminant": "Liquefied Petroleum Gas (LPG)",
+    "Analytical Method": "Colorimetric detector tube",
+    "Matrix": "Air",
+    "Sampling Media": "Colorimetric Tube, SKC part # 810-100A",
+    "Holding Times": "—",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Mercury",
+    "Analytical Method": "EPA Method 7470A",
+    "Matrix": "Water",
+    "Sampling Media": "250-mL poly preserved with HNO3",
+    "Holding Times": "28 days",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Mercury",
+    "Analytical Method": "EPA Method 7471A or 7471B",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "4- or 8-oz. glass jar",
+    "Holding Times": "28 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Mercury",
+    "Analytical Method": "EPA Method 7474",
+    "Matrix": "Sediment & Tissue Samples",
+    "Sampling Media": "4- or 8-oz. glass jar",
+    "Holding Times": "28 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Mercury",
+    "Analytical Method": "NIOSH Method 6009 (includes elemental mercury)",
+    "Matrix": "Air",
+    "Sampling Media": "Anasorb C300 Solid Sorbent Tube, SKC part # 226-17-1A (add MCE filter to exclude particulate mercury if needed)",
+    "Holding Times": "30 days @ 25 °C",
+    "Flow Rate": "0.15 to 0.25 L/min",
+    "Sample Volume": "2-100 L @ 0.5 mg/m3"
+  },
+  {
+    "Contaminant": "Mercury, as particulates",
+    "Analytical Method": "OSHA Method ID-145",
+    "Matrix": "Air",
+    "Sampling Media": "37 mm cassette with 0.8 µm MCE filter",
+    "Holding Times": "As soon as possible",
+    "Flow Rate": "2.0 L/min",
+    "Sample Volume": "10 L"
+  },
+  {
+    "Contaminant": "Methane",
+    "Analytical Method": "Colorimetric detector tube",
+    "Matrix": "Air",
+    "Sampling Media": "Colorimetric Tube, SKC part # 800-20001",
+    "Holding Times": "—",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Methyl Bromide",
+    "Analytical Method": "OSHA Method PV2040",
+    "Matrix": "Air",
+    "Sampling Media": "Anasorb 747 Sorbent Tubes, SKC part # 226-82",
+    "Holding Times": "14 days when refrigerated",
+    "Flow Rate": "0.05-0.2 L/min",
+    "Sample Volume": "3 L"
+  },
+  {
+    "Contaminant": "Nitrate",
+    "Analytical Method": "EPA Method 300.0",
+    "Matrix": "Water",
+    "Sampling Media": "250-mL poly",
+    "Holding Times": "48 hours @ 4 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Nitric Oxide, Nitrogen Dioxide",
+    "Analytical Method": "NIOSH Method 6014",
+    "Matrix": "Air",
+    "Sampling Media": "Sorbent Tubes, SKC part # 226-40A",
+    "Holding Times": "at least 7 days @ 25 °C",
+    "Flow Rate": "NO: 0.025 L/min and NO2: 0.025-0.2 L/min",
+    "Sample Volume": "1.5-6 L"
+  },
+  {
+    "Contaminant": "Nitrite",
+    "Analytical Method": "EPA Method 300.0",
+    "Matrix": "Water",
+    "Sampling Media": "250-mL poly",
+    "Holding Times": "48 hours @ 4 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Nitrogen as Nitrate + Nitrite ions",
+    "Analytical Method": "EPA Method 300.0",
+    "Matrix": "Water",
+    "Sampling Media": "250-mL poly preserved with H2SO4",
+    "Holding Times": "28 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Nitrogen, Ammonia",
+    "Analytical Method": "SM 4500-NH3-D or EPA Method 350.3",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "28 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Nitrogen, Ammonia",
+    "Analytical Method": "SM 4500-NH3-D or EPA Method 350.3",
+    "Matrix": "Water",
+    "Sampling Media": "250-mL poly preserved with H2SO4",
+    "Holding Times": "28 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Nitrogen, Total Kjeldahl (TKN)",
+    "Analytical Method": "SM 4500-Norg",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "28 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Nitrogen, Total Kjeldahl (TKN)",
+    "Analytical Method": "SM 4500-Norg or EPA Method 351.4",
+    "Matrix": "Water",
+    "Sampling Media": "1-L glass jar preserved with H2SO4",
+    "Holding Times": "up to 28 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Non-Volatile acids (H3PO4, H2SO4)",
+    "Analytical Method": "NIOSH Method 7908",
+    "Matrix": "Air",
+    "Sampling Media": "37-mm quartz fiber filter in acid-resistant cassette, SKC part # 225-9033",
+    "Holding Times": "at least 7 days @ 20 °C; or 28 days at 4 °C",
+    "Flow Rate": "1-5 L/min",
+    "Sample Volume": "15-2000 L"
+  },
+  {
+    "Contaminant": "Organochlorine Pesticides",
+    "Analytical Method": "EPA Method 8081A",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "14 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Organochlorine Pesticides",
+    "Analytical Method": "EPA Method 8081A",
+    "Matrix": "Water",
+    "Sampling Media": "1-L amber glass jar",
+    "Holding Times": "7 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Organophosphorus Pesticides",
+    "Analytical Method": "EPA Method 8141B",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "7 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Organophosphorus Pesticides",
+    "Analytical Method": "EPA Method 8141B",
+    "Matrix": "Water",
+    "Sampling Media": "1-L amber glass jar; pH adjusted to 5 to 8, if needed (using NaOH or H2SO4)",
+    "Holding Times": "7 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "PAHs",
+    "Analytical Method": "EPA Method 8270D or 8310",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "14 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "PAHs",
+    "Analytical Method": "EPA Method 8270D or 8310",
+    "Matrix": "Water",
+    "Sampling Media": "1-L amber glass jar",
+    "Holding Times": "7 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "PAHs",
+    "Analytical Method": "EPA Method TO-13A",
+    "Matrix": "Air",
+    "Sampling Media": "PUF Sorbent Tube (SKC part # 226-131) with quartz fiber filter (SKC part # 225-1808)",
+    "Holding Times": "7 days @ <4 °C; wrap in foil to protect from UV and fluorescent light",
+    "Flow Rate": "0.225 m3/min for up to 24 hours",
+    "Sample Volume": "At least 300 m3 over a 24 hour period, or determined by user (as needed to achieve the project's RLs)."
+  },
+  {
+    "Contaminant": "PAHs",
+    "Analytical Method": "NIOSH Method 5506",
+    "Matrix": "Air",
+    "Sampling Media": "XAD-2 Sorbent Tube (SKC part # 226-30-04) with PTFE filter, 2.0-µm pore size, in 37-mm cassette (SKC part # 225-1713)",
+    "Holding Times": "unknown; wrap sample in foil to protect from heat and UV light",
+    "Flow Rate": "2 L/min",
+    "Sample Volume": "200-1000 L"
+  },
+  {
+    "Contaminant": "PCBs",
+    "Analytical Method": "EPA Method 8082A",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "14 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "PCBs",
+    "Analytical Method": "EPA Method 8082A",
+    "Matrix": "Water",
+    "Sampling Media": "1-L amber glass jar",
+    "Holding Times": "7 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "PCBs",
+    "Analytical Method": "NIOSH Method 5503",
+    "Matrix": "Air",
+    "Sampling Media": "Glass Fiber Filter, SKC part # 225-16 Filter Cassette Holder, SKC part # 225-32 Florisil Sorbent Tube, SKC part # 226-39",
+    "Holding Times": "Unspecified for filters, although Eurofins Air Toxics uses 7 days; 2 months for Florisil tubes; all media stored @ 4 °C and wrapped in foil to protect from UV light",
+    "Flow Rate": "0.05-0.2 L/min",
+    "Sample Volume": "1-50 L @ 0.5 mg/m3"
+  },
+  {
+    "Contaminant": "PCBs and Pesticides",
+    "Analytical Method": "EPA Method TO-10A",
+    "Matrix": "Air",
+    "Sampling Media": "Low Volume PUF Cartridge, SKC part # 226-92",
+    "Holding Times": "7 days @ <4 °C; wrap in foil to protect from UV light",
+    "Flow Rate": "1-5 L/min for 4-24 hours",
+    "Sample Volume": "Determined by user (as needed to achieve the project's RLs)."
+  },
+  {
+    "Contaminant": "PCBs and Pesticides",
+    "Analytical Method": "EPA Method TO-4A",
+    "Matrix": "Air",
+    "Sampling Media": "PUF Sorbent Tube (SKC part # 226-131) with quartz fiber filter (SKC part # 225-1808)",
+    "Holding Times": "7 days @ <4 °C; wrap in foil to protect from UV light",
+    "Flow Rate": "0.225 m3/min for up to 24 hours",
+    "Sample Volume": "At least 300 m3 over a 24 hour period, or determined by user (as needed to achieve the project's RLs)."
+  },
+  {
+    "Contaminant": "PCDDs and PCDFs (Dioxins & Furans)",
+    "Analytical Method": "EPA Method TO-9A",
+    "Matrix": "Air",
+    "Sampling Media": "PUF Sorbent Tube (SKC part # 226-131) with quartz fiber filter (SKC part # 225-1808)",
+    "Holding Times": "7 days @ <4 °C; wrap in foil to protect from UV light",
+    "Flow Rate": "0.225 m3/min for up to 24 hours",
+    "Sample Volume": "At least 325 m3 over a 24 hour period, determined by user (as needed to achieve the project's RLs)"
+  },
+  {
+    "Contaminant": "Petroleum Hydrocarbons",
+    "Analytical Method": "NIOSH Method 1500 (Hydrocarbons, BP 36°-216 °C)",
+    "Matrix": "Air",
+    "Sampling Media": "Anasorb CSC Sorbent Tube, SKC part # 226-01",
+    "Holding Times": "30 days @ 5 °C",
+    "Flow Rate": "Check Table 3 in Method for analyte specific flow rate and sample volume.",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "pH",
+    "Analytical Method": "EPA Method 9040C",
+    "Matrix": "Water",
+    "Sampling Media": "250-mL poly",
+    "Holding Times": "Store @ 6 °C; analyze sample ASAP",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "pH",
+    "Analytical Method": "EPA Method 9045D",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "Store @ 6 °C; analyze sample ASAP",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Phosgene",
+    "Analytical Method": "OSHA Method 61",
+    "Matrix": "Air",
+    "Sampling Media": "XAD-2 Sorbent Tube, SKC part # 226-117",
+    "Holding Times": "at least 19 days @ 23 °C",
+    "Flow Rate": "1 L/min",
+    "Sample Volume": "240 L"
+  },
+  {
+    "Contaminant": "Phosphine",
+    "Analytical Method": "NIOSH Method 6002",
+    "Matrix": "Air",
+    "Sampling Media": "Mercuric Cyanide Treated Silica Gel Sorbent Tube, SKC part # 226-165A",
+    "Holding Times": "7 days @ 25 ⁰C",
+    "Flow Rate": "0.01-0.2 L/min",
+    "Sample Volume": "1-16 L @ 0.3 ppm"
+  },
+  {
+    "Contaminant": "Phosphoric acid",
+    "Analytical Method": "OSHA Method ID 111",
+    "Matrix": "Air",
+    "Sampling Media": "Cassette (SKC part # 225-3-01) containing one MCE filter (37 mm, 0.8-μm pore size)",
+    "Holding Times": "not determined",
+    "Flow Rate": "2 L/min",
+    "Sample Volume": "960 L"
+  },
+  {
+    "Contaminant": "Phosphorus (elemental, vapor phase only)",
+    "Analytical Method": "NIOSH Method 7905",
+    "Matrix": "Air",
+    "Sampling Media": "Tenax Sorbent Tube, SKC part # 226-35-03 (add MCE filter to exclude particulate phosphorus if expected in sample)",
+    "Holding Times": "7 days @ 25 ⁰C",
+    "Flow Rate": "0.01-0.2 L/min",
+    "Sample Volume": "5-100 L @ 0.1 mg/m3"
+  },
+  {
+    "Contaminant": "Silica",
+    "Analytical Method": "NIOSH Method 7500",
+    "Matrix": "Air",
+    "Sampling Media": "disposable parallel particle impactor, preloaded with impaction substrates (SKC part # 225-3851)",
+    "Holding Times": "Stable",
+    "Flow Rate": "2 L/min",
+    "Sample Volume": "400-1000 L"
+  },
+  {
+    "Contaminant": "Sulfur Dioxide",
+    "Analytical Method": "NIOSH Method 6004",
+    "Matrix": "Air",
+    "Sampling Media": "Cassette (SKC part # 225-9005) containing one MCE pre-filter and one Na2CO3-coated cellulose filter",
+    "Holding Times": "Not determined",
+    "Flow Rate": "0.5-1.5 L/min",
+    "Sample Volume": "4-200 L @ 5 ppm"
+  },
+  {
+    "Contaminant": "SVOCs",
+    "Analytical Method": "EPA Method 8270C",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "14 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "SVOCs",
+    "Analytical Method": "EPA Method 8270C",
+    "Matrix": "Water",
+    "Sampling Media": "1-L amber glass jar",
+    "Holding Times": "7 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "TCLP Metals",
+    "Analytical Method": "EPA Methods 1311/6010B/7471A (mercury)",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "6 months (except mercury 28 days @ 6 °C)",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Tetrachloroethylene (PCE)",
+    "Analytical Method": "NIOSH Method 1003 (Halogenated Hydrocarbons)",
+    "Matrix": "Air",
+    "Sampling Media": "Anasorb CSC Sorbent Tube, SKC part # 226-01",
+    "Holding Times": "at least 30 days @ ambient temperatures",
+    "Flow Rate": "0.01-0.2 L/min",
+    "Sample Volume": "1.0-40 L @ 100 ppm; target is 3 L"
+  },
+  {
+    "Contaminant": "Total Metals (mercury)",
+    "Analytical Method": "EPA Methods 6010B/7470A (mercury)",
+    "Matrix": "Water",
+    "Sampling Media": "500-mL poly preserved with HNO3",
+    "Holding Times": "6 months (except mercury 28 days)",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Total Metals (mercury)",
+    "Analytical Method": "EPA Methods 6010B/7471A (mercury)",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "6 months (except mercury 28 days @ 6 °C)",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Total or Select Metals (except Mercury), including as particulates",
+    "Analytical Method": "NIOSH Method 7300",
+    "Matrix": "Air",
+    "Sampling Media": "Cassette (SKC part # 225-3-01) containing one MCE filter (37 mm, 0.8-μm pore size)",
+    "Holding Times": "Stable",
+    "Flow Rate": "1-4 L/min",
+    "Sample Volume": "Check Table 1 in Method for analyte specific sampling volume."
+  },
+  {
+    "Contaminant": "Total Phosphorus",
+    "Analytical Method": "SM 4500-P B/E",
+    "Matrix": "Water",
+    "Sampling Media": "8 oz. glass jar preserved with H2SO4",
+    "Holding Times": "28 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Total Phosphorus",
+    "Analytical Method": "SM 4500-P B/E (M)",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "28 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "TPH as DRO and MRO",
+    "Analytical Method": "EPA Method 8015B",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "8-oz. glass jar",
+    "Holding Times": "14 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "TPH as DRO and MRO",
+    "Analytical Method": "EPA Method 8015B",
+    "Matrix": "Water",
+    "Sampling Media": "1-L amber glass jar",
+    "Holding Times": "7 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "TPH as GRO",
+    "Analytical Method": "EPA Method 8015B or 8260B",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "EnCore, TerraCore, or similar",
+    "Holding Times": "48 hours @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "TPH as GRO",
+    "Analytical Method": "EPA Method 8015B or 8260B",
+    "Matrix": "Water",
+    "Sampling Media": "40-mL VOA preserved with HCl (no headspace)",
+    "Holding Times": "14 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "Trichloroethylene (TCE)",
+    "Analytical Method": "NIOSH Method 1022",
+    "Matrix": "Air",
+    "Sampling Media": "Anasorb CSC Sorbent Tube, SKC part # 226-01",
+    "Holding Times": "Not determined",
+    "Flow Rate": "0.01-0.2 L/min",
+    "Sample Volume": "1-30 L @ 100 ppm"
+  },
+  {
+    "Contaminant": "Vinyl Chloride",
+    "Analytical Method": "NIOSH Method 1007",
+    "Matrix": "Air",
+    "Sampling Media": "Anasorb CSC Sorbent Tube, SKC part # 226-01",
+    "Holding Times": "10 days @ 25 °C",
+    "Flow Rate": "0.05 L/min",
+    "Sample Volume": "0.7-5 L"
+  },
+  {
+    "Contaminant": "VOCs",
+    "Analytical Method": "EPA Method 8260B",
+    "Matrix": "Soil/Waste",
+    "Sampling Media": "Encore, TerraCore, or similar",
+    "Holding Times": "48 hours @ 6 °C if not preserved; 14 days @ 6 °C if preserved with methanol",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "VOCs",
+    "Analytical Method": "EPA Method 8260B",
+    "Matrix": "Water",
+    "Sampling Media": "40-mL VOA preserved with HCl (no headspace)",
+    "Holding Times": "14 days @ 6 °C",
+    "Flow Rate": "—",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "VOCs",
+    "Analytical Method": "EPA Method TO-15",
+    "Matrix": "Air",
+    "Sampling Media": "Summa Canister",
+    "Holding Times": "30 days @ ambient temperatures",
+    "Flow Rate": "Consult Lab for specific instructions for collecting grab, 8 hour or 24 hour collection times.",
+    "Sample Volume": "—"
+  },
+  {
+    "Contaminant": "VOCs (Aromatic Hydrocarbons)",
+    "Analytical Method": "NIOSH Method 1501",
+    "Matrix": "Air",
+    "Sampling Media": "Anasorb CSC Sorbent Tube, SKC part # 226-01",
+    "Holding Times": "30 days @ 5 °C",
+    "Flow Rate": "0.01-1.0 L/min",
+    "Sample Volume": "1-30 L depending on the contaminant; see Table 3 in Method for specific sample flow rates and volumes."
+  },
+  {
+    "Contaminant": "Volatile acids (HCl, HBr, HNO3)",
+    "Analytical Method": "NIOSH Method 7907",
+    "Matrix": "Air",
+    "Sampling Media": "37-mm quartz fiber filter coated with Na2CO3; and 37-mm quartz fiber pre-filter, SKC part # 225-9032",
+    "Holding Times": "at least 7 days @ 20 °C; or 28 days at 4 °C",
+    "Flow Rate": "2 L/min",
+    "Sample Volume": "30-600 L"
+  }
+]

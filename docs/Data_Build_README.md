@@ -61,14 +61,14 @@ So: **drop (or point to) your Excel file, run the one command above, then refres
 
 ## Include column (source sheets)
 
-Optional column **`Include`** on merge sources: `Sensor_Chemical`, `Sensors`, `Device_Sensor`, `Devices`, `Chemicals`, `Chemical_Method`, `Sampling_Methods`. The same rule applies when you run **`node pwa/scripts/build_cross_sens.js`** for **Sensors** and **Sensor_CrossSens**.
+Optional column **`include`** on merge sources (header is matched case-insensitively after the usual PK/FK strip in `build_data.py`): `Sensor_Chemical`, `Sensors`, `Device_Sensor`, `Devices`, `Chemicals`, `Chemical_Method`, `Sampling_Methods`. The same rule applies when you run **`node pwa/scripts/build_cross_sens.js`** for **Sensors** and **Sensor_CrossSens**.
 
 | Value (case-insensitive) | Effect |
 |--------------------------|--------|
-| **no**, **n**, **false**, **0** | Row is **omitted** from merges / cross-sens JSON. |
-| **yes**, empty, or anything else | Row is **kept**. |
+| **No** | Row is **omitted** from merges / cross-sens JSON. |
+| **Yes**, empty, or anything else | Row is **kept**. |
 
-If **`Include`** is missing on a sheet, every row is kept. The column is stripped before joins so it never appears in `air_monitoring_table.json`.
+If **`include`** is missing on a sheet, every row is kept (the build prints a **stderr note for Sensors** when the column is absent so you can tell the CSV is out of date). Re-export from Excel and run **`python3 scripts/build_data.py`** to refresh CSVs. The column is stripped before joins so it never appears in `air_monitoring_table.json`.
 
 ---
 

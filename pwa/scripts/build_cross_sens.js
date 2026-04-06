@@ -10,24 +10,15 @@ const SENSORS_CSV = path.join(ROOT, 'data_reference', 'Air_Monitoring_Relationsh
 const CROSS_CSV = path.join(ROOT, 'data_reference', 'Air_Monitoring_Relationships-2_Sensor_CrossSens.csv');
 const OUT = path.join(ROOT, 'pwa', 'sensor_cross_sens.json');
 
-/** Match Excel-style headers, aligned with scripts/build_data.py normalize_header for Include. */
-function headerBaseName(h) {
-  if (!h) return '';
-  let s = String(h).trim();
-  s = s.replace(/\s*\(PK\)\s*$/i, '').replace(/\s*\(FK\)\s*$/i, '').trim();
-  return s.toLowerCase();
-}
-
 function findIncludeColumnIndex(headerRow) {
-  return headerRow.findIndex((h) => headerBaseName(h) === 'include');
+  return headerRow.findIndex((h) => h != null && String(h).trim().toLowerCase() === 'include');
 }
 
-/** Row kept unless Include is explicitly no / n / false / 0 (case-insensitive). */
+/** Only **No** excludes; Yes, blank, or anything else keeps the row. */
 function rowIncluded(row, idxInclude) {
   if (idxInclude < 0) return true;
   const v = String(row[idxInclude] ?? '').trim().toLowerCase();
-  if (v === 'no' || v === 'n' || v === 'false' || v === '0') return false;
-  return true;
+  return v !== 'no';
 }
 
 function parseCSV(content) {
