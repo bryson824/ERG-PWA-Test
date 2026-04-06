@@ -89,10 +89,18 @@
     }
     .filter-bar-toggle-row {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
+      gap: 0.5rem;
       padding: 0.35rem 1rem;
       background: #f0f4fa;
       border-bottom: 1px solid #d0d8e0;
+    }
+    .filter-bar-toggle-row .filter-toggle-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
     }
     .filter-bar-toggle-row button {
       font-size: 0.875rem;
@@ -251,9 +259,12 @@
       <a href="https://experience.arcgis.com/experience/0d211e826b3e4d089aea9f43b01f4ba5" id="erg-guide-link" target="_blank" rel="noopener noreferrer">Open ERG Guide</a>
     </header>
 
-    <div class="filter-section" id="filter-section" style="display: none;">
+    <div class="filter-section filter-section--collapsed" id="filter-section" style="display: none;">
       <div class="filter-bar-toggle-row">
-        <button type="button" id="filter-toggle-btn" aria-expanded="true" aria-controls="filter-bar">Hide filters</button>
+        <div class="filter-toggle-actions">
+          <button type="button" id="filter-toggle-btn" aria-expanded="false" aria-controls="filter-bar">Show filters</button>
+          <button type="button" id="filter-reset-btn" aria-label="Clear all filter text and checkbox selections">Reset all filters</button>
+        </div>
       </div>
       <div class="filter-bar" id="filter-bar" style="display: none;">
         <div class="filter-text-row">
@@ -290,6 +301,7 @@
       const filterSection = document.getElementById('filter-section');
       const filterBar = document.getElementById('filter-bar');
       const filterToggleBtn = document.getElementById('filter-toggle-btn');
+      const filterResetBtn = document.getElementById('filter-reset-btn');
       const filterNoMatch = document.getElementById('filter-no-match');
       const FILTER_COLLAPSED_KEY = 'air-table-filters-collapsed';
       let allRows = [];
@@ -594,14 +606,39 @@
         try { localStorage.setItem(FILTER_COLLAPSED_KEY, collapsed ? 'true' : 'false'); } catch (e) {}
       }
       function isFiltersCollapsed() {
-        try { return localStorage.getItem(FILTER_COLLAPSED_KEY) === 'true'; } catch (e) { return false; }
+        try {
+          var v = localStorage.getItem(FILTER_COLLAPSED_KEY);
+          if (v === null || v === '') return true;
+          return v === 'true';
+        } catch (e) {
+          return true;
+        }
       }
+
+      function resetAllFilters() {
+        document.getElementById('filter-chemical').value = '';
+        document.getElementById('filter-device').value = '';
+        document.getElementById('filter-sensor').value = '';
+        ['filter-chem-list', 'filter-device-list', 'filter-sensor-list'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          el.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
+            cb.checked = false;
+          });
+        });
+        buildCheckboxLists();
+        applyFilter();
+      }
+
       if (filterToggleBtn) {
         filterToggleBtn.addEventListener('click', function () {
           var collapsed = filterSection.classList.contains('filter-section--collapsed');
           setFiltersCollapsed(!collapsed);
           if (!collapsed) filterBar.style.display = 'none';
         });
+      }
+      if (filterResetBtn) {
+        filterResetBtn.addEventListener('click', resetAllFilters);
       }
 
       fetch(TABLE_URL)
@@ -615,9 +652,11 @@
           var startCollapsed = isFiltersCollapsed();
           if (startCollapsed) {
             filterSection.classList.add('filter-section--collapsed');
+            filterBar.style.display = 'none';
             filterToggleBtn.textContent = 'Show filters';
             filterToggleBtn.setAttribute('aria-expanded', 'false');
           } else {
+            filterSection.classList.remove('filter-section--collapsed');
             filterBar.style.display = 'flex';
             filterToggleBtn.textContent = 'Hide filters';
             filterToggleBtn.setAttribute('aria-expanded', 'true');
