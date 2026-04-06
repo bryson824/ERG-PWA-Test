@@ -13,6 +13,9 @@
       --epa-blue-light: #e8eef7;
       --epa-blue-highlight: #c5d4ed;
     }
+    html {
+      font-size: 106.25%; /* ~17px from typical 16px default; rem-based UI scales with tables */
+    }
     html, body { height: 100%; margin: 0; }
     * { box-sizing: border-box; }
     body {
@@ -21,8 +24,8 @@
       padding: 0;
       background: #e8eef7;
       color: #1c1c1c;
-      font-size: 16px;
-      line-height: 1.4;
+      font-size: 1rem;
+      line-height: 1.45;
     }
     .shell { max-width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
 
@@ -155,13 +158,13 @@
     .air-table td:not(.col-frozen) { white-space: normal; max-width: 18rem; }
 
     .air-table tbody tr.chem-alt-0 td { background: #fff; }
-    .air-table tbody tr.chem-alt-1 td { background: #e8eef7; }
+    .air-table tbody tr.chem-alt-1 td { background: #d6e2ef; }
     .air-table tbody tr.chem-alt-0 td.col-frozen { background: #fff; --frozen-bg: #fff; }
-    .air-table tbody tr.chem-alt-1 td.col-frozen { background: #e8eef7; --frozen-bg: #e8eef7; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-0 td { background: #f0f4fa; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-0 td.col-frozen { background: #f0f4fa; --frozen-bg: #f0f4fa; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-1 td { background: #dce4f0; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-1 td.col-frozen { background: #dce4f0; --frozen-bg: #dce4f0; }
+    .air-table tbody tr.chem-alt-1 td.col-frozen { background: #d6e2ef; --frozen-bg: #d6e2ef; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-0 td { background: #e2eaf6; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-0 td.col-frozen { background: #e2eaf6; --frozen-bg: #e2eaf6; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-1 td { background: #c8d6e8; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-1 td.col-frozen { background: #c8d6e8; --frozen-bg: #c8d6e8; }
 
     .load-msg { padding: 1rem; color: #444; font-size: 0.9375rem; }
     .load-err { color: #b00; font-weight: 500; }

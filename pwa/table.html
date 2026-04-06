@@ -14,6 +14,9 @@
       --epa-blue-light: #e8eef7;
       --epa-blue-highlight: #c5d4ed;
     }
+    html {
+      font-size: 106.25%; /* ~17px from typical 16px default; rem-based UI scales with tables */
+    }
     html, body { height: 100%; margin: 0; }
     * { box-sizing: border-box; }
     body {
@@ -22,8 +25,8 @@
       padding: 0;
       background: #e8eef7;
       color: #1c1c1c;
-      font-size: 16px;
-      line-height: 1.4;
+      font-size: 1rem;
+      line-height: 1.45;
     }
     .shell { max-width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
 
@@ -234,13 +237,13 @@
     }
 
     .air-table tbody tr.chem-alt-0 td { background: #fff; }
-    .air-table tbody tr.chem-alt-1 td { background: #e8eef7; }
+    .air-table tbody tr.chem-alt-1 td { background: #d6e2ef; }
     .air-table tbody tr.chem-alt-0 td.col-frozen { background: #fff; --frozen-bg: #fff; }
-    .air-table tbody tr.chem-alt-1 td.col-frozen { background: #e8eef7; --frozen-bg: #e8eef7; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-0 td { background: #f0f4fa; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-0 td.col-frozen { background: #f0f4fa; --frozen-bg: #f0f4fa; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-1 td { background: #dce4f0; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-1 td.col-frozen { background: #dce4f0; --frozen-bg: #dce4f0; }
+    .air-table tbody tr.chem-alt-1 td.col-frozen { background: #d6e2ef; --frozen-bg: #d6e2ef; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-0 td { background: #e2eaf6; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-0 td.col-frozen { background: #e2eaf6; --frozen-bg: #e2eaf6; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-1 td { background: #c8d6e8; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-1 td.col-frozen { background: #c8d6e8; --frozen-bg: #c8d6e8; }
     .air-table tbody tr.highlight-chemical td,
     .air-table tbody tr.highlight-device td { background: #c5d4ed !important; }
     .air-table tbody tr.highlight-chemical td.col-frozen,
@@ -311,6 +314,8 @@
       ];
       const ONCE_PER_DEVICE = ['Device'];
       const METHOD_COLUMNS = ['method_id', 'sample_volume', 'flow_rate', 'media_type', 'hold_time', 'Air Sampling Method'];
+      /** Present in JSON for sensor pages; not shown as a table column here. */
+      const TABLE_INTERNAL_KEYS = { Technology: true };
 
       function escapeAttr(s) {
         if (s == null) return '';
@@ -463,7 +468,7 @@
         }
         loadMsg.style.display = 'none';
         airSheetScroll.setAttribute('aria-hidden', 'false');
-        var keys = Object.keys(rows[0]);
+        var keys = Object.keys(rows[0]).filter(function (k) { return !TABLE_INTERNAL_KEYS[k]; });
         var hasDeviceAndSensor = keys.indexOf('Device') !== -1 && keys.indexOf('Sensor') !== -1;
 
         var html = '<table class="air-table" aria-label="Air monitoring reference"><thead><tr>';

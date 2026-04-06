@@ -125,7 +125,7 @@
         </section>
         <section class="card">
           <h2 class="section-title">Target compounds (monitored)</h2>
-          <p class="muted">Correction factor and detection range from the air monitoring reference table.</p>
+          <p id="monitor-intro" class="muted"></p>
           <div id="monitor-wrap"></div>
         </section>
         <section class="card">
@@ -200,6 +200,21 @@
         });
       }
 
+      /** True if the table cell carries a correction factor worth showing (not empty / em dash / ND). */
+      function hasMeaningfulCf(val) {
+        if (val == null) return false;
+        var t = String(val).trim();
+        if (!t || t === '—' || t === '-') return false;
+        if (/^nd$/i.test(t)) return false;
+        return true;
+      }
+
+      /** PID/FID sensors use ionization potential; use Technology from data and fall back to display name (e.g. TVA FID with blank tech). */
+      function isPidOrFidTechnology(tech, sensorDisplayName) {
+        var s = (String(tech || '') + ' ' + String(sensorDisplayName || '')).toLowerCase();
+        return s.indexOf('pid') !== -1 || s.indexOf('fid') !== -1;
+      }
+
       function uniqueMonitorRows(rows) {
         var seen = {};
         var out = [];
@@ -207,6 +222,7 @@
           var key = [
             r['Target Compound'] || '',
             r['Device'] || '',
+            r['Technology'] || '',
             r['Correction Factor'] || '',
             r['Detection Level'] || '',
             r['Ionization Potential (eV)'] || ''
@@ -267,26 +283,43 @@
         }
 
         var monitorWrap = document.getElementById('monitor-wrap');
+        var monitorIntro = document.getElementById('monitor-intro');
         var monitorRows = uniqueMonitorRows(rowsForSensorDisplayName(tableRows, sensor, device));
         if (!monitorRows.length) {
+          monitorIntro.textContent = '';
           var emptyMsg = device
             ? 'No target compound rows found for this sensor on this device in the air monitoring table.'
             : 'No target compound rows found for this sensor in the air monitoring table.';
           monitorWrap.innerHTML = '<p class="muted">' + emptyMsg + '</p>';
         } else {
+          var showCfCol = monitorRows.some(function (r) { return hasMeaningfulCf(r['Correction Factor']); });
+          var showIpCol = monitorRows.some(function (r) { return isPidOrFidTechnology(r['Technology'], sensor); });
+
+          var introParts = ['Detection range from the air monitoring reference table.'];
+          if (showCfCol) introParts.push('Correction factors are shown only when at least one compound has a value in the table.');
+          if (showIpCol) introParts.push('Ionization potential (eV) is shown only for PID and FID sensors.');
+          monitorIntro.textContent = introParts.join(' ');
+
           var monHtml = '<table aria-label="Target compounds for this sensor">';
           monHtml += '<thead><tr><th>Target compound</th>';
           if (!device) monHtml += '<th>Device</th>';
-          monHtml += '<th>Correction factor</th><th>Detection range</th><th>Ionization potential (eV)</th></tr></thead><tbody>';
+          if (showCfCol) monHtml += '<th>Correction factor</th>';
+          monHtml += '<th>Detection range</th>';
+          if (showIpCol) monHtml += '<th>Ionization potential (eV)</th>';
+          monHtml += '</tr></thead><tbody>';
           monitorRows.forEach(function (r) {
             var ip = r['Ionization Potential (eV)'];
             monHtml += '<tr><td>' + escapeHtml(r['Target Compound'] || '—') + '</td>';
             if (!device) monHtml += '<td>' + escapeHtml(r['Device'] || '—') + '</td>';
-            monHtml +=
-              '<td>' + escapeHtml(r['Correction Factor'] != null && String(r['Correction Factor']).trim() !== '' ? r['Correction Factor'] : '—') + '</td>' +
-              '<td>' + escapeHtml(r['Detection Level'] != null && String(r['Detection Level']).trim() !== '' ? r['Detection Level'] : '—') + '</td>' +
-              '<td>' + escapeHtml(ip != null && String(ip).trim() !== '' ? ip : '—') + '</td>' +
-            '</tr>';
+            if (showCfCol) {
+              monHtml += '<td>' + escapeHtml(hasMeaningfulCf(r['Correction Factor']) ? String(r['Correction Factor']).trim() : '—') + '</td>';
+            }
+            monHtml += '<td>' + escapeHtml(r['Detection Level'] != null && String(r['Detection Level']).trim() !== '' ? r['Detection Level'] : '—') + '</td>';
+            if (showIpCol) {
+              var showCellIp = isPidOrFidTechnology(r['Technology'], sensor);
+              monHtml += '<td>' + escapeHtml(showCellIp && ip != null && String(ip).trim() !== '' ? ip : '—') + '</td>';
+            }
+            monHtml += '</tr>';
           });
           monHtml += '</tbody></table>';
           monitorWrap.innerHTML = monHtml;

@@ -197,6 +197,10 @@ def build_merged_table():
     # Device and Sensor (separate columns for grouped UI: show device once, each sensor its own row)
     m["Device"] = m["model"].astype(str).str.strip()
     m["Sensor"] = m["plain_name"].astype(str).str.strip()
+    if "technology" in m.columns:
+        m["Technology"] = m["technology"].apply(safe_str)
+    else:
+        m["Technology"] = pd.Series(["—"] * len(m))
 
     # Detection Level: detection_range_low–high range_unit, or Sensors.detection_range
     def detection_level(row):
@@ -213,13 +217,16 @@ def build_merged_table():
 
     # Ionization Potential (eV): from Chemicals, same per chemical — merged in UI
     m["Ionization Potential (eV)"] = m.get("IP (eV)", pd.Series([None] * len(m))).apply(safe_str)
-    # Correction Factor: from Sensor_Chemical, per sensor row; "—" when not applicable (e.g. non-PID)
+    # Correction Factor: from Sensor_Chemical whenever populated (LEL response factors, PID CFs, etc.)
     def correction_factor(row):
-        tech = str(row.get("technology") or "")
-        if "PID" in tech or "pid" in tech:
-            cf = row.get("correction_factor")
-            return safe_str(cf) if pd.notna(cf) else "—"
-        return "—"
+        cf = row.get("correction_factor")
+        if cf is None or (isinstance(cf, float) and pd.isna(cf)):
+            return "—"
+        s = str(cf).strip()
+        if s == "" or s.lower() in ("nan", "na", "n/a"):
+            return "—"
+        return safe_str(cf)
+
     m["Correction Factor"] = m.apply(correction_factor, axis=1) if "correction_factor" in m.columns else pd.Series(["—"] * len(m))
 
     # Regulatory from Chemicals
@@ -245,7 +252,7 @@ def build_merged_table():
 
     # Build output rows: Target Compound, Device, Sensor, Detection Level, Ionization Potential (eV), Correction Factor, then regulatory
     columns_order = [
-        "Target Compound", "Device", "Sensor", "Detection Level", "Ionization Potential (eV)", "Correction Factor",
+        "Target Compound", "Device", "Sensor", "Technology", "Detection Level", "Ionization Potential (eV)", "Correction Factor",
         "PEL", "REL", "TLV", "IDLH", "PAC-1", "PAC-2", "PAC-3",
         "method_id", "sample_volume", "flow_rate", "media_type", "hold_time", "Air Sampling Method"
     ]
@@ -262,6 +269,7 @@ def build_merged_table():
             "Target Compound": name or "—",
             "Device": "—",
             "Sensor": "—",
+            "Technology": "—",
             "Detection Level": "—",
             "Ionization Potential (eV)": safe_str(row.get("IP (eV)")),
             "Correction Factor": "—",

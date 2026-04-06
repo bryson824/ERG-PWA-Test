@@ -45,9 +45,10 @@ The merge script MUST write a **JSON array of objects**. One object per row; key
 | 1 | Target Compound        | Chemical name (display). **Show once per chemical** (merged/grouped in UI). |
 | 2 | Device                 | Device model (e.g. "MultiRAE Pro"). **Show once per device** (merged/grouped in UI). |
 | 3 | Sensor                 | Sensor name (e.g. "Combustible Gases (LEL-1)"). **One row per sensor** (independent rows). |
+| — | Technology             | From **Sensors.technology** (e.g. `PID`, `Catalytic bead`). In JSON for tooling/sensor pages; **hidden** as a column on `table.html`. |
 | 4 | Detection Level        | Human-readable range (e.g. "0.1 ppm", "0–100 %LEL"). |
 | 5 | Ionization Potential (eV) | From Chemicals (IP (eV)); **show once per chemical** (merged in UI). |
-| 6 | Correction Factor      | From Sensor_Chemical (per sensor/chemical); "—" when not applicable (e.g. non-PID). |
+| 6 | Correction Factor      | From Sensor_Chemical (per sensor/chemical) when populated (e.g. PID CFs, LEL response factors); "—" when empty in source. |
 | 7 | PEL                    | Permissible Exposure Limit. **Show once per chemical** (same row as Target Compound). |
 | 8 | REL                    | Recommended Exposure Limit. **Show once per chemical**. |
 | 9 | TLV                    | Threshold Limit Value. **Show once per chemical**. |
@@ -88,7 +89,7 @@ Merge logic follows `docs/Air_Monitoring_Data_Model.md` §3: start from **Sensor
 | Target Compound       | Chemicals | `chemical_name` | From Chemicals via Sensor_Chemical.chemical_id → cas_number. |
 | Instrument            | Devices + Sensors | `Devices.model` (or device display name), `Sensors.plain_name` (or sensor display) | Format e.g. `"{device_display} / {sensor_display}"`. Prefer human-readable labels (e.g. "MultiRAE Pro", "PID 10.6 eV"). |
 | Detection Level       | Sensor_Chemical + Sensors | `detection_range_low`, `detection_range_high`, `range_unit` (Sensor_Chemical); or `Sensors.detection_range`, `resolution` if needed | Format as readable string, e.g. "0.1 ppm", "0–100 %LEL". |
-| PID Lamp / CF         | Sensors + Sensor_Chemical | Sensor technology/lamp info if present; `Sensor_Chemical.correction_factor` | Use "—" or "N/A" for non-PID sensors. |
+| PID Lamp / CF         | Sensors + Sensor_Chemical | Older spec name; same source as **Correction Factor** in §2 (`Sensor_Chemical.correction_factor`). | Populated for any sensor row when the source cell has a value. |
 | PEL                   | Chemicals | `pel_ppm` | Copy as-is (may contain text like "10 ppm (25 mg/m³)"). |
 | REL                   | Chemicals | `rel` | Copy as-is. |
 | TLV                   | Chemicals | `tlv_ppm` | Copy as-is. |
