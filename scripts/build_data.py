@@ -386,6 +386,228 @@ def build_matrix_sampling_rows():
     return rows_out
 
 
+def _col_ci(df, names):
+    """Return actual column name for first of names that exists (case-insensitive)."""
+    cmap = {str(c).strip().lower(): c for c in df.columns}
+    for n in names:
+        k = n.strip().lower()
+        if k in cmap:
+            return cmap[k]
+    return None
+
+
+def read_csv_title_or_header(path, required_column_names):
+    """
+    Title on row 0, header on row 1 (workbook export). If required columns are missing,
+    re-read with header=0 (e.g. CSV pasted without a title row).
+    """
+    import pandas as pd
+
+    df = read_csv_with_title_row(path, header_row_index=1)
+
+    def has_required(d):
+        return all(_col_ci(d, [n]) is not None for n in required_column_names)
+
+    if has_required(df):
+        return df
+    df0 = pd.read_csv(path, header=0, encoding="utf-8", on_bad_lines="warn", low_memory=False)
+    df0.columns = [normalize_header(c) for c in df0.columns]
+    return df0
+
+
+def _norm_join_key(val):
+    if val is None:
+        return ""
+    if isinstance(val, float) and pd is not None and pd.isna(val):
+        return ""
+    s = str(val).strip()
+    if not s or s.lower() in ("nan", "na", "n/a"):
+        return ""
+    return " ".join(s.split()).casefold()
+
+
+def build_device_sharepoint_urls():
+    """
+    Latest_URL_Export: device_type, document_type, file_url (+ isFolder to skip folders).
+    Device_URL: device_id (FK) -> Devices.model; document_id (FK) values match export device_type.
+    Output: { device model name: [ { title, url, type }, ... ] } for device.html.
+    """
+    import pandas as pd
+
+    data_ref = _data_ref()
+    base = "Air_Monitoring_Relationships-2"
+
+    export_candidates = [
+        os.path.join(data_ref, f"{base}_Latest_URL_Export.csv"),
+        os.path.join(data_ref, "Latest_URL_Export.csv"),
+    ]
+    export_path = next((p for p in export_candidates if os.path.isfile(p)), None)
+    if not export_path:
+        return {}
+
+    try:
+        ex = read_csv_title_or_header(export_path, ["device_type", "document_type", "file_url"])
+    except Exception as e:
+        print(f"device URLs: could not read {export_path}: {e}", file=sys.stderr)
+        return {}
+
+    ex = filter_rows_by_include(ex, "Latest_URL_Export")
+    c_dt = _col_ci(ex, ["device_type"])
+    c_doc = _col_ci(ex, ["document_type"])
+    c_url = _col_ci(ex, ["file_url"])
+    c_folder = _col_ci(ex, ["isfolder", "is_folder"])
+    if not c_dt or not c_doc or not c_url:
+        print(
+            "device URLs: Latest_URL_Export missing device_type, document_type, or file_url — skipping.",
+            file=sys.stderr,
+        )
+        return {}
+
+    def is_folder_row(row):
+        if not c_folder:
+            return False
+        v = row.get(c_folder)
+        if v is None or (isinstance(v, float) and pd.isna(v)):
+            return False
+        s = str(v).strip().lower()
+        return s in ("true", "1", "yes", "folder")
+
+    by_export_key = {}
+    for _, row in ex.iterrows():
+        if is_folder_row(row):
+            continue
+        k = _norm_join_key(row.get(c_dt))
+        if not k:
+            continue
+        url = row.get(c_url)
+        if url is None or (isinstance(url, float) and pd.isna(url)):
+            continue
+        url_s = str(url).strip()
+        if not url_s or not url_s.lower().startswith(("http://", "https://")):
+            continue
+        doc_t = row.get(c_doc)
+        title = safe_str(doc_t) if doc_t is not None and not (isinstance(doc_t, float) and pd.isna(doc_t)) else "Document"
+        if title == "—":
+            title = "Document"
+        sub = _col_ci(ex, ["sub_folder", "subfolder"])
+        cat = _col_ci(ex, ["category"])
+        pill = "Document"
+        if sub:
+            pv = row.get(sub)
+            if pv is not None and not (isinstance(pv, float) and pd.isna(pv)) and str(pv).strip():
+                pill = " ".join(str(pv).split())
+        elif cat:
+            pv = row.get(cat)
+            if pv is not None and not (isinstance(pv, float) and pd.isna(pv)) and str(pv).strip():
+                pill = " ".join(str(pv).split())
+        rec = {"title": title, "url": url_s, "type": pill}
+        sig = (title, url_s)
+        if k not in by_export_key:
+            by_export_key[k] = {}
+        if sig not in by_export_key[k]:
+            by_export_key[k][sig] = rec
+
+    def docs_for_export_key(key_raw):
+        k = _norm_join_key(key_raw)
+        if not k or k not in by_export_key:
+            return []
+        return list(by_export_key[k].values())
+
+    mapping_path = os.path.join(data_ref, f"{base}_Device_URL.csv")
+    devices_path = os.path.join(data_ref, f"{base}_Devices.csv")
+    if not os.path.isfile(mapping_path) or not os.path.isfile(devices_path):
+        print("device URLs: missing Device_URL or Devices CSV — skipping device links.", file=sys.stderr)
+        return {}
+
+    try:
+        du = read_csv_with_title_row(mapping_path)
+        du = filter_rows_by_include(du, "Device_URL")
+    except Exception as e:
+        print(f"device URLs: could not read {mapping_path}: {e}", file=sys.stderr)
+        return {}
+
+    c_dev_id = _col_ci(du, ["device_id"])
+    c_doc_id = _col_ci(du, ["document_id"])
+    if not c_dev_id or not c_doc_id:
+        print(
+            "device URLs: Device_URL missing device_id or document_id column — skipping.",
+            file=sys.stderr,
+        )
+        return {}
+
+    try:
+        dev_df = read_csv_with_title_row(devices_path)
+        dev_df = filter_rows_by_include(dev_df, "Devices")
+    except Exception as e:
+        print(f"device URLs: could not read Devices: {e}", file=sys.stderr)
+        return {}
+
+    c_did = _col_ci(dev_df, ["device_id"])
+    c_model = _col_ci(dev_df, ["model"])
+    if not c_did or not c_model:
+        print("device URLs: Devices missing device_id or model — skipping.", file=sys.stderr)
+        return {}
+
+    id_to_model = {}
+    for _, row in dev_df.iterrows():
+        did = row.get(c_did)
+        if did is None or (isinstance(did, float) and pd.isna(did)):
+            continue
+        m = row.get(c_model)
+        if m is None or (isinstance(m, float) and pd.isna(m)):
+            continue
+        model_s = " ".join(str(m).split()).strip()
+        if model_s:
+            id_to_model[str(did).strip()] = model_s
+
+    out = {}
+    for _, row in du.iterrows():
+        did = row.get(c_dev_id)
+        if did is None or (isinstance(did, float) and pd.isna(did)):
+            continue
+        did_s = str(did).strip()
+        if not did_s:
+            continue
+        model = id_to_model.get(did_s)
+        if not model:
+            continue
+        export_key = row.get(c_doc_id)
+        if export_key is None or (isinstance(export_key, float) and pd.isna(export_key)):
+            continue
+        export_key_s = str(export_key).strip()
+        if not export_key_s:
+            continue
+        docs = docs_for_export_key(export_key_s)
+        if not docs:
+            continue
+        if model not in out:
+            out[model] = []
+        seen = {(d["title"], d["url"]) for d in out[model]}
+        for d in docs:
+            sig = (d["title"], d["url"])
+            if sig not in seen:
+                seen.add(sig)
+                out[model].append(d)
+
+    # Fallback: no Device_URL rows produced links — match Devices.model to export device_type
+    if not out:
+        for _, row in dev_df.iterrows():
+            m = row.get(c_model)
+            if m is None or (isinstance(m, float) and pd.isna(m)):
+                continue
+            model_s = " ".join(str(m).split()).strip()
+            if not model_s:
+                continue
+            docs = docs_for_export_key(model_s)
+            if docs:
+                out[model_s] = docs
+
+    for k in list(out.keys()):
+        out[k].sort(key=lambda d: (str(d.get("title", "")).lower(), str(d.get("url", ""))))
+
+    return out
+
+
 def main():
     if pd is None:
         print("Need pandas. Run: pip install -r requirements.txt")
@@ -433,6 +655,18 @@ def main():
         with open(matrix_pwa, "w", encoding="utf-8") as f:
             json.dump(matrix_rows, f, indent=2, ensure_ascii=False)
         print(f"Copied to {matrix_pwa}")
+
+    print("Building device SharePoint URL map...")
+    device_urls = build_device_sharepoint_urls()
+    du_out = os.path.join(_out_dir(), "device_sharepoint_urls.json")
+    with open(du_out, "w", encoding="utf-8") as f:
+        json.dump(device_urls, f, indent=2, ensure_ascii=False)
+    print(f"Wrote {len(device_urls)} device(s) with links to {du_out}")
+    du_pwa = os.path.join(_pwa_dir(), "device_sharepoint_urls.json")
+    if os.path.isdir(_pwa_dir()):
+        with open(du_pwa, "w", encoding="utf-8") as f:
+            json.dump(device_urls, f, indent=2, ensure_ascii=False)
+        print(f"Copied to {du_pwa}")
 
     print("Done.")
 

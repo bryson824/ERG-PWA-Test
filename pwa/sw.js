@@ -3,7 +3,7 @@
  * Cache strategy: cache-first for shell + air_monitoring_table.json.
  * Bump CACHE_VERSION when deploying to invalidate old caches.
  */
-const CACHE_VERSION = 'erg-pwa-v15';
+const CACHE_VERSION = 'erg-pwa-v16';
 const CACHE_SHELL = `${CACHE_VERSION}-shell`;
 const CACHE_TABLE = `${CACHE_VERSION}-table`;
 
@@ -26,7 +26,8 @@ const TABLE_DATA_URLS = [
   './matrix_sampling.json',
   './sensor_part_numbers.json',
   './sensor_cross_sens.json',
-  './device_documents.json'
+  './device_documents.json',
+  './device_sharepoint_urls.json'
 ];
 
 self.addEventListener('install', (event) => {
@@ -58,7 +59,8 @@ self.addEventListener('fetch', (event) => {
     url.pathname.endsWith('matrix_sampling.json') ||
     url.pathname.endsWith('sensor_part_numbers.json') ||
     url.pathname.endsWith('sensor_cross_sens.json') ||
-    url.pathname.endsWith('device_documents.json')
+    url.pathname.endsWith('device_documents.json') ||
+    url.pathname.endsWith('device_sharepoint_urls.json')
   ) {
     event.respondWith(
       caches.open(CACHE_TABLE).then((cache) =>

@@ -130,7 +130,7 @@
         </section>
         <section class="card">
           <h2>Relevant Documents</h2>
-          <p class="muted">Configure links in <code>device_documents.json</code>.</p>
+          <p class="muted">Links from the data build (<code>Latest_URL_Export</code> + <code>Device_URL</code>), plus optional manual entries in <code>device_documents.json</code>.</p>
           <div id="doc-list" class="doc-list"></div>
         </section>
       </div>
@@ -141,6 +141,7 @@
       var TABLE_URL = './air_monitoring_table.json';
       var SENSOR_PART_URL = './sensor_part_numbers.json';
       var DEVICE_DOCS_URL = './device_documents.json';
+      var DEVICE_SP_URLS_URL = './device_sharepoint_urls.json';
       var loadMsg = document.getElementById('load-msg');
       var content = document.getElementById('content');
 
@@ -148,6 +149,30 @@
         var div = document.createElement('div');
         div.textContent = s == null ? '' : String(s);
         return div.innerHTML;
+      }
+
+      function escapeAttr(s) {
+        if (s == null) return '';
+        var str = String(s);
+        return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function mergeDeviceDocs(sharepointList, manualList) {
+        var seen = {};
+        var out = [];
+        function add(arr) {
+          if (!Array.isArray(arr)) return;
+          arr.forEach(function (doc) {
+            if (!doc || !doc.url) return;
+            var u = String(doc.url).trim();
+            if (!u || seen[u]) return;
+            seen[u] = true;
+            out.push(doc);
+          });
+        }
+        add(sharepointList);
+        add(manualList);
+        return out;
       }
 
       function getDeviceFromQuery() {
@@ -163,7 +188,7 @@
         return Object.keys(out).sort();
       }
 
-      function renderDevice(device, rows, partNumbers, deviceDocs) {
+      function renderDevice(device, rows, partNumbers, deviceDocs, deviceSharepoint) {
         var matching = rows.filter(function (r) { return String(r['Device'] || '') === device; });
         if (!matching.length) {
           throw new Error('Device not found in table: ' + device);
@@ -171,7 +196,9 @@
 
         var sensors = uniqueSorted(matching.map(function (r) { return r['Sensor']; }));
         var chemicals = uniqueSorted(matching.map(function (r) { return r['Target Compound']; }));
-        var docs = Array.isArray(deviceDocs[device]) ? deviceDocs[device] : [];
+        var fromSp = deviceSharepoint && deviceSharepoint[device] ? deviceSharepoint[device] : [];
+        var manual = Array.isArray(deviceDocs[device]) ? deviceDocs[device] : [];
+        var docs = mergeDeviceDocs(fromSp, manual);
 
         document.getElementById('device-name').textContent = device;
         document.getElementById('device-summary').textContent =
@@ -208,7 +235,7 @@
             var row = document.createElement('div');
             row.innerHTML =
               '<span class="pill">' + escapeHtml(type) + '</span>' +
-              '<a class="doc-link" href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(title) + '</a>' +
+              '<a class="doc-link" href="' + escapeAttr(url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(title) + '</a>' +
               (meta.length ? '<span class="doc-meta">' + escapeHtml(meta.join(' · ')) + '</span>' : '');
             docList.appendChild(row);
           });
@@ -225,10 +252,13 @@
       Promise.all([
         fetch(TABLE_URL).then(function (r) { if (!r.ok) throw new Error(r.status + ' ' + r.statusText); return r.json(); }),
         fetch(SENSOR_PART_URL).then(function (r) { if (!r.ok) return {}; return r.json(); }).catch(function () { return {}; }),
-        fetch(DEVICE_DOCS_URL).then(function (r) { if (!r.ok) return {}; return r.json(); }).catch(function () { return {}; })
+        fetch(DEVICE_DOCS_URL).then(function (r) { if (!r.ok) return {}; return r.json(); }).catch(function () { return {}; }),
+        fetch(DEVICE_SP_URLS_URL).then(function (r) { if (!r.ok) return {}; return r.json(); }).catch(function () { return {}; })
       ]).then(function (results) {
         var rows = Array.isArray(results[0]) ? results[0] : (results[0].rows || []);
-        renderDevice(device, rows, results[1] || {}, results[2] || {});
+        var sp = results[3] || {};
+        if (sp && sp._notes) delete sp._notes;
+        renderDevice(device, rows, results[1] || {}, results[2] || {}, sp);
         loadMsg.style.display = 'none';
         content.style.display = 'block';
       }).catch(function (err) {

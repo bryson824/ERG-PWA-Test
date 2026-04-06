@@ -432,17 +432,9 @@ o-Xylene",primary,0.46,0,2000,ppm,,
 RAE-PID-10.6PPB-M,"Xylene:
 p-Xylene",primary,0.39,0,2000,ppm,,
 DRAG-PID-HC10.6,Acetone,primary,1.04,0,2000,ppm,,
-DRAG-PID-HC10.6,Acetylene,primary,,,,ppm,,
 DRAG-PID-HC10.6,Ammonia,primary,18.4,0,10000,ppm,,
-DRAG-PID-HC10.6,*Arsine,primary,,,,ppm,,
 DRAG-PID-HC10.6,*Benzene,primary,0.5,0,1000,ppm,,
-DRAG-PID-HC10.6,"Butane
-(n-butane)",primary,,,,ppm,,
-DRAG-PID-HC10.6,Bromine,primary,,,,ppm,,
 DRAG-PID-HC10.6,"*1,3 Butadiene",primary,0.69,0,1500,ppm,,
-DRAG-PID-HC10.6,"Butane
-(n-butane)",primary,,,,ppm,,
-DRAG-PID-HC10.6,Chlorine,primary,,,,ppm,,
 DRAG-PID-HC10.6,Cyclohexane,primary,1.4,0,2500,ppm,,
 DRAG-PID-HC10.6,"Ether
 (ethyl ether, diethyl ether, ethyl oxide)",primary,1.2,0,2000,ppm,,
@@ -452,15 +444,11 @@ DRAG-PID-HC10.6,"Ethanol
 DRAG-PID-HC10.6,Ethyl acetate,primary,4.66,0,8000,ppm,,
 DRAG-PID-HC10.6,Ethylbenzene,primary,0.55,0,1000,ppm,,
 DRAG-PID-HC10.6,Ethylene,primary,10.6,0,10000,ppm,,
-DRAG-PID-HC10.6,*Formaldehyde,primary,,,,ppm,,
 DRAG-PID-HC10.6,*Gasoline,primary,1.21,0,2000,ppm,,
 DRAG-PID-HC10.6,Leaded Gasoline,primary,1.21,0,2000,ppm,,
 DRAG-PID-HC10.6,Heptane,primary,3.24,0,6500,ppm,,
 DRAG-PID-HC10.6,Hexane,primary,4.1,0,8000,ppm,,
-DRAG-PID-HC10.6,"Hydriodic Acid
-(Hydrogen Iodide)",primary,,,,ppm,,
 DRAG-PID-HC10.6,Hydrogen Sulfide,primary,3.82,0,8000,ppm,,
-DRAG-PID-HC10.6,Iodine Crystal,primary,,,,ppm,,
 DRAG-PID-HC10.6,Isobutylene,primary,1,0,2000,ppm,,
 DRAG-PID-HC10.6,Isoproponal,primary,6.5,0,10000,ppm,,
 DRAG-PID-HC10.6,"Kerosene/
@@ -468,17 +456,10 @@ Jet Fuels",primary,1,0,2000,ppm,,
 DRAG-PID-HC10.6,*Methyl Bromide,primary,1.87,0,4000,ppm,,
 DRAG-PID-HC10.6,"Methyl Ethyl Ketone (MEK)
 (2-butanone)",primary,0.9,0,2000,ppm,,
-DRAG-PID-HC10.6,"*PAHs 
-(coal tar pitch volatiles) 
-NOTE: PAHs include the following species: anthracene, benzo(a)pyrene, chrysene, naphthalene, phenanthrene, pyrene.",primary,,,,ppm,,
-DRAG-PID-HC10.6,Nitric Oxide,primary,,,,ppm,,
-DRAG-PID-HC10.6,Nitrogen Dioxide,primary,,,,ppm,,
 DRAG-PID-HC10.6,Octane,primary,1.93,0,4000,ppm,,
 DRAG-PID-HC10.6,Pentane,primary,14.26,0,10000,ppm,,
-DRAG-PID-HC10.6,Phosgene,primary,,,,ppm,,
 DRAG-PID-HC10.6,"Phosphine
 Note: reacts photochemically to form products that can coat a PID lamp over time.",primary,3.94,0,8000,ppm,,
-DRAG-PID-HC10.6,Propene,primary,,,,ppm,,
 DRAG-PID-HC10.6,Styrene,primary,0.44,0,800,ppm,,
 DRAG-PID-HC10.6,"*Tetrachloro-
 ethylene
@@ -486,7 +467,6 @@ ethylene
 DRAG-PID-HC10.6,"*Trichloro-
 ethylene
 (TCE)",primary,0.53,0,1000,ppm,,
-DRAG-PID-HC10.6,Turpentine,primary,,,,ppm,,
 DRAG-PID-HC10.6,*Vinyl Chloride,primary,1.97,0,4000,ppm,,
 TVA-2020-FID,Acetone,primary,0.8,1,50000,ppm,,
 TVA-2020-FID,*Acrylonitrile,primary,0.9,1,50000,ppm,,
@@ -554,8 +534,8 @@ TVA-2020-PID,"Xylenes:
 o-Xylene",detectable,TBD,0,2000,ppm,,
 TVA-2020-PID,"Xylene:
 p-Xylene",detectable,TBD,0,2000,ppm,,
-,,,,,,,,
-,,,,,,,,
+JEROME-J505,Mercury,primary,,50,500000,ng/m3,,
+LUMEX-RA915M,Mercury,primary,,2,200000,ng/m3,,
 ,,,,,,,,
 ,,,,,,,,
 ,,,,,,,,

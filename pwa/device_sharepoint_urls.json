@@ -1,0 +1,119 @@
+{
+  "MultiRAE Pro": [
+    {
+      "title": "EOG",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/MultiRAE%20PRO_EOG_v1.0.pdf",
+      "type": "Air Monitoring"
+    },
+    {
+      "title": "Manual",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/MultiRAE%20PRO_Manual_v1.0.pdf",
+      "type": "Air Monitoring"
+    },
+    {
+      "title": "QSG",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/MultiRAE%20PRO_QSG_v2.1.pdf",
+      "type": "Air Monitoring"
+    }
+  ],
+  "AreaRAE Pro": [
+    {
+      "title": "QSG",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/AreaRAE%20Pro%20and%20Plus_QSG_v1.0.pdf",
+      "type": "Air Monitoring"
+    },
+    {
+      "title": "QSG",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Viper/Viper%20Setup-AreaRAE%20Safety%20Suite_QSG_v1.0.pdf",
+      "type": "Viper"
+    },
+    {
+      "title": "User Guide",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/AreaRAE%20Pro%20and%20Plus_User%20Guide_v1.0.pdf",
+      "type": "Air Monitoring"
+    },
+    {
+      "title": "Viper Guide",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Viper/AreaRAE%20Safety%20Suite_Viper%20Guide_v1.0.pdf",
+      "type": "Viper"
+    }
+  ],
+  "DustTrak DRX 8533 with 8535 enclosure": [
+    {
+      "title": "Manual",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/DustTrak%208533_Manual_2024.pdf",
+      "type": "Air Monitoring"
+    },
+    {
+      "title": "QSG",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/DustTrak%208533_QSG_v1.0.pdf",
+      "type": "Air Monitoring"
+    },
+    {
+      "title": "Viper Guide",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Viper/DustTraks_Viper%20Guide_v1.0.pdf",
+      "type": "Viper"
+    }
+  ],
+  "DustTrak DRX 8534": [
+    {
+      "title": "Manual",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/DustTrak%208534_Manual_2024.pdf",
+      "type": "Air Monitoring"
+    },
+    {
+      "title": "QSG",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/DustTrak%208534_QSG_v1.0.pdf",
+      "type": "Air Monitoring"
+    },
+    {
+      "title": "Viper Guide",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Viper/DustTraks_Viper%20Guide_v1.0.pdf",
+      "type": "Viper"
+    }
+  ],
+  "XAM-8000": [
+    {
+      "title": "Manual",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/Drager%20XAM%208000_Manual_v1.0.pdf",
+      "type": "Air Monitoring"
+    },
+    {
+      "title": "PID Guide",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/Drager%20XAM%208000_PID%20Guide_2020.pdf",
+      "type": "Air Monitoring"
+    },
+    {
+      "title": "QSG",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/Drager%20XAM%208000_QSG_v1.0.pdf",
+      "type": "Air Monitoring"
+    },
+    {
+      "title": "Sensor Guide",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/Drager%20XAM%208000_Sensor%20Guide_7th.pdf",
+      "type": "Air Monitoring"
+    }
+  ],
+  "SPM Flex": [
+    {
+      "title": "Manual",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/SPM%20Flex_Manual_v1.pdf",
+      "type": "Air Monitoring"
+    },
+    {
+      "title": "QSG",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Equipment%20Documents/Air%20Monitoring/SPM%20Flex_QSG_v1.0.pdf",
+      "type": "Air Monitoring"
+    },
+    {
+      "title": "QSG",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Viper/Viper%20Setup-SPM%20Flex%20With%20Gateway_QSG_v1.0.pdf",
+      "type": "Viper"
+    },
+    {
+      "title": "Viper Guide",
+      "url": "https://westonsolutions.sharepoint.com/sites/Testing/Shared%20Documents/ExB%20Link%20Testing/Website%20PDFs/Viper/SPM%20Flex%20Xsite_Viper%20Guide_v2.0.pdf",
+      "type": "Viper"
+    }
+  ]
+}
