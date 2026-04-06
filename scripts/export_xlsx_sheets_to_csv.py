@@ -30,7 +30,22 @@ def main():
     base = os.path.splitext(os.path.basename(xlsx_path))[0]
     wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
 
+    # Workbook tabs maintained manually in Excel — not exported to CSV for the build pipeline.
+    skip_sheets = frozenset(
+        name.strip().lower()
+        for name in (
+            "MultiRAE_Cleaned",
+            "AreaRAE_Cleaned",
+            "TVA_PID",
+            "TVA_FID",
+            "Drager_Cleaned",
+        )
+    )
+
     for sheet_name in wb.sheetnames:
+        if sheet_name.strip().lower() in skip_sheets:
+            print(f"Skipping sheet (not exported): {sheet_name}")
+            continue
         safe = "".join(c if c.isalnum() or c in " -_" else "_" for c in sheet_name).strip() or "sheet"
         out_path = os.path.join(out_dir, f"{base}_{safe}.csv")
         ws = wb[sheet_name]

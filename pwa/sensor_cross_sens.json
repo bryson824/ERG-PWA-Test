@@ -81,6 +81,122 @@
     ],
     "Flex CC-U XP Mineral Acids (export unrestricted)": [
       "SPM-MINERAL-EU"
+    ],
+    "CatEx 125 PR": [
+      "DRAG-CATEX-125"
+    ],
+    "PID HC (10.6 eV)": [
+      "DRAG-PID-HC10.6"
+    ],
+    "PID LC ppb (10.6eV)": [
+      "DRAG-PID-LC10.6"
+    ],
+    "XXS Cl2": [
+      "DRAG-XXS-CL"
+    ],
+    "XXS CO": [
+      "DRAG-XXS-CO"
+    ],
+    "XXS E CO": [
+      "DRAG-XXS-ECO"
+    ],
+    "XXS CO HC": [
+      "DRAGER-XXS-COHC"
+    ],
+    "XXS CO LC": [
+      "DRAGER-XXS-COLC"
+    ],
+    "XXS CO H2-Compensated": [
+      "DRAGER-XXS-COH2CP"
+    ],
+    "XXS CO2": [
+      "DRAGER-XXS-CO2"
+    ],
+    "XXS COCl2": [
+      "DRAGER-XXS-COCl2"
+    ],
+    "XXS H2": [
+      "DRAGER-XXS-H2"
+    ],
+    "XXS H2 HC": [
+      "DRAGER-XXS-H2HC"
+    ],
+    "XXS HCN": [
+      "DRAGER-XXS-HCN"
+    ],
+    "XXS H2S": [
+      "DRAGER-XXS-H2S"
+    ],
+    "XXS E H2S": [
+      "DRAGER-XXS-EH2S"
+    ],
+    "XXS H2S/CO": [
+      "DRAGER-XXS-H2SCO-H2S"
+    ],
+    "XXS H2S/CO LC": [
+      "DRAGER-XXS-H2SCOLC-CO"
+    ],
+    "XXS O2/CO LC": [
+      "DRAGER-XXS-O2COLC-CO"
+    ],
+    "XXS O2/H2S LC": [
+      "DRAGER-XXS-O2H2SLC-O2",
+      "DRAGER-XXS-O2H2SLC-H2S"
+    ],
+    "XXS O2 100": [
+      "DRAGER-XXS-O2100"
+    ],
+    "XXS OZONE": [
+      "DRAGER-XXS-O3"
+    ],
+    "XXS PH3": [
+      "DRAGER-XXS-PH3"
+    ],
+    "XXS PH3 HC": [
+      "DRAGER-XXS-PH3HC"
+    ],
+    "XXS SO2": [
+      "DRAGER-XXS-SO2"
+    ],
+    "TVA FID": [
+      "TVA-2020-FID"
+    ],
+    "TVA PID": [
+      "TVA-2020-PID"
+    ],
+    "PDR-1000": [
+      "THERMO-PDR-1000"
+    ],
+    "TSI Sidepack": [
+      "TSI-SIDEPACK-AM520"
+    ],
+    "TSI Dusttrak 8533": [
+      "TSI-DUSTTRAK-8533"
+    ],
+    "TSI Dusttrak 8534": [
+      "TSI-DUSTTRAK-8534"
+    ],
+    "Lumex RA 915M": [
+      "LUMEX-RA915M"
+    ],
+    "Geiger-Muller Pancake": [
+      "LUDLUM-44-9"
+    ],
+    "1x1 inch NaI": [
+      "LUDLUM-44-2"
+    ],
+    "High Range Gamma": [
+      "LUDLUM-133-7"
+    ],
+    "Alpha Scintillation": [
+      "LUDLUM-43-90"
+    ],
+    "2x2 inch NaI": [
+      "BNC-SAM-950"
+    ],
+    "??": [
+      "LUDLUM-192",
+      "LUDLUM-19"
     ]
   },
   "bySensorId": {

@@ -10,6 +10,26 @@ const SENSORS_CSV = path.join(ROOT, 'data_reference', 'Air_Monitoring_Relationsh
 const CROSS_CSV = path.join(ROOT, 'data_reference', 'Air_Monitoring_Relationships-2_Sensor_CrossSens.csv');
 const OUT = path.join(ROOT, 'pwa', 'sensor_cross_sens.json');
 
+/** Match Excel-style headers, aligned with scripts/build_data.py normalize_header for Include. */
+function headerBaseName(h) {
+  if (!h) return '';
+  let s = String(h).trim();
+  s = s.replace(/\s*\(PK\)\s*$/i, '').replace(/\s*\(FK\)\s*$/i, '').trim();
+  return s.toLowerCase();
+}
+
+function findIncludeColumnIndex(headerRow) {
+  return headerRow.findIndex((h) => headerBaseName(h) === 'include');
+}
+
+/** Row kept unless Include is explicitly no / n / false / 0 (case-insensitive). */
+function rowIncluded(row, idxInclude) {
+  if (idxInclude < 0) return true;
+  const v = String(row[idxInclude] ?? '').trim().toLowerCase();
+  if (v === 'no' || v === 'n' || v === 'false' || v === '0') return false;
+  return true;
+}
+
 function parseCSV(content) {
   const rows = [];
   let i = 0;
@@ -50,9 +70,11 @@ const sensorRows = parseCSV(sensorsContent);
 const headerS = sensorRows[1] || sensorRows[0] || [];
 const idxSensorId = headerS.findIndex((h) => h && h.toLowerCase().includes('sensor_id'));
 const idxPlain = headerS.findIndex((h) => h && h.toLowerCase().includes('plain_name'));
+const idxIncludeS = findIncludeColumnIndex(headerS);
 const displayNameToSensorIds = {};
 for (let r = 2; r < sensorRows.length; r++) {
   const row = sensorRows[r];
+  if (!rowIncluded(row, idxIncludeS)) continue;
   const sid = row[idxSensorId];
   const plain = row[idxPlain];
   if (!sid || !plain) continue;
@@ -75,10 +97,12 @@ const idxObsUnit = col('observed_rdg_unit');
 const idxFilteredRd = col('filtered_resp_reading');
 const idxFilteredUnit = col('filtered_rdg_unit');
 const idxNotes = col('notes');
+const idxIncludeC = findIncludeColumnIndex(headerC);
 
 const bySensorId = {};
 for (let r = 2; r < crossRows.length; r++) {
   const row = crossRows[r];
+  if (!rowIncluded(row, idxIncludeC)) continue;
   const sid = row[idxCSensorId];
   const chemical = row[idxChemical];
   if (!sid || !chemical) continue;

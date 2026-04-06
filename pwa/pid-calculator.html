@@ -202,6 +202,9 @@
     var t = String(s).trim();
     if (!t || t === '—' || t === '-' || /^nd$/i.test(t)) return { kind: 'none' };
     var range = t.match(/(\d+(?:\.\d+)?)\s+to\s+(\d+(?:\.\d+)?)/i);
+    if (!range) {
+      range = t.match(/(\d+(?:\.\d+)?)\s*[-\u2013\u2014]\s*(\d+(?:\.\d+)?)/);
+    }
     if (range) {
       var a = parseFloat(range[1]);
       var b = parseFloat(range[2]);

@@ -63,6 +63,37 @@ def read_csv_with_title_row(path, header_row_index=1):
     df.columns = [normalize_header(c) for c in df.columns]
     return df
 
+
+def _include_column_name(df):
+    for c in df.columns:
+        if str(c).strip().lower() == "include":
+            return c
+    return None
+
+
+def filter_rows_by_include(df):
+    """
+    Rows with Include = no (case-insensitive; also n, false, 0) are dropped from merges.
+    If the column is missing, all rows are kept. The Include column is removed after filtering.
+    """
+    import pandas as pd
+
+    col = _include_column_name(df)
+    if col is None:
+        return df
+
+    def keep(val):
+        if val is None or (isinstance(val, float) and pd.isna(val)):
+            return True
+        t = str(val).strip().lower()
+        if t in ("no", "n", "false", "0"):
+            return False
+        return True
+
+    out = df[df[col].apply(keep)].copy()
+    out = out.drop(columns=[col], errors="ignore")
+    return out.reset_index(drop=True)
+
 def safe_str(val):
     if val is None or (isinstance(val, float) and pd is not None and pd.isna(val)):
         return "—"
@@ -121,6 +152,14 @@ def build_merged_table():
         df.columns = [c.strip() for c in df.columns]
     for df in (cm, sm):
         df.columns = [c.strip() for c in df.columns]
+
+    sc = filter_rows_by_include(sc)
+    sens = filter_rows_by_include(sens)
+    ds = filter_rows_by_include(ds)
+    dev = filter_rows_by_include(dev)
+    chem = filter_rows_by_include(chem)
+    cm = filter_rows_by_include(cm)
+    sm = filter_rows_by_include(sm)
 
     # Drop rows where key join columns are missing
     sc = sc.dropna(subset=["sensor_id", "chemical_id"])

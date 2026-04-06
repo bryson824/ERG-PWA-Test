@@ -8484,27 +8484,6 @@
     "Air Sampling Method": "OSHA-ID-1008"
   },
   {
-    "Target Compound": "Incomplete",
-    "Device": "XAM-8000",
-    "Sensor": "PID LC ppb (10.6eV)",
-    "Detection Level": "0-10 ppm isobutylene / 0 to 5 ppm benzene",
-    "Ionization Potential (eV)": "—",
-    "Correction Factor": "—",
-    "PEL": "—",
-    "REL": "—",
-    "TLV": "—",
-    "IDLH": "—",
-    "PAC-1": "—",
-    "PAC-2": "—",
-    "PAC-3": "—",
-    "method_id": "—",
-    "sample_volume": "—",
-    "flow_rate": "—",
-    "media_type": "—",
-    "hold_time": "—",
-    "Air Sampling Method": "—"
-  },
-  {
     "Target Compound": "Iodine Crystal",
     "Device": "AreaRAE Pro",
     "Sensor": "4R+ PID (9.8 eV)",

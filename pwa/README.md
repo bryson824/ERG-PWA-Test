@@ -21,6 +21,10 @@ Then open the URL (e.g. http://localhost:3000) and use “Add to home screen” 
 - **ERG guide link:** Header block and `#erg-guide-link` — replace with final URL, copy, and styling.
 - **Air sheet table:** `#table-container` and `.air-table` — replace with frozen header row + frozen first column implementation per design.
 
+## Correction factors (PID)
+
+How to enter CFs in Excel and how the PID calculator parses them (single value vs ranges, dash form) is documented in **`docs/Data_Build_README.md`** under *Correction factors (PID)*. Future tools such as an **IDLH calculator** should follow that spec and align with `parseCf` in `pid-calculator.html` (or a shared module extracted from it).
+
 ## Coordination
 
 See `docs/ERG_PWA_ExB_Decision.md` for esri-sme decision, ExB constraints, and what’s needed from ui-engineer and business-analyst.

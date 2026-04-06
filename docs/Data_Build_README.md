@@ -2,14 +2,16 @@
 
 ## How the data is used to build the PWA
 
-1. **Build script** (`scripts/build_data.py`) reads your Excel-derived CSVs in `data_reference/`, merges them into one air monitoring table (one row per chemical/device/sensor), and writes:
+1. **Excel → CSV** (`scripts/export_xlsx_sheets_to_csv.py`, invoked from the build when the workbook is newer than the CSVs) exports each workbook sheet except **MultiRAE_Cleaned**, **AreaRAE_Cleaned**, **TVA_PID**, **TVA_FID**, and **Drager_Cleaned** (those tabs are for manual use only and are not written to `data_reference/`).
+
+2. **Build script** (`scripts/build_data.py`) reads your Excel-derived CSVs in `data_reference/`, merges them into one air monitoring table (one row per chemical/device/sensor), and writes:
    - `data_reference/out/air_monitoring_table.json`
    - a copy to `pwa/air_monitoring_table.json`
 
-2. **The PWA** is the folder `pwa/`. When you open the PWA in a browser:
+3. **The PWA** is the folder `pwa/`. When you open the PWA in a browser:
    - `pwa/index.html` loads `pwa/air_monitoring_table.json` and renders it as a table (frozen header, frozen first column, and grouped view so chemical/device show once per group).
 
-3. **Offline:** The PWA’s service worker caches the shell and the JSON so the table works offline after the first load.
+4. **Offline:** The PWA’s service worker caches the shell and the JSON so the table works offline after the first load.
 
 ---
 
@@ -54,3 +56,34 @@ Then open **http://localhost:3000** (or the port shown). You should see the ERG 
    - The script always overwrites `data_reference/out/air_monitoring_table.json` and `pwa/air_monitoring_table.json` with the new merged table.
 
 So: **drop (or point to) your Excel file, run the one command above, then refresh the PWA** to see the updated table.
+
+---
+
+## Include column (source sheets)
+
+Optional column **`Include`** on merge sources: `Sensor_Chemical`, `Sensors`, `Device_Sensor`, `Devices`, `Chemicals`, `Chemical_Method`, `Sampling_Methods`. The same rule applies when you run **`node pwa/scripts/build_cross_sens.js`** for **Sensors** and **Sensor_CrossSens**.
+
+| Value (case-insensitive) | Effect |
+|--------------------------|--------|
+| **no**, **n**, **false**, **0** | Row is **omitted** from merges / cross-sens JSON. |
+| **yes**, empty, or anything else | Row is **kept**. |
+
+If **`Include`** is missing on a sheet, every row is kept. The column is stripped before joins so it never appears in `air_monitoring_table.json`.
+
+---
+
+## Correction factors (PID) — source format and tools
+
+Values in **`Sensor_Chemical.correction_factor`** (merged to column **`Correction Factor`** in `air_monitoring_table.json`) are stored as **plain text** in the sheet. Conventions:
+
+| Form | Example | Meaning |
+|------|---------|--------|
+| Single | `10`, `1.5` | One correction factor (positive number). |
+| Range with “to” | `0.7 to 0.9` | Vendor range; endpoints can be in either order. |
+| Range with dash | `0.7-0.9`, `0.7 - 0.9` | Same as range; hyphen, en-dash (`–`), or em-dash (`—`) between numbers are accepted in the PID calculator. |
+
+Avoid commas inside numbers for ranges unless parser support is added later (e.g. use `0.7-0.9` not `0,7-0,9`). Use `—` / leave empty / `ND` where there is no CF.
+
+**Reference implementation:** `parseCf()` in `pwa/pid-calculator.html` turns these strings into `{ kind: 'single' \| 'range' \| 'none', ... }` for math (including implied-ppm bands for ranges).
+
+**Future tools (e.g. IDLH-aware calculator):** Reuse the same parsing rules and interval logic as `parseCf` / `impliedPpmFromRef` so CF ranges stay consistent app-wide; consider extracting a shared small JS module when you add that feature.
