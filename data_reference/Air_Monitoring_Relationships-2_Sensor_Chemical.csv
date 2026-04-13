@@ -587,15 +587,19 @@ DRAGER-TUBE-XYLENES,"Xylenes:
 o-Xylene",primary,,10,400,ppm,,
 DRAGER-TUBE-XYLENES,"Xylene:
 p-Xylene",primary,,10,400,ppm,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
+DRAGER-TUBE-PH,Sodium Hydroxide,primary,,Qualitative,,,"Response may give an indication of relative concentrations, but may not be quantitative.",
+PH-PAPER,Sodium Hydroxide,primary,,0,14,,,
+PH-PAPER,Sulfuric Acid,primary,,0,14,,,
+PH-PAPER,Nitric Acid,primary,,0,14,,,
+PH-PAPER,"Hydrofluoric Acid 
+(Hydrogen Fluoride)",primary,,0,14,,,
+PH-PAPER,"Hydrocyanic Acid 
+(Hydrogen Cyanide)",primary,,0,14,,,
+PH-PAPER,"Hydrochloric Acid 
+(Hydrogen Chloride)",primary,,0,14,,,
+PH-PAPER,Hydrobromic Acid (Hydrogen Bromide),primary,,0,14,,,
+PH-PAPER,"Hydriodic Acid
+(Hydrogen Iodide)",primary,,0,14,,,
 ,,,,,,,,
 ,,,,,,,,
 ,,,,,,,,
