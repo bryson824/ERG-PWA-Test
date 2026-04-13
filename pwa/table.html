@@ -271,12 +271,13 @@
       </div>
       <div class="filter-bar" id="filter-bar" style="display: none;">
         <div class="filter-text-row">
-          <label for="filter-chemical">Chemical:</label>
-          <input type="text" id="filter-chemical" placeholder="Search…" aria-label="Filter by chemical name" />
-          <label for="filter-device">Device:</label>
-          <input type="text" id="filter-device" placeholder="Search…" aria-label="Filter by device" />
-          <label for="filter-sensor">Sensor:</label>
-          <input type="text" id="filter-sensor" placeholder="Search…" aria-label="Filter by sensor" />
+          <label for="filter-search">Search:</label>
+          <input
+            type="text"
+            id="filter-search"
+            placeholder="Search target compound, device, or sensor…"
+            aria-label="Search by target compound, device, or sensor"
+          />
         </div>
         <div class="filter-checkboxes" id="filter-checkboxes">
           <div class="filter-check-col"><span class="filter-check-title">Chemical (select first)</span><div id="filter-chem-list" class="filter-list-single-col"></div></div>
@@ -392,9 +393,7 @@
       }
 
       function applyFilter() {
-        var chemText = (document.getElementById('filter-chemical').value || '').trim().toLowerCase();
-        var devText = (document.getElementById('filter-device').value || '').trim().toLowerCase();
-        var sensText = (document.getElementById('filter-sensor').value || '').trim().toLowerCase();
+        var searchText = (document.getElementById('filter-search').value || '').trim().toLowerCase();
         var chemChecked = getCheckedValues('filter-chem-list');
         var devChecked = getCheckedValues('filter-device-list');
         var sensChecked = getCheckedValues('filter-sensor-list');
@@ -402,7 +401,7 @@
           var c = (r['Target Compound'] || '').toLowerCase();
           var d = (r['Device'] || '').toLowerCase();
           var s = (r['Sensor'] || '').toLowerCase();
-          var textOk = (!chemText || c.indexOf(chemText) !== -1) && (!devText || d.indexOf(devText) !== -1) && (!sensText || s.indexOf(sensText) !== -1);
+          var textOk = !searchText || c.indexOf(searchText) !== -1 || d.indexOf(searchText) !== -1 || s.indexOf(searchText) !== -1;
           var chemOk = !chemChecked || chemChecked.indexOf(r['Target Compound']) !== -1;
           var devOk = !devChecked || devChecked.indexOf(r['Device']) !== -1;
           var sensOk = !sensChecked || sensChecked.indexOf(r['Sensor']) !== -1;
@@ -593,9 +592,7 @@
         });
       }
 
-      document.getElementById('filter-chemical').addEventListener('input', applyFilter);
-      document.getElementById('filter-device').addEventListener('input', applyFilter);
-      document.getElementById('filter-sensor').addEventListener('input', applyFilter);
+      document.getElementById('filter-search').addEventListener('input', applyFilter);
 
       function setFiltersCollapsed(collapsed) {
         if (collapsed) {
@@ -621,9 +618,7 @@
       }
 
       function resetAllFilters() {
-        document.getElementById('filter-chemical').value = '';
-        document.getElementById('filter-device').value = '';
-        document.getElementById('filter-sensor').value = '';
+        document.getElementById('filter-search').value = '';
         ['filter-chem-list', 'filter-device-list', 'filter-sensor-list'].forEach(function (id) {
           var el = document.getElementById(id);
           if (!el) return;
