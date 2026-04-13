@@ -403,8 +403,8 @@
           <input
             id="search-input"
             type="text"
-            placeholder="Search compound, device, sensor, detection level, PEL, REL, IDLH..."
-            aria-label="Search compounds and monitoring fields"
+            placeholder="Search target compound, device, or sensor…"
+            aria-label="Search by target compound, device, or sensor"
           />
         </div>
 
@@ -537,11 +537,7 @@
         return [
           row["Target Compound"],
           row["Device"],
-          row["Sensor"],
-          row["Detection Level"],
-          row["PEL"],
-          row["REL"],
-          row["IDLH"]
+          row["Sensor"]
         ].map(function (item) { return (item || "").toString().toLowerCase(); }).join(" ");
       }
 
