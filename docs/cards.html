@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0c1117">
+  <title>Air Monitoring Cards — ERG</title>
+  <style>
+    /* ============================================================
+       ROOT & RESET
+       ============================================================ */
+    :root {
+      --bg-page: #0c1117;
+      --bg-card: #131b25;
+      --bg-header: #111922;
+      --bg-input: #151d27;
+      --border-subtle: rgba(255,255,255,0.06);
+      --border-light: rgba(255,255,255,0.08);
+      --text-primary: #e8f0f8;
+      --text-secondary: #c8d6e5;
+      --text-muted: #5a6a7a;
+      --text-dim: #445566;
+      --accent: #00e5a0;
+      --accent-bg: rgba(0,229,160,0.08);
+      --accent-border: rgba(0,229,160,0.25);
+      --danger: #ff3b30;
+      --warning: #ffab00;
+      --caution: #ff9500;
+      --safe: #00c853;
+      --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'IBM Plex Mono', 'Menlo', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-mono);
+      background: var(--bg-page);
+      color: var(--text-secondary);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    /* ============================================================
+       HEADER
+       ============================================================ */
+    .header {
+      background: linear-gradient(180deg, var(--bg-header) 0%, var(--bg-page) 100%);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 16px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-logo {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--accent-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .header-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .header-meta {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+      align-items: center;
+    }
+    .result-count {
+      font-size: 11px;
+      color: var(--accent);
+      background: var(--accent-bg);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .last-updated {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    /* ============================================================
+       NAV BAR (matches existing PWA nav pattern)
+       ============================================================ */
+    .nav-bar {
+      display: flex;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-page);
+      border-bottom: 1px solid var(--border-subtle);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .nav-bar a {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-light);
+      white-space: nowrap;
+      font-family: var(--font-mono);
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .nav-bar a:hover, .nav-bar a.active {
+      color: var(--accent);
+      border-color: var(--accent-border);
+      background: var(--accent-bg);
+    }
+
+    /* ============================================================
+       SEARCH & FILTERS
+       ============================================================ */
+    .search-wrap {
+      padding: 12px 16px 0;
+      position: sticky;
+      top: 85px;
+      z-index: 99;
+      background: var(--bg-page);
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .search-bar input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: var(--font-mono);
+    }
+    .search-bar input::placeholder { color: #4a5a6a; }
+
+    .filter-controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      align-items: center;
+    }
+    .btn-filter-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-light);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-filter-toggle.active {
+      background: var(--accent-bg);
+      color: var(--accent);
+      border-color: var(--accent-border);
+    }
+    .btn-reset {
+      font-size: 12px;
+      color: #ff6b6b;
+      background: rgba(255,107,107,0.06);
+      border: 1px solid rgba(255,107,107,0.15);
+      border-radius: 6px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+    .btn-clear-search {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+    }
+
+    .filter-panel {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 10px 0 4px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+    .filter-panel.open { display: flex; }
+
+    .filter-label {
+      display: block;
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 3px;
+      font-weight: 600;
+    }
+    .filter-panel select {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      padding: 8px 10px;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      outline: none;
+    }
+
+    /* ============================================================
+       CARD LIST
+       ============================================================ */
+    .card-list {
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 14px 14px 8px;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .card:active {
+      box-shadow: 0 0 0 1px rgba(0,229,160,0.2);
+    }
+
+    /* Card header */
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .chem-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .cas-num {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 1px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* IDLH badge */
+    .idlh-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid;
+      flex-shrink: 0;
+      min-width: 56px;
+    }
+    .idlh-label { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; opacity: 0.7; }
+    .idlh-value { font-size: 18px; font-weight: 800; line-height: 1.1; }
+    .idlh-unit  { font-size: 9px; opacity: 0.5; }
+
+    /* Device + sensor badges */
+    .device-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .badge-device {
+      display: inline-flex; align-items: center; font-size: 11px;
+      color: #8ca8c4; background: rgba(140,168,196,0.08);
+      padding: 3px 8px; border-radius: 5px; font-weight: 500; gap: 4px;
+    }
+    .badge-sensor {
+      display: inline-flex; align-items: center; font-size: 11px;
+      color: #a48cc4; background: rgba(164,140,196,0.08);
+      padding: 3px 8px; border-radius: 5px; font-weight: 500; gap: 4px;
+    }
+
+    /* Values grid */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .val-cell {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 6px;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .val-cell.cf-cell {
+      background: rgba(0,229,160,0.05);
+      border-color: rgba(0,229,160,0.12);
+    }
+    .val-cell.cf-cell .val-label,
+    .val-cell.cf-cell .val-num { color: var(--accent); }
+    .val-label { font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    .val-num   { font-size: 15px; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+    .val-num.small { font-size: 12px; }
+    .val-unit  { font-size: 9px; color: var(--text-dim); }
+
+    /* Expand chevron */
+    .expand-hint {
+      display: flex;
+      justify-content: center;
+      padding: 4px 0 2px;
+    }
+    .expand-hint svg { transition: transform 0.2s; }
+    .card.expanded .expand-hint svg { transform: rotate(180deg); }
+
+    /* Expanded section */
+    .expanded-section {
+      display: none;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      margin-top: 6px;
+      padding-top: 10px;
+    }
+    .card.expanded .expanded-section { display: block; }
+
+    .pac-header { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .pac-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .pac-cell {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 6px; border-radius: 6px; border: 1px solid;
+      background: rgba(255,255,255,0.02);
+    }
+    .pac-cell.pac1 { border-color: rgba(0,200,83,0.25); }
+    .pac-cell.pac2 { border-color: rgba(255,171,0,0.25); }
+    .pac-cell.pac3 { border-color: rgba(255,59,48,0.25); }
+    .pac-label { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; }
+    .pac-cell.pac1 .pac-label { color: var(--safe); }
+    .pac-cell.pac2 .pac-label { color: var(--warning); }
+    .pac-cell.pac3 .pac-label { color: var(--danger); }
+    .pac-val { font-size: 16px; font-weight: 800; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+
+    .detail-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
+    .detail-label { color: var(--text-muted); font-weight: 600; }
+    .detail-val   { color: var(--text-secondary); }
+
+    .notes-box {
+      display: flex; gap: 8px; margin-top: 8px;
+      padding: 8px 10px;
+      background: rgba(255,171,0,0.04);
+      border: 1px solid rgba(255,171,0,0.12);
+      border-radius: 6px;
+    }
+    .notes-box svg { flex-shrink: 0; margin-top: 1px; }
+    .notes-text { font-size: 12px; color: #b8c6d4; line-height: 1.5; }
+
+    /* Empty state */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .empty-state p { color: var(--text-muted); font-size: 13px; margin-top: 12px; }
+
+    /* Spacer */
+    .bottom-spacer { height: 80px; }
+
+    /* ============================================================
+       TABLET+ BREAKPOINT — 2-column grid
+       ============================================================ */
+    @media (min-width: 640px) {
+      .card-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .empty-state { grid-column: 1 / -1; }
+    }
+    @media (min-width: 960px) {
+      .card-list { grid-template-columns: 1fr 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav-bar">
+    <a href="index.html">← ERG Home</a>
+    <a href="table.html">Table View</a>
+    <a href="cards.html" class="active">Card View</a>
+    <a href="matrix-sampling.html">Matrix &amp; Sampling</a>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-title-row">
+      <div class="header-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00e5a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Air Monitoring</h1>
+        <div class="header-subtitle">Region 9 ERG — Chemical Reference</div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <span class="result-count" id="result-count">0 results</span>
+      <span class="last-updated">Updated <span id="last-updated">—</span></span>
+    </div>
+  </header>
+
+  <!-- SEARCH & FILTERS -->
+  <div class="search-wrap">
+    <div class="search-bar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7a8a99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search-input" placeholder="Search chemicals, devices, CAS #..." autocomplete="off" autocapitalize="off">
+      <button class="btn-clear-search" id="btn-clear-search" style="display:none" aria-label="Clear search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7a8a99" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="filter-controls">
+      <button class="btn-filter-toggle" id="btn-filter-toggle">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+        <span id="filter-toggle-label">Filters</span>
+      </button>
+      <button class="btn-reset" id="btn-reset" style="display:none">Reset all</button>
+    </div>
+    <div class="filter-panel" id="filter-panel">
+      <div>
+        <label class="filter-label" for="filter-chemical">Chemical</label>
+        <select id="filter-chemical"><option value="">All chemicals</option></select>
+      </div>
+      <div>
+        <label class="filter-label" for="filter-device">Device</label>
+        <select id="filter-device"><option value="">All devices</option></select>
+      </div>
+      <div>
+        <label class="filter-label" for="filter-sensor">Sensor</label>
+        <select id="filter-sensor"><option value="">All sensors</option></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD LIST -->
+  <div class="card-list" id="card-list"></div>
+  <div class="bottom-spacer"></div>
+
+  <!-- ============================================================
+       DATA + LOGIC
+       ============================================================ -->
+  <script>
+    // ------------------------------------------------------------------
+    // DATA — Replace this array with a fetch() to your JSON/CSV endpoint
+    //        or inline from the service worker cache.
+    //        This sample data is for mockup purposes.
+    // ------------------------------------------------------------------
+    const DATA = [
+      { id:1,  chemical:"Benzene", cas:"71-43-2", device:"MiniRAE 3000", sensor:"PID (10.6 eV)", range:"0–15,000 ppm", resolution:"0.1 ppm", cf:0.53, pel:1, stel:5, idlh:500, pac1:9, pac2:150, pac3:800, notes:"Known carcinogen. CF validated for isobutylene-calibrated PID." },
+      { id:2,  chemical:"Benzene", cas:"71-43-2", device:"MultiRAE Lite", sensor:"PID (10.6 eV)", range:"0–5,000 ppm", resolution:"0.1 ppm", cf:0.53, pel:1, stel:5, idlh:500, pac1:9, pac2:150, pac3:800, notes:"Use ppbRAE for sub-ppm detection." },
+      { id:3,  chemical:"Benzene", cas:"71-43-2", device:"Dräger X-am 5600", sensor:"PID", range:"0–2,000 ppm", resolution:"0.01 ppm", cf:0.46, pel:1, stel:5, idlh:500, pac1:9, pac2:150, pac3:800, notes:"Dräger CF differs from RAE. Verify with Dräger TN." },
+      { id:4,  chemical:"Hydrogen Sulfide", cas:"7783-06-4", device:"MultiRAE Lite", sensor:"H₂S EC", range:"0–100 ppm", resolution:"0.1 ppm", cf:null, pel:10, stel:15, idlh:50, pac1:0.51, pac2:27, pac3:50, notes:"Direct-reading sensor. No CF needed. Ceiling = 20 ppm." },
+      { id:5,  chemical:"Hydrogen Sulfide", cas:"7783-06-4", device:"AreaRAE Pro", sensor:"H₂S EC", range:"0–100 ppm", resolution:"0.1 ppm", cf:null, pel:10, stel:15, idlh:50, pac1:0.51, pac2:27, pac3:50, notes:"Wireless area monitor. Check Smart Gateway connectivity." },
+      { id:6,  chemical:"Ammonia (Anhydrous)", cas:"7664-41-7", device:"MultiRAE Lite", sensor:"NH₃ EC", range:"0–100 ppm", resolution:"1 ppm", cf:null, pel:25, stel:35, idlh:300, pac1:25, pac2:150, pac3:750, notes:"Cross-sensitive to amines. Verify with colorimetric tube." },
+      { id:7,  chemical:"Ammonia (Anhydrous)", cas:"7664-41-7", device:"Dräger X-am 5600", sensor:"NH₃ EC", range:"0–300 ppm", resolution:"1 ppm", cf:null, pel:25, stel:35, idlh:300, pac1:25, pac2:150, pac3:750, notes:"Higher range than MultiRAE sensor. Preferred for anhydrous releases." },
+      { id:8,  chemical:"Vinyl Chloride", cas:"75-01-4", device:"MiniRAE 3000", sensor:"PID (10.6 eV)", range:"0–15,000 ppm", resolution:"0.1 ppm", cf:2.7, pel:1, stel:5, idlh:null, pac1:180, pac2:2500, pac3:12000, notes:"High CF — reading accuracy drops significantly. Consider FID." },
+      { id:9,  chemical:"Vinyl Chloride", cas:"75-01-4", device:"TVA2020", sensor:"FID", range:"0.5–50,000 ppm", resolution:"0.5 ppm", cf:1.0, pel:1, stel:5, idlh:null, pac1:180, pac2:2500, pac3:12000, notes:"FID preferred — near 1:1 response. Requires H₂ fuel." },
+      { id:10, chemical:"Chlorine", cas:"7782-50-5", device:"MultiRAE Lite", sensor:"Cl₂ EC", range:"0–50 ppm", resolution:"0.1 ppm", cf:null, pel:0.5, stel:1, idlh:10, pac1:0.5, pac2:2, pac3:20, notes:"Strong oxidizer. Cross-sensitivity to ClO₂ and Br₂." },
+      { id:11, chemical:"Toluene", cas:"108-88-3", device:"MiniRAE 3000", sensor:"PID (10.6 eV)", range:"0–15,000 ppm", resolution:"0.1 ppm", cf:0.54, pel:200, stel:300, idlh:500, pac1:67, pac2:560, pac3:3700, notes:"Good PID response at 10.6 eV." },
+      { id:12, chemical:"Toluene", cas:"108-88-3", device:"ppbRAE 3000", sensor:"PID (10.6 eV)", range:"1 ppb–10,000 ppm", resolution:"1 ppb", cf:0.54, pel:200, stel:300, idlh:500, pac1:67, pac2:560, pac3:3700, notes:"Sub-ppm for background/ambient monitoring." },
+      { id:13, chemical:"Carbon Monoxide", cas:"630-08-0", device:"MultiRAE Lite", sensor:"CO EC", range:"0–500 ppm", resolution:"1 ppm", cf:null, pel:25, stel:null, idlh:1200, pac1:83, pac2:330, pac3:1700, notes:"Cross-sensitive to H₂S (use filter if co-present)." },
+      { id:14, chemical:"Hydrogen Cyanide", cas:"74-90-8", device:"Dräger X-am 5600", sensor:"HCN EC", range:"0–50 ppm", resolution:"0.1 ppm", cf:null, pel:4.7, stel:null, idlh:50, pac1:2.5, pac2:10, pac3:27, notes:"Almond odor unreliable — 40% of population cannot detect." },
+      { id:15, chemical:"Sulfur Dioxide", cas:"7446-09-5", device:"MultiRAE Lite", sensor:"SO₂ EC", range:"0–20 ppm", resolution:"0.1 ppm", cf:null, pel:2, stel:5, idlh:100, pac1:0.2, pac2:0.75, pac3:30, notes:"Highly irritating below PEL. Monitor downwind of combustion." },
+    ];
+
+    // ------------------------------------------------------------------
+    // DOM REFS
+    // ------------------------------------------------------------------
+    const $searchInput     = document.getElementById('search-input');
+    const $btnClearSearch  = document.getElementById('btn-clear-search');
+    const $btnFilterToggle = document.getElementById('btn-filter-toggle');
+    const $filterToggleLabel = document.getElementById('filter-toggle-label');
+    const $filterPanel     = document.getElementById('filter-panel');
+    const $btnReset        = document.getElementById('btn-reset');
+    const $filterChemical  = document.getElementById('filter-chemical');
+    const $filterDevice    = document.getElementById('filter-device');
+    const $filterSensor    = document.getElementById('filter-sensor');
+    const $cardList        = document.getElementById('card-list');
+    const $resultCount     = document.getElementById('result-count');
+
+    let filtersOpen = false;
+    let expandedId  = null;
+
+    // ------------------------------------------------------------------
+    // POPULATE DROPDOWNS (initial full set)
+    // ------------------------------------------------------------------
+    function uniqueSorted(arr, key) {
+      return [...new Set(arr.map(d => d[key]))].sort();
+    }
+
+    function populateDropdowns(data) {
+      const makeChem = (!$filterDevice.value && !$filterSensor.value)
+        ? DATA : DATA.filter(d =>
+            (!$filterDevice.value || d.device === $filterDevice.value) &&
+            (!$filterSensor.value || d.sensor === $filterSensor.value));
+      const makeDev = (!$filterChemical.value && !$filterSensor.value)
+        ? DATA : DATA.filter(d =>
+            (!$filterChemical.value || d.chemical === $filterChemical.value) &&
+            (!$filterSensor.value || d.sensor === $filterSensor.value));
+      const makeSen = (!$filterChemical.value && !$filterDevice.value)
+        ? DATA : DATA.filter(d =>
+            (!$filterChemical.value || d.chemical === $filterChemical.value) &&
+            (!$filterDevice.value || d.device === $filterDevice.value));
+
+      rebuildSelect($filterChemical, uniqueSorted(makeChem, 'chemical'), 'All chemicals');
+      rebuildSelect($filterDevice,   uniqueSorted(makeDev,  'device'),   'All devices');
+      rebuildSelect($filterSensor,   uniqueSorted(makeSen,  'sensor'),   'All sensors');
+    }
+
+    function rebuildSelect(el, options, allLabel) {
+      const val = el.value;
+      el.innerHTML = `<option value="">${allLabel}</option>` +
+        options.map(o => `<option value="${esc(o)}"${o === val ? ' selected' : ''}>${esc(o)}</option>`).join('');
+    }
+
+    // ------------------------------------------------------------------
+    // FILTER + RENDER
+    // ------------------------------------------------------------------
+    function getFiltered() {
+      const q = $searchInput.value.toLowerCase();
+      const chem = $filterChemical.value;
+      const dev  = $filterDevice.value;
+      const sen  = $filterSensor.value;
+
+      return DATA.filter(d => {
+        if (q && !(
+          d.chemical.toLowerCase().includes(q) ||
+          d.device.toLowerCase().includes(q) ||
+          d.sensor.toLowerCase().includes(q) ||
+          d.cas.includes(q) ||
+          (d.notes && d.notes.toLowerCase().includes(q))
+        )) return false;
+        if (chem && d.chemical !== chem) return false;
+        if (dev  && d.device !== dev)    return false;
+        if (sen  && d.sensor !== sen)    return false;
+        return true;
+      });
+    }
+
+    function render() {
+      const filtered = getFiltered();
+      $resultCount.textContent = `${filtered.length} result${filtered.length !== 1 ? 's' : ''}`;
+
+      const hasFilters = $searchInput.value || $filterChemical.value || $filterDevice.value || $filterSensor.value;
+      $btnReset.style.display = hasFilters ? '' : 'none';
+      $btnClearSearch.style.display = $searchInput.value ? '' : 'none';
+
+      const activeCount = [$filterChemical.value, $filterDevice.value, $filterSensor.value].filter(Boolean).length;
+      $filterToggleLabel.textContent = activeCount ? `Filters (${activeCount})` : 'Filters';
+
+      populateDropdowns();
+
+      if (filtered.length === 0) {
+        $cardList.innerHTML = `
+          <div class="empty-state">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#445566" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M8 11h6"/></svg>
+            <p>No matching results — try a different search or clear filters</p>
+          </div>`;
+        return;
+      }
+
+      $cardList.innerHTML = filtered.map(d => renderCard(d)).join('');
+    }
+
+    function renderCard(d) {
+      const isExpanded = expandedId === d.id;
+      return `
+      <div class="card${isExpanded ? ' expanded' : ''}" data-id="${d.id}" onclick="toggleCard(${d.id})">
+        <div class="card-header">
+          <div style="min-width:0">
+            <div class="chem-name">${esc(d.chemical)}</div>
+            <div class="cas-num">CAS ${esc(d.cas)}</div>
+          </div>
+          <div class="idlh-badge" style="color:${idlhColor(d.idlh)};background:${idlhBg(d.idlh)};border-color:${idlhColor(d.idlh)}33">
+            <span class="idlh-label">IDLH</span>
+            <span class="idlh-value">${d.idlh !== null ? d.idlh : 'N/D'}</span>
+            ${d.idlh !== null ? '<span class="idlh-unit">ppm</span>' : ''}
+          </div>
+        </div>
+
+        <div class="device-row">
+          <span class="badge-device">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+            ${esc(d.device)}
+          </span>
+          <span class="badge-sensor">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M1 12h4M19 12h4M4.2 19.8l2.8-2.8M17 7l2.8-2.8"/></svg>
+            ${esc(d.sensor)}
+          </span>
+        </div>
+
+        <div class="values-grid">
+          <div class="val-cell"><span class="val-label">PEL</span><span class="val-num">${d.pel}</span><span class="val-unit">ppm</span></div>
+          ${d.stel ? `<div class="val-cell"><span class="val-label">STEL</span><span class="val-num">${d.stel}</span><span class="val-unit">ppm</span></div>` : ''}
+          ${d.cf !== null ? `<div class="val-cell cf-cell"><span class="val-label">CF</span><span class="val-num">${d.cf}</span></div>` : ''}
+          <div class="val-cell"><span class="val-label">Range</span><span class="val-num small">${esc(d.range)}</span></div>
+        </div>
+
+        <div class="expand-hint">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#556677" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+
+        <div class="expanded-section">
+          <div class="pac-header">PAC Values (ppm)</div>
+          <div class="pac-grid">
+            <div class="pac-cell pac1"><span class="pac-label">PAC-1</span><span class="pac-val">${d.pac1}</span></div>
+            <div class="pac-cell pac2"><span class="pac-label">PAC-2</span><span class="pac-val">${d.pac2}</span></div>
+            <div class="pac-cell pac3"><span class="pac-label">PAC-3</span><span class="pac-val">${d.pac3}</span></div>
+          </div>
+          <div class="detail-row"><span class="detail-label">Resolution</span><span class="detail-val">${esc(d.resolution)}</span></div>
+          ${d.notes ? `
+          <div class="notes-box">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffab00" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span class="notes-text">${esc(d.notes)}</span>
+          </div>` : ''}
+        </div>
+      </div>`;
+    }
+
+    // ------------------------------------------------------------------
+    // HELPERS
+    // ------------------------------------------------------------------
+    function esc(s) {
+      if (s == null) return '';
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function idlhColor(v) {
+      if (v === null) return '#b8860b';
+      if (v <= 50)  return '#ff3b30';
+      if (v <= 300) return '#ff9500';
+      return '#ffcc00';
+    }
+    function idlhBg(v) {
+      if (v === null) return 'rgba(184,134,11,0.12)';
+      if (v <= 50)  return 'rgba(255,59,48,0.10)';
+      if (v <= 300) return 'rgba(255,149,0,0.08)';
+      return 'rgba(255,204,0,0.06)';
+    }
+
+    function toggleCard(id) {
+      expandedId = (expandedId === id) ? null : id;
+      render();
+    }
+
+    function resetAll() {
+      $searchInput.value = '';
+      $filterChemical.value = '';
+      $filterDevice.value = '';
+      $filterSensor.value = '';
+      expandedId = null;
+      render();
+      $searchInput.focus();
+    }
+
+    // ------------------------------------------------------------------
+    // EVENT LISTENERS
+    // ------------------------------------------------------------------
+    $searchInput.addEventListener('input', render);
+    $btnClearSearch.addEventListener('click', () => { $searchInput.value = ''; render(); $searchInput.focus(); });
+    $filterChemical.addEventListener('change', render);
+    $filterDevice.addEventListener('change', render);
+    $filterSensor.addEventListener('change', render);
+    $btnReset.addEventListener('click', resetAll);
+    $btnFilterToggle.addEventListener('click', () => {
+      filtersOpen = !filtersOpen;
+      $filterPanel.classList.toggle('open', filtersOpen);
+      $btnFilterToggle.classList.toggle('active', filtersOpen);
+    });
+
+    // Keyboard shortcut: / to focus search
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') {
+        e.preventDefault();
+        $searchInput.focus();
+      }
+    });
+
+    // ------------------------------------------------------------------
+    // INIT
+    // ------------------------------------------------------------------
+    render();
+  </script>
+</body>
+</html>

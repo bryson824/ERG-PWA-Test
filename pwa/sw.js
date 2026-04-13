@@ -3,7 +3,7 @@
  * Cache strategy: cache-first for shell + air_monitoring_table.json.
  * Bump CACHE_VERSION when deploying to invalidate old caches.
  */
-const CACHE_VERSION = 'erg-pwa-v16';
+const CACHE_VERSION = 'erg-pwa-v17';
 const CACHE_SHELL = `${CACHE_VERSION}-shell`;
 const CACHE_TABLE = `${CACHE_VERSION}-table`;
 
@@ -11,6 +11,7 @@ const SHELL_URLS = [
   './',
   './index.html',
   './table.html',
+  './mobile-air-table.html',
   './matrix-sampling.html',
   './device.html',
   './sensor.html',
@@ -83,6 +84,7 @@ self.addEventListener('fetch', (event) => {
     path.endsWith('/') ||
     path.endsWith('index.html') ||
     path.endsWith('table.html') ||
+    path.endsWith('mobile-air-table.html') ||
     path.endsWith('matrix-sampling.html') ||
     path.endsWith('device.html') ||
     path.endsWith('sensor.html') ||
