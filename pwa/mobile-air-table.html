@@ -225,30 +225,29 @@
       margin-top: 0.1rem;
     }
 
-    .badge-row {
+    .device-row {
       margin-top: 0.55rem;
       display: flex;
       flex-wrap: wrap;
       gap: 0.4rem;
     }
-    .badge-link {
+    .device-chip {
       display: inline-flex;
       align-items: center;
       border: 1px solid #b8c9e2;
       background: #f7faff;
       color: #1a4179;
-      text-decoration: none;
       padding: 0.25rem 0.45rem;
       border-radius: 999px;
       font-size: 0.75rem;
       font-weight: 600;
       max-width: 100%;
     }
-    .badge-link:hover,
-    .badge-link:focus {
-      background: #e9f1fc;
-      outline: 2px solid rgba(0,40,104,0.28);
-      outline-offset: 2px;
+    .device-summary {
+      margin-top: 0.4rem;
+      font-size: 0.75rem;
+      color: #3e5475;
+      font-weight: 600;
     }
 
     .quick-grid {
@@ -298,14 +297,61 @@
     .card.is-expanded .card-details {
       display: block;
     }
+    .device-detail-list {
+      display: grid;
+      gap: 0.6rem;
+    }
+    .device-detail-card {
+      border: 1px solid #cad9ef;
+      border-radius: 8px;
+      background: #fff;
+      padding: 0.5rem 0.55rem;
+    }
+    .device-detail-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+      margin-bottom: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .device-link {
+      color: #1a4179;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.8rem;
+      border-bottom: 1px solid rgba(26,65,121,0.35);
+    }
+    .device-link:hover,
+    .device-link:focus {
+      outline: 2px solid rgba(0,40,104,0.22);
+      outline-offset: 2px;
+      border-radius: 3px;
+    }
+    .sensor-line {
+      margin-bottom: 0.35rem;
+    }
+    .sensor-link {
+      color: #385f93;
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(56,95,147,0.35);
+    }
+    .sensor-link:hover,
+    .sensor-link:focus {
+      outline: 2px solid rgba(56,95,147,0.22);
+      outline-offset: 2px;
+      border-radius: 3px;
+    }
     .detail-grid {
       display: grid;
-      gap: 0.4rem;
+      gap: 0.35rem;
     }
     .detail-item {
       border: 1px solid #d5e0f0;
       border-radius: 6px;
-      background: #fff;
+      background: #fbfdff;
       padding: 0.4rem 0.5rem;
     }
     .detail-item .quick-label {
@@ -424,6 +470,7 @@
       var filterSensor = document.getElementById("filter-sensor");
 
       var allRows = [];
+      var allChemicals = [];
       var expandedIds = {};
 
       function esc(s) {
@@ -467,12 +514,13 @@
         return Object.keys(map).sort();
       }
 
-      function rebuildSelect(selectEl, values, allLabel) {
+      function rebuildSelect(selectEl, values, allLabel, formatLabel) {
         var current = selectEl.value;
         selectEl.innerHTML = '<option value="">' + allLabel + "</option>" +
           values.map(function (val) {
             var selected = val === current ? " selected" : "";
-            return '<option value="' + esc(val) + '"' + selected + ">" + esc(val) + "</option>";
+            var label = formatLabel ? formatLabel(val) : val;
+            return '<option value="' + esc(val) + '"' + selected + ">" + esc(label) + "</option>";
           }).join("");
       }
 
@@ -490,33 +538,121 @@
             (!filterDevice.value || row["Device"] === filterDevice.value);
         });
 
-        rebuildSelect(filterChemical, uniqueSorted(forChem, "Target Compound"), "All chemicals");
+        rebuildSelect(filterChemical, uniqueSorted(forChem, "Target Compound"), "All chemicals", sanitizeCompound);
         rebuildSelect(filterDevice, uniqueSorted(forDevice, "Device"), "All devices");
         rebuildSelect(filterSensor, uniqueSorted(forSensor, "Sensor"), "All sensors");
       }
 
-      function getFilteredRows() {
+      function getSearchText(row) {
+        return [
+          row["Target Compound"],
+          row["Device"],
+          row["Sensor"],
+          row["Detection Level"],
+          row["PEL"],
+          row["REL"],
+          row["IDLH"]
+        ].map(function (item) { return (item || "").toString().toLowerCase(); }).join(" ");
+      }
+
+      function groupByChemical(rows) {
+        var groups = {};
+        rows.forEach(function (row) {
+          var key = row["Target Compound"] || "Unknown compound";
+          if (!groups[key]) {
+            groups[key] = {
+              id: encodeURIComponent(String(key)),
+              compoundRaw: key,
+              compoundDisplay: sanitizeCompound(key),
+              rows: []
+            };
+          }
+          groups[key].rows.push(row);
+        });
+        return Object.keys(groups).sort(function (a, b) {
+          var nameA = groups[a].compoundDisplay.toLowerCase();
+          var nameB = groups[b].compoundDisplay.toLowerCase();
+          if (nameA < nameB) return -1;
+          if (nameA > nameB) return 1;
+          return 0;
+        }).map(function (key) { return groups[key]; });
+      }
+
+      function getFilteredChemicals() {
         var query = (searchInput.value || "").trim().toLowerCase();
         var chem = filterChemical.value;
         var device = filterDevice.value;
         var sensor = filterSensor.value;
 
-        return allRows.filter(function (row) {
-          if (chem && row["Target Compound"] !== chem) return false;
-          if (device && row["Device"] !== device) return false;
-          if (sensor && row["Sensor"] !== sensor) return false;
+        return allChemicals.map(function (chemical) {
+          var matchedRows = chemical.rows.filter(function (row) {
+            if (chem && row["Target Compound"] !== chem) return false;
+            if (device && row["Device"] !== device) return false;
+            if (sensor && row["Sensor"] !== sensor) return false;
+            if (!query) return true;
+            return getSearchText(row).indexOf(query) !== -1;
+          });
+          if (!matchedRows.length) return null;
+          return {
+            id: chemical.id,
+            compoundRaw: chemical.compoundRaw,
+            compoundDisplay: chemical.compoundDisplay,
+            rows: chemical.rows,
+            matchedRows: matchedRows
+          };
+        }).filter(Boolean);
+      }
 
-          if (!query) return true;
-          var searchable = [
-            row["Target Compound"],
-            row["Device"],
-            row["Sensor"],
-            row["Detection Level"],
-            row["PEL"],
-            row["REL"],
-            row["IDLH"]
-          ].map(function (item) { return (item || "").toString().toLowerCase(); }).join(" ");
-          return searchable.indexOf(query) !== -1;
+      function collectUniqueValues(rows, key) {
+        var seen = {};
+        var ordered = [];
+        rows.forEach(function (row) {
+          var value = fmt(row[key]);
+          if (value === "N/D") return;
+          if (!seen[value]) {
+            seen[value] = true;
+            ordered.push(value);
+          }
+        });
+        return ordered;
+      }
+
+      function summarizeValues(values, fallbackText) {
+        if (!values.length) return fallbackText || "N/D";
+        if (values.length === 1) return values[0];
+        if (values.length === 2) return values[0] + " | " + values[1];
+        return values[0] + " | " + values[1] + " +" + (values.length - 2) + " more";
+      }
+
+      function getChemicalLevelValue(rows, key) {
+        var values = collectUniqueValues(rows, key);
+        if (!values.length) return "N/D";
+        return values[0];
+      }
+
+      function uniqueDevices(rows) {
+        var map = {};
+        var result = [];
+        rows.forEach(function (row) {
+          var device = fmt(row["Device"]);
+          if (device === "N/D") return;
+          if (!map[device]) {
+            map[device] = true;
+            result.push(device);
+          }
+        });
+        return result;
+      }
+
+      function groupRowsByDevice(rows) {
+        var groups = {};
+        rows.forEach(function (row) {
+          var key = fmt(row["Device"]);
+          if (!groups[key]) groups[key] = [];
+          groups[key].push(row);
+        });
+        return Object.keys(groups).sort().map(function (device) {
+          return { device: device, rows: groups[device] };
         });
       }
 
@@ -529,42 +665,21 @@
         }).join("") + "</ul>";
       }
 
-      function renderCard(row, index) {
-        var id = row.__id;
-        var expanded = !!expandedIds[id];
-        var compoundLabel = sanitizeCompound(row["Target Compound"]);
-        var device = fmt(row["Device"]);
-        var sensor = fmt(row["Sensor"]);
-
-        return '' +
-          '<article class="card' + (expanded ? " is-expanded" : "") + '" data-id="' + id + '">' +
-            '<div class="card-main">' +
-              '<div class="card-head">' +
-                "<h2 class=\"compound\">" + esc(compoundLabel) + "</h2>" +
-                '<div class="idlh-badge">' +
-                  '<span class="idlh-label">IDLH</span>' +
-                  '<span class="idlh-value">' + esc(fmt(row["IDLH"])) + "</span>" +
-                "</div>" +
+      function renderDeviceDetails(deviceGroup) {
+        var device = deviceGroup.device;
+        return '<div class="device-detail-card">' +
+          '<div class="device-detail-head">' +
+            '<a class="device-link" href="./device.html?device=' + encodeURIComponent(device) + '">' + esc(device) + "</a>" +
+            '<span class="quick-val">' + deviceGroup.rows.length + " sensor configuration" + (deviceGroup.rows.length === 1 ? "" : "s") + "</span>" +
+          "</div>" +
+          deviceGroup.rows.map(function (row) {
+            var sensor = fmt(row["Sensor"]);
+            return '' +
+              '<div class="sensor-line">' +
+                '<a class="sensor-link" href="./sensor.html?sensor=' + encodeURIComponent(sensor) + "&device=" + encodeURIComponent(device) + '">Sensor: ' + esc(sensor) + "</a>" +
               "</div>" +
-              '<div class="badge-row">' +
-                '<a class="badge-link" href="./device.html?device=' + encodeURIComponent(device) + '">Device: ' + esc(device) + "</a>" +
-                '<a class="badge-link" href="./sensor.html?sensor=' + encodeURIComponent(sensor) + "&device=" + encodeURIComponent(device) + '">Sensor: ' + esc(sensor) + "</a>" +
-              "</div>" +
-              '<div class="quick-grid">' +
-                '<div class="quick-row"><span class="quick-label">Detection Level</span><span class="quick-val">' + esc(fmt(row["Detection Level"])) + "</span></div>" +
-                '<div class="quick-row"><span class="quick-label">PEL</span><span class="quick-val">' + esc(fmt(row["PEL"])) + "</span></div>" +
-                '<div class="quick-row rel"><span class="quick-label">REL</span><span class="quick-val">' + esc(fmt(row["REL"])) + "</span></div>" +
-              "</div>" +
-              '<div class="card-actions">' +
-                '<button type="button" class="btn btn-expand" data-toggle-id="' + id + '">' + (expanded ? "Collapse" : "Expand") + " details</button>" +
-              "</div>" +
-            "</div>" +
-            '<div class="card-details">' +
               '<div class="detail-grid">' +
-                '<div class="detail-item"><span class="quick-label">PAC-1</span><span class="quick-val">' + esc(fmt(row["PAC-1"])) + "</span></div>" +
-                '<div class="detail-item"><span class="quick-label">PAC-2</span><span class="quick-val">' + esc(fmt(row["PAC-2"])) + "</span></div>" +
-                '<div class="detail-item"><span class="quick-label">PAC-3</span><span class="quick-val">' + esc(fmt(row["PAC-3"])) + "</span></div>" +
-                '<div class="detail-item"><span class="quick-label">TLV</span><span class="quick-val">' + esc(fmt(row["TLV"])) + "</span></div>" +
+                '<div class="detail-item"><span class="quick-label">Detection Level</span><span class="quick-val">' + esc(fmt(row["Detection Level"])) + "</span></div>" +
                 '<div class="detail-item"><span class="quick-label">Technology</span><span class="quick-val">' + esc(fmt(row["Technology"])) + "</span></div>" +
                 '<div class="detail-item"><span class="quick-label">Ionization Potential (eV)</span><span class="quick-val">' + esc(fmt(row["Ionization Potential (eV)"])) + "</span></div>" +
                 '<div class="detail-item"><span class="quick-label">Air Sampling Method</span>' + renderMultiValue(row["Air Sampling Method"]) + "</div>" +
@@ -573,15 +688,70 @@
                 '<div class="detail-item"><span class="quick-label">Flow Rate</span>' + renderMultiValue(row["flow_rate"]) + "</div>" +
                 '<div class="detail-item"><span class="quick-label">Sample Volume</span>' + renderMultiValue(row["sample_volume"]) + "</div>" +
                 '<div class="detail-item"><span class="quick-label">Hold Time</span>' + renderMultiValue(row["hold_time"]) + "</div>" +
+              "</div>";
+          }).join("") +
+        "</div>";
+      }
+
+      function renderCard(chemical) {
+        var id = chemical.id;
+        var expanded = !!expandedIds[id];
+        var rows = chemical.matchedRows;
+        var devices = uniqueDevices(rows);
+        var detectionSummary = summarizeValues(collectUniqueValues(rows, "Detection Level"));
+        var pelSummary = getChemicalLevelValue(chemical.rows, "PEL");
+        var relSummary = getChemicalLevelValue(chemical.rows, "REL");
+        var idlhSummary = getChemicalLevelValue(chemical.rows, "IDLH");
+        var tlvSummary = getChemicalLevelValue(chemical.rows, "TLV");
+        var pac1Summary = getChemicalLevelValue(chemical.rows, "PAC-1");
+        var pac2Summary = getChemicalLevelValue(chemical.rows, "PAC-2");
+        var pac3Summary = getChemicalLevelValue(chemical.rows, "PAC-3");
+        var deviceGroups = groupRowsByDevice(rows);
+
+        return '' +
+          '<article class="card' + (expanded ? " is-expanded" : "") + '" data-id="' + id + '">' +
+            '<div class="card-main">' +
+              '<div class="card-head">' +
+                "<h2 class=\"compound\">" + esc(chemical.compoundDisplay) + "</h2>" +
+                '<div class="idlh-badge">' +
+                  '<span class="idlh-label">IDLH</span>' +
+                  '<span class="idlh-value">' + esc(idlhSummary) + "</span>" +
+                "</div>" +
               "</div>" +
+              '<div class="device-row">' +
+                devices.map(function (device) {
+                  return '<span class="device-chip">' + esc(device) + "</span>";
+                }).join("") +
+              "</div>" +
+              '<div class="device-summary">' + devices.length + " device" + (devices.length === 1 ? "" : "s") + " detect this chemical</div>" +
+              '<div class="quick-grid">' +
+                '<div class="quick-row"><span class="quick-label">Detection Level</span><span class="quick-val">' + esc(detectionSummary) + "</span></div>" +
+                '<div class="quick-row"><span class="quick-label">PEL</span><span class="quick-val">' + esc(pelSummary) + "</span></div>" +
+                '<div class="quick-row rel"><span class="quick-label">REL</span><span class="quick-val">' + esc(relSummary) + "</span></div>" +
+              "</div>" +
+              '<div class="card-actions">' +
+                '<button type="button" class="btn btn-expand" data-toggle-id="' + id + '">' + (expanded ? "Collapse" : "Expand") + " details</button>" +
+              "</div>" +
+            "</div>" +
+            '<div class="card-details">' +
+              '<div class="detail-grid" style="margin-bottom:0.6rem">' +
+                '<div class="detail-item"><span class="quick-label">PEL</span><span class="quick-val">' + esc(pelSummary) + "</span></div>" +
+                '<div class="detail-item"><span class="quick-label">REL</span><span class="quick-val">' + esc(relSummary) + "</span></div>" +
+                '<div class="detail-item"><span class="quick-label">IDLH</span><span class="quick-val">' + esc(idlhSummary) + "</span></div>" +
+                '<div class="detail-item"><span class="quick-label">TLV</span><span class="quick-val">' + esc(tlvSummary) + "</span></div>" +
+                '<div class="detail-item"><span class="quick-label">PAC-1</span><span class="quick-val">' + esc(pac1Summary) + "</span></div>" +
+                '<div class="detail-item"><span class="quick-label">PAC-2</span><span class="quick-val">' + esc(pac2Summary) + "</span></div>" +
+                '<div class="detail-item"><span class="quick-label">PAC-3</span><span class="quick-val">' + esc(pac3Summary) + "</span></div>" +
+              "</div>" +
+              '<div class="device-detail-list">' + deviceGroups.map(renderDeviceDetails).join("") + "</div>" +
             "</div>" +
           "</article>";
       }
 
       function render() {
         populateDropdowns();
-        var filtered = getFilteredRows();
-        resultCount.textContent = filtered.length + " result" + (filtered.length === 1 ? "" : "s");
+        var filtered = getFilteredChemicals();
+        resultCount.textContent = filtered.length + " chemical card" + (filtered.length === 1 ? "" : "s");
 
         if (!filtered.length) {
           cardsWrap.innerHTML = '<div class="empty-state">No matching cards. Try a broader search or clear filters.</div>';
@@ -664,12 +834,12 @@
         })
         .then(function (data) {
           var rows = Array.isArray(data) ? data : (data && Array.isArray(data.rows) ? data.rows : []);
-          allRows = rows.map(function (row, idx) {
+          allRows = rows.map(function (row) {
             var clone = {};
             Object.keys(row).forEach(function (key) { clone[key] = row[key]; });
-            clone.__id = String(idx + 1);
             return clone;
           });
+          allChemicals = groupByChemical(allRows);
           render();
         })
         .catch(function (err) {
