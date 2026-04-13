@@ -100,6 +100,32 @@
       font-size: 0.875rem;
       background: #fff;
     }
+
+    .commonly-owned-row {
+      display: none;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 0.75rem;
+      margin-top: 0.55rem;
+      padding: 0.45rem 0;
+      border-top: 1px solid rgba(0, 40, 104, 0.12);
+    }
+    .commonly-owned-row label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--epa-blue);
+      cursor: pointer;
+    }
+    .commonly-owned-row input[type="checkbox"] { margin: 0; }
+    .commonly-owned-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      width: 100%;
+    }
     .btn {
       font-size: 0.875rem;
       font-weight: 600;
@@ -408,6 +434,14 @@
           />
         </div>
 
+        <div class="commonly-owned-row" id="commonly-owned-row" role="region" aria-label="Commonly owned sensors filter">
+          <label for="filter-commonly-owned">
+            <input type="checkbox" id="filter-commonly-owned" checked />
+            Limit to EPA commonly owned sensors
+          </label>
+          <span class="commonly-owned-hint">Uncheck to see all sensors.</span>
+        </div>
+
         <div class="toolbar-row">
           <span class="result-count" id="result-count">0 results</span>
           <div class="toolbar-actions">
@@ -458,6 +492,8 @@
       var filterChemical = document.getElementById("filter-chemical");
       var filterDevice = document.getElementById("filter-device");
       var filterSensor = document.getElementById("filter-sensor");
+      var filterCommonlyOwned = document.getElementById("filter-commonly-owned");
+      var commonlyOwnedRow = document.getElementById("commonly-owned-row");
 
       var allRows = [];
       var allChemicals = [];
@@ -564,6 +600,13 @@
         }).map(function (key) { return groups[key]; });
       }
 
+      function passesCommonlyOwnedFilter(row) {
+        if (!filterCommonlyOwned || !filterCommonlyOwned.checked) return true;
+        var s = row["Sensor"];
+        if (s == null || s === "" || s === "—") return true;
+        return row["Commonly Owned?"] === "Yes";
+      }
+
       function getFilteredChemicals() {
         var query = (searchInput.value || "").trim().toLowerCase();
         var chem = filterChemical.value;
@@ -572,6 +615,7 @@
 
         return allChemicals.map(function (chemical) {
           var matchedRows = chemical.rows.filter(function (row) {
+            if (!passesCommonlyOwnedFilter(row)) return false;
             if (chem && row["Target Compound"] !== chem) return false;
             if (device && row["Device"] !== device) return false;
             if (sensor && row["Sensor"] !== sensor) return false;
@@ -665,6 +709,7 @@
                 '<a class="sensor-link" href="./sensor.html?sensor=' + encodeURIComponent(sensor) + "&device=" + encodeURIComponent(device) + '">Sensor: ' + esc(sensor) + "</a>" +
               "</div>" +
               '<div class="detail-grid">' +
+                '<div class="detail-item"><span class="quick-label">Commonly Owned?</span><span class="quick-val">' + esc(fmt(row["Commonly Owned?"])) + "</span></div>" +
                 '<div class="detail-item"><span class="quick-label">Detection Level</span><span class="quick-val">' + esc(fmt(row["Detection Level"])) + "</span></div>" +
                 '<div class="detail-item"><span class="quick-label">Technology</span><span class="quick-val">' + esc(fmt(row["Technology"])) + "</span></div>" +
               "</div>";
@@ -764,6 +809,7 @@
         filterChemical.value = "";
         filterDevice.value = "";
         filterSensor.value = "";
+        if (filterCommonlyOwned) filterCommonlyOwned.checked = true;
         expandedIds = {};
         render();
       }
@@ -834,6 +880,7 @@
             return clone;
           });
           allChemicals = groupByChemical(allRows);
+          if (commonlyOwnedRow) commonlyOwnedRow.style.display = "flex";
           render();
         })
         .catch(function (err) {

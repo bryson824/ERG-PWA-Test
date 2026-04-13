@@ -3,7 +3,7 @@
 Build the air monitoring table from Excel (or existing CSVs).
 Pipeline: Excel → CSVs (if needed) → merge → air_monitoring_table.json.
 Output: data_reference/out/air_monitoring_table.json, then copy to pwa/air_monitoring_table.json.
-Schema: docs/Air_Monitoring_Table_Schema.md (12 columns, one row per chemical/device/sensor).
+Schema: docs/Air_Monitoring_Table_Schema.md (one row per chemical/device/sensor; includes Commonly Owned? from Sensors.commonly_owned).
 
 Usage:
   python scripts/build_data.py
@@ -247,12 +247,27 @@ def build_merged_table():
     # Target Compound = chemical_name
     m["Target Compound"] = m["chemical_name"].astype(str).apply(lambda x: " ".join(x.split()))
 
+    def commonly_owned_display(val):
+        if val is None or (isinstance(val, float) and pd.isna(val)):
+            return "No"
+        s = str(val).strip().upper()
+        if s in ("Y", "YES"):
+            return "Yes"
+        if s in ("N", "NO"):
+            return "No"
+        return "No"
+
+    if "commonly_owned" in m.columns:
+        m["Commonly Owned?"] = m["commonly_owned"].apply(commonly_owned_display)
+    else:
+        m["Commonly Owned?"] = pd.Series(["No"] * len(m))
+
     # Sort so consecutive rows group by chemical, then device, then sensor (for UI merged cells)
     m = m.sort_values(by=["Target Compound", "Device", "Sensor"], kind="stable")
 
-    # Build output rows: Target Compound, Device, Sensor, Detection Level, Ionization Potential (eV), Correction Factor, then regulatory
+    # Build output rows: Target Compound, Device, Sensor, Commonly Owned?, Detection Level, …
     columns_order = [
-        "Target Compound", "Device", "Sensor", "Technology", "Detection Level", "Ionization Potential (eV)", "Correction Factor",
+        "Target Compound", "Device", "Sensor", "Commonly Owned?", "Technology", "Detection Level", "Ionization Potential (eV)", "Correction Factor",
         "PEL", "REL", "TLV", "IDLH", "PAC-1", "PAC-2", "PAC-3",
         "method_id", "sample_volume", "flow_rate", "media_type", "hold_time", "Air Sampling Method"
     ]
@@ -269,6 +284,7 @@ def build_merged_table():
             "Target Compound": name or "—",
             "Device": "—",
             "Sensor": "—",
+            "Commonly Owned?": "—",
             "Technology": "—",
             "Detection Level": "—",
             "Ionization Potential (eV)": safe_str(row.get("IP (eV)")),
