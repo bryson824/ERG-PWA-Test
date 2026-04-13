@@ -201,30 +201,6 @@
       font-size: 1rem;
       line-height: 1.3;
     }
-    .idlh-badge {
-      border: 1px solid #8ea6c9;
-      background: #f2f6fc;
-      border-radius: 6px;
-      padding: 0.25rem 0.45rem;
-      min-width: 7.25rem;
-      text-align: center;
-      color: #1f3c6d;
-    }
-    .idlh-label {
-      display: block;
-      font-size: 0.625rem;
-      letter-spacing: 0.06em;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-    .idlh-value {
-      display: block;
-      font-size: 0.8125rem;
-      font-weight: 700;
-      line-height: 1.2;
-      margin-top: 0.1rem;
-    }
-
     .device-row {
       margin-top: 0.55rem;
       display: flex;
@@ -356,6 +332,20 @@
     }
     .detail-item .quick-label {
       margin-bottom: 0.15rem;
+    }
+    .sampling-shared {
+      margin-top: 0.7rem;
+      border: 1px solid #c5d4ed;
+      background: #f3f8ff;
+      border-radius: 8px;
+      padding: 0.55rem;
+    }
+    .sampling-shared h3 {
+      margin: 0 0 0.45rem 0;
+      color: var(--epa-blue);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
     .multi-line-list {
       margin: 0;
@@ -681,13 +671,6 @@
               '<div class="detail-grid">' +
                 '<div class="detail-item"><span class="quick-label">Detection Level</span><span class="quick-val">' + esc(fmt(row["Detection Level"])) + "</span></div>" +
                 '<div class="detail-item"><span class="quick-label">Technology</span><span class="quick-val">' + esc(fmt(row["Technology"])) + "</span></div>" +
-                '<div class="detail-item"><span class="quick-label">Ionization Potential (eV)</span><span class="quick-val">' + esc(fmt(row["Ionization Potential (eV)"])) + "</span></div>" +
-                '<div class="detail-item"><span class="quick-label">Air Sampling Method</span>' + renderMultiValue(row["Air Sampling Method"]) + "</div>" +
-                '<div class="detail-item"><span class="quick-label">Method ID</span>' + renderMultiValue(row["method_id"]) + "</div>" +
-                '<div class="detail-item"><span class="quick-label">Media Type</span>' + renderMultiValue(row["media_type"]) + "</div>" +
-                '<div class="detail-item"><span class="quick-label">Flow Rate</span>' + renderMultiValue(row["flow_rate"]) + "</div>" +
-                '<div class="detail-item"><span class="quick-label">Sample Volume</span>' + renderMultiValue(row["sample_volume"]) + "</div>" +
-                '<div class="detail-item"><span class="quick-label">Hold Time</span>' + renderMultiValue(row["hold_time"]) + "</div>" +
               "</div>";
           }).join("") +
         "</div>";
@@ -698,14 +681,20 @@
         var expanded = !!expandedIds[id];
         var rows = chemical.matchedRows;
         var devices = uniqueDevices(rows);
-        var detectionSummary = summarizeValues(collectUniqueValues(rows, "Detection Level"));
         var pelSummary = getChemicalLevelValue(chemical.rows, "PEL");
         var relSummary = getChemicalLevelValue(chemical.rows, "REL");
         var idlhSummary = getChemicalLevelValue(chemical.rows, "IDLH");
         var tlvSummary = getChemicalLevelValue(chemical.rows, "TLV");
+        var ionizationSummary = getChemicalLevelValue(chemical.rows, "Ionization Potential (eV)");
         var pac1Summary = getChemicalLevelValue(chemical.rows, "PAC-1");
         var pac2Summary = getChemicalLevelValue(chemical.rows, "PAC-2");
         var pac3Summary = getChemicalLevelValue(chemical.rows, "PAC-3");
+        var samplingMethod = getChemicalLevelValue(chemical.rows, "Air Sampling Method");
+        var methodId = getChemicalLevelValue(chemical.rows, "method_id");
+        var mediaType = getChemicalLevelValue(chemical.rows, "media_type");
+        var flowRate = getChemicalLevelValue(chemical.rows, "flow_rate");
+        var sampleVolume = getChemicalLevelValue(chemical.rows, "sample_volume");
+        var holdTime = getChemicalLevelValue(chemical.rows, "hold_time");
         var deviceGroups = groupRowsByDevice(rows);
 
         return '' +
@@ -713,10 +702,6 @@
             '<div class="card-main">' +
               '<div class="card-head">' +
                 "<h2 class=\"compound\">" + esc(chemical.compoundDisplay) + "</h2>" +
-                '<div class="idlh-badge">' +
-                  '<span class="idlh-label">IDLH</span>' +
-                  '<span class="idlh-value">' + esc(idlhSummary) + "</span>" +
-                "</div>" +
               "</div>" +
               '<div class="device-row">' +
                 devices.map(function (device) {
@@ -725,9 +710,11 @@
               "</div>" +
               '<div class="device-summary">' + devices.length + " device" + (devices.length === 1 ? "" : "s") + " detect this chemical</div>" +
               '<div class="quick-grid">' +
-                '<div class="quick-row"><span class="quick-label">Detection Level</span><span class="quick-val">' + esc(detectionSummary) + "</span></div>" +
+                '<div class="quick-row"><span class="quick-label">Ionization Potential (eV)</span><span class="quick-val">' + esc(ionizationSummary) + "</span></div>" +
                 '<div class="quick-row"><span class="quick-label">PEL</span><span class="quick-val">' + esc(pelSummary) + "</span></div>" +
-                '<div class="quick-row rel"><span class="quick-label">REL</span><span class="quick-val">' + esc(relSummary) + "</span></div>" +
+                '<div class="quick-row"><span class="quick-label">REL</span><span class="quick-val">' + esc(relSummary) + "</span></div>" +
+                '<div class="quick-row"><span class="quick-label">IDLH</span><span class="quick-val">' + esc(idlhSummary) + "</span></div>" +
+                '<div class="quick-row rel"><span class="quick-label">TLV</span><span class="quick-val">' + esc(tlvSummary) + "</span></div>" +
               "</div>" +
               '<div class="card-actions">' +
                 '<button type="button" class="btn btn-expand" data-toggle-id="' + id + '">' + (expanded ? "Collapse" : "Expand") + " details</button>" +
@@ -744,6 +731,17 @@
                 '<div class="detail-item"><span class="quick-label">PAC-3</span><span class="quick-val">' + esc(pac3Summary) + "</span></div>" +
               "</div>" +
               '<div class="device-detail-list">' + deviceGroups.map(renderDeviceDetails).join("") + "</div>" +
+              '<section class="sampling-shared">' +
+                "<h3>Shared Sampling Guidance</h3>" +
+                '<div class="detail-grid">' +
+                  '<div class="detail-item"><span class="quick-label">Air Sampling Method</span>' + renderMultiValue(samplingMethod) + "</div>" +
+                  '<div class="detail-item"><span class="quick-label">Method ID</span>' + renderMultiValue(methodId) + "</div>" +
+                  '<div class="detail-item"><span class="quick-label">Media Type</span>' + renderMultiValue(mediaType) + "</div>" +
+                  '<div class="detail-item"><span class="quick-label">Flow Rate</span>' + renderMultiValue(flowRate) + "</div>" +
+                  '<div class="detail-item"><span class="quick-label">Sample Volume</span>' + renderMultiValue(sampleVolume) + "</div>" +
+                  '<div class="detail-item"><span class="quick-label">Hold Time</span>' + renderMultiValue(holdTime) + "</div>" +
+                "</div>" +
+              "</section>" +
             "</div>" +
           "</article>";
       }

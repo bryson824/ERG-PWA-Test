@@ -3,7 +3,7 @@
  * Cache strategy: cache-first for shell + air_monitoring_table.json.
  * Bump CACHE_VERSION when deploying to invalidate old caches.
  */
-const CACHE_VERSION = 'erg-pwa-v17';
+const CACHE_VERSION = 'erg-pwa-v18';
 const CACHE_SHELL = `${CACHE_VERSION}-shell`;
 const CACHE_TABLE = `${CACHE_VERSION}-table`;
 
