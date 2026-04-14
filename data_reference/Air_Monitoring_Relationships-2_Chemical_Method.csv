@@ -76,46 +76,75 @@ Methanol,NIOSH-2000,1-5L @ 200 ppm,0.02-0.2 L/min,
 "Methyl Ethyl Ketone (MEK)
 (2-butanone)",NIOSH-2500,0.25-12 L @ 200 ppm,0.01-0.2 L/min,
 *Nickel,NIOSH-7300,,1-4 L/min,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
+"PCDDs and PCDFs
+(Dioxins & Furans)",EPA-TO-9A,48 L-480 L @ 0.5 mg/m³,0.5-1.0 L/min,
+Nitric Acid,NIOSH-7907,30-600 L,2 L/min,
+Nitric Oxide,NIOSH-6014,1.5-6 L,0.025 L/min,
+Nitrogen Dioxide,NIOSH-6014,1.5-6 L,0.025-0.2 L/min,
+Nitrous Oxide,NIOSH-6600,3 L,0.1-4 L/min,
+"*PAHs 
+(coal tar pitch volatiles) 
+NOTE: PAHs include the following species: anthracene, benzo(a)pyrene, chrysene, naphthalene, phenanthrene, pyrene.",NIOSH-5506,"200-1,000 L",2 L/min,
+"*PAHs 
+(coal tar pitch volatiles) 
+NOTE: PAHs include the following species: anthracene, benzo(a)pyrene, chrysene, naphthalene, phenanthrene, pyrene.",EPA-TO-13A,"At least 300 m³ over a 24 hour period, or determined by user (as needed to achieve the project's RLs).","0.225 m³/min for up to 24
+hours",
+"*PAHs 
+(coal tar pitch volatiles) 
+NOTE: PAHs include the following species: anthracene, benzo(a)pyrene, chrysene, naphthalene, phenanthrene, pyrene.",NIOSH-5023,"500-2,400 L @ 0.2 mg/m³",1-4 L/min,
+"*PAHs 
+(coal tar pitch volatiles) 
+NOTE: PAHs include the following species: anthracene, benzo(a)pyrene, chrysene, naphthalene, phenanthrene, pyrene.",EPA-TO-15,"Consult Lab for specific instructions for collecting grab, 8 hour or 24 hour collection times.","Consult Lab for specific instructions for collecting grab, 8 hour or 24 hour collection times.",
+"*PAHs 
+(coal tar pitch volatiles) 
+NOTE: PAHs include the following species: anthracene, benzo(a)pyrene, chrysene, naphthalene, phenanthrene, pyrene.",EPA-TO-17,Calculate volume to achieve final reporting limit.,10-200 mL/min,
+*PCB (Aroclor 1242),EPA-TO-10A,Determined by user (as needed to achieve the project's RLs),"1-5 L/min for
+4-24 hours",
+*PCB (Aroclor 1242),EPA-TO-4A,"At least 300 m³ over a 24 hour period, or determined by user (as needed to achieve the project's RLs).",0.225 m³/min for up to 24 hours,
+*PCB (Aroclor 1242),NIOSH-5503,1-50 L @ 0.5 mg/m³,0.05-0.2 L/min,
+*PCB (Aroclor 1254),EPA-TO-10A,Determined by user (as needed to achieve the project's RLs),"1-5 L/min for
+4-24 hours",
+*PCB (Aroclor 1254),EPA-TO-4A,"At least 300 m³ over a 24 hour period, or determined by user (as needed to achieve the project's RLs).",0.225 m³/min for up to 24 hours,
+*PCB (Aroclor 1254),NIOSH-5503,1-50 L @ 0.5 mg/m³,0.05-0.2 L/min,
+"Pentachloro-
+phenol",NIOSH-5512,48 L-480 L @ 0.5 mg/m³,0.5-1.0 L/min,
+Pesticides,EPA-TO-10A,Determined by user (as needed to achieve the project's RLs),"1-5 L/min for
+4-24 hours",
+Pesticides,EPA-TO-4A,"At least 300 m³ over a 24 hour period, or determined by user (as needed to achieve the project's RLs).",0.225 m³/min for up to 24 hours,
+Phosgene,OSHA-ID-61,240 L,1 L/min,
+"Phosphine
+Note: reacts photochemically to form products that can coat a PID lamp over time.",NIOSH-6002,1-16 L @ 0.3 ppm,0.01-0.2 L/min,
+Phosphoric Acid,NIOSH-7908,"15-2,000 L",1-5 L/min,
+"Phosphorus (elemental)
+Note: emits phosphorus oxides and may re-ignite upon exposure to air",NIOSH-7905,5-100 L @ 0.1 mg/m³,0.01-0.2 L/min,
+Phosphorus Pentoxide,OSHA-ID-111,960 L,2 L/min,
+Propane,OSHA-PV2077,5 L,0.1 L/min,
+Sodium Hydroxide,NIOSH-7401,"70-1,000 L @ 2 mg/m³",1-4 L/min,
+Styrene,NIOSH-1501,1-14 L @ 100 ppm,<1.00 L/min,
+Sulfur Dioxide,NIOSH-6004,4-200 L @ 5 ppm,0.5-1.5 L/min,
+Sulfuric Acid,NIOSH-7908,"15-2,000 L",1-5 L/min,
+"*Tetrachloro-
+ethylene
+(PCE)",EPA-TO-15,"Consult Lab for specific instructions for collecting grab, 8 hour or 24 hour collection times.","Consult Lab for specific instructions for collecting grab, 8 hour or 24 hour collection times.",
+"*Tetrachloro-
+ethylene
+(PCE)",NIOSH-1603,"1-40 L, target 3 L",0.01-0.2 L/min,
+Toluene,EPA-TO-15,"Consult Lab for specific instructions for collecting grab, 8 hour or 24 hour collection times.","Consult Lab for specific instructions for collecting grab, 8 hour or 24 hour collection times.",
+Toluene,NIOSH-1501,1-14 L @ 100 ppm,<1.00 L/min,
+"*Trichloro-
+ethylene
+(TCE)",EPA-TO-15,"Consult Lab for specific instructions for collecting grab, 8 hour or 24 hour collection times.","Consult Lab for specific instructions for collecting grab, 8 hour or 24 hour collection times.",
+"*Trichloro-
+ethylene
+(TCE)",NIOSH-1022,1-30 L @100 ppm,0.01-0.2 L/min,
+*Vinyl Chloride,EPA-TO-15,"Consult Lab for specific instructions for collecting grab, 8 hour or 24 hour collection times.","Consult Lab for specific instructions for collecting grab, 8 hour or 24 hour collection times.",
+*Vinyl Chloride,NIOSH-1007,0.7-5 L,0.05 L/min,
+"Xylenes:
+m-Xylene",NIOSH-1501,1-14 L @ 100 ppm,<1.00 L/min,
+"Xylenes:
+o-Xylene",NIOSH-1501,1-14 L @ 100 ppm,<1.00 L/min,
+"Xylene:
+p-Xylene",NIOSH-1501,1-14 L @ 100 ppm,<1.00 L/min,
 ,,,,
 ,,,,
 ,,,,
