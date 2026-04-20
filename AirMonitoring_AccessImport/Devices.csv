@@ -1,0 +1,21 @@
+device_id,manufacturer,model,device_type,sensor_slots,intrinsically_safe,swappable_sensors,ip_rating,weight,certifications,notes
+RAE-MULTIRAE-PRO,RAE Systems,MultiRAE Pro,Multi-gas,,,Yes,IP65,0.68 kg,"UL, CSA, ATEX",Pumped multi-gas with PID
+RAE-AREARAE-PRO,RAE Systems,AreaRAE Pro,Multi-gas,,,,,,,
+TSI-DUSTTRAK-8533,TSI,DustTrak DRX 8533 with 8535 enclosure,,,,,,,,
+TSI-DUSTTRAK-8534,TSI,DustTrak DRX 8534,Dust monitor,,,No,IP54,1.5 kg,,Real-time aerosol monitor
+DRAGER-XAM-8000,Drager,XAM-8000,Multi-gas,,,Yes,IP65,0.64 kg,"UL, CSA, ATEX",Up to 6 gas sensors
+DRAGER-TUBE,Drager,Drager Detector Tube,,,,,,,,
+DRAGER-CHIP,Drager,Chip Measurement System,,,,,,,,
+HONEYWELL-SPM-FLEX,Honeywell,SPM Flex,,,,,,,,
+THERMO-TVA2020,Thermo Scientific,TVA 2020,,,,,,,,
+THERMO-PDR1000,Thermo Scientific,PDR-1000,,,,,,,,
+RAE-ULTRARAE,RAE Systems,UltraRAE,,,,,,,,
+TSI-SIDEPAK-AM520,TSI,SidePak AM520,,,,,,,,
+LUMEX-RA915M,Ohio Lumex,RA-915M,Other,,,,,,,
+LUDLUM-19,Ludlum,Model 19,,,,,,,,
+LUDLUM-192,Ludlum,Model 192,,,,,,,,
+LUDLUM-2241,Ludlum,Model 2241,,,,,,,,
+LUDLUM-3001,Ludlum,Model 3001,,,,,,,,
+BNC-SAM-950,SAM,950,,,,,,,,
+JEROME-J505,Jerome,Jerome J505,Other,,,,,,,
+PH-PAPER,pH Paper,pH Paper,Other,,,,,,,
