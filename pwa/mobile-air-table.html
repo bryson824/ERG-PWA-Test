@@ -379,6 +379,21 @@
       display: grid;
       gap: 0.15rem;
     }
+    .method-group {
+      border: 1px solid #cad9ef;
+      border-radius: 8px;
+      background: #fff;
+      padding: 0.5rem 0.55rem;
+    }
+    .method-group + .method-group {
+      margin-top: 0.5rem;
+    }
+    .method-group-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--epa-blue);
+      margin-bottom: 0.4rem;
+    }
 
     .empty-state,
     .load-msg {
@@ -695,6 +710,46 @@
         }).join("") + "</ul>";
       }
 
+      function buildMethodGroups(rows) {
+        var fields = ['method_id', 'sample_volume', 'flow_rate', 'media_type', 'hold_time'];
+        var rawValues = fields.map(function (f) { return getChemicalLevelValue(rows, f); });
+        var splitArrays = rawValues.map(splitValues);
+        var maxLen = 0;
+        splitArrays.forEach(function (arr) { if (arr.length > maxLen) maxLen = arr.length; });
+        if (maxLen === 0) return [];
+        var groups = [];
+        for (var i = 0; i < maxLen; i++) {
+          groups.push({
+            method_id: splitArrays[0][i] || 'N/D',
+            sample_volume: splitArrays[1][i] || 'N/D',
+            flow_rate: splitArrays[2][i] || 'N/D',
+            media_type: splitArrays[3][i] || 'N/D',
+            hold_time: splitArrays[4][i] || 'N/D'
+          });
+        }
+        return groups;
+      }
+
+      function renderSamplingSection(rows) {
+        var groups = buildMethodGroups(rows);
+        if (!groups.length) return '';
+        return '<section class="sampling-shared">' +
+          '<h3>Sampling Guidance</h3>' +
+          groups.map(function (group, idx) {
+            var title = group.method_id !== 'N/D' ? group.method_id : ('Method ' + (idx + 1));
+            return '<div class="method-group">' +
+              '<div class="method-group-title">' + esc(title) + '</div>' +
+              '<div class="detail-grid">' +
+                '<div class="detail-item"><span class="quick-label">Sample Volume</span><span class="quick-val">' + esc(group.sample_volume) + '</span></div>' +
+                '<div class="detail-item"><span class="quick-label">Flow Rate</span><span class="quick-val">' + esc(group.flow_rate) + '</span></div>' +
+                '<div class="detail-item"><span class="quick-label">Media Type</span><span class="quick-val">' + esc(group.media_type) + '</span></div>' +
+                '<div class="detail-item"><span class="quick-label">Hold Time</span><span class="quick-val">' + esc(group.hold_time) + '</span></div>' +
+              '</div>' +
+            '</div>';
+          }).join('') +
+        '</section>';
+      }
+
       function renderDeviceDetails(deviceGroup) {
         var device = deviceGroup.device;
         return '<div class="device-detail-card">' +
@@ -730,12 +785,6 @@
         var pac1Summary = getChemicalLevelValue(chemical.rows, "PAC-1");
         var pac2Summary = getChemicalLevelValue(chemical.rows, "PAC-2");
         var pac3Summary = getChemicalLevelValue(chemical.rows, "PAC-3");
-        var samplingMethod = getChemicalLevelValue(chemical.rows, "Air Sampling Method");
-        var methodId = getChemicalLevelValue(chemical.rows, "method_id");
-        var mediaType = getChemicalLevelValue(chemical.rows, "media_type");
-        var flowRate = getChemicalLevelValue(chemical.rows, "flow_rate");
-        var sampleVolume = getChemicalLevelValue(chemical.rows, "sample_volume");
-        var holdTime = getChemicalLevelValue(chemical.rows, "hold_time");
         var deviceGroups = groupRowsByDevice(rows);
 
         return '' +
@@ -763,26 +812,12 @@
             "</div>" +
             '<div class="card-details">' +
               '<div class="detail-grid" style="margin-bottom:0.6rem">' +
-                '<div class="detail-item"><span class="quick-label">PEL</span><span class="quick-val">' + esc(pelSummary) + "</span></div>" +
-                '<div class="detail-item"><span class="quick-label">REL</span><span class="quick-val">' + esc(relSummary) + "</span></div>" +
-                '<div class="detail-item"><span class="quick-label">IDLH</span><span class="quick-val">' + esc(idlhSummary) + "</span></div>" +
-                '<div class="detail-item"><span class="quick-label">TLV</span><span class="quick-val">' + esc(tlvSummary) + "</span></div>" +
                 '<div class="detail-item"><span class="quick-label">PAC-1</span><span class="quick-val">' + esc(pac1Summary) + "</span></div>" +
                 '<div class="detail-item"><span class="quick-label">PAC-2</span><span class="quick-val">' + esc(pac2Summary) + "</span></div>" +
                 '<div class="detail-item"><span class="quick-label">PAC-3</span><span class="quick-val">' + esc(pac3Summary) + "</span></div>" +
               "</div>" +
               '<div class="device-detail-list">' + deviceGroups.map(renderDeviceDetails).join("") + "</div>" +
-              '<section class="sampling-shared">' +
-                "<h3>Shared Sampling Guidance</h3>" +
-                '<div class="detail-grid">' +
-                  '<div class="detail-item"><span class="quick-label">Air Sampling Method</span>' + renderMultiValue(samplingMethod) + "</div>" +
-                  '<div class="detail-item"><span class="quick-label">Method ID</span>' + renderMultiValue(methodId) + "</div>" +
-                  '<div class="detail-item"><span class="quick-label">Media Type</span>' + renderMultiValue(mediaType) + "</div>" +
-                  '<div class="detail-item"><span class="quick-label">Flow Rate</span>' + renderMultiValue(flowRate) + "</div>" +
-                  '<div class="detail-item"><span class="quick-label">Sample Volume</span>' + renderMultiValue(sampleVolume) + "</div>" +
-                  '<div class="detail-item"><span class="quick-label">Hold Time</span>' + renderMultiValue(holdTime) + "</div>" +
-                "</div>" +
-              "</section>" +
+              renderSamplingSection(chemical.rows) +
             "</div>" +
           "</article>";
       }
