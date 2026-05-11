@@ -388,7 +388,7 @@
       }
       function buildCellLink(columnName, value, row) {
         var text = value == null ? '' : String(value);
-        if (!text) return '—';
+        if (!text || text === '—') return '—';
         if (columnName === 'Device') {
           return '<a class="cell-link" href="./device.html?device=' + encodeURIComponent(text) + '">' + escapeHtml(text) + '</a>';
         }
