@@ -236,16 +236,18 @@
       border-radius: 2px;
     }
 
-    /* Red chemical group (chem-alt-0) */
+    /* Red chemical group (chem-alt-0) — three tiers: sensor (lightest) → device → target compound (darkest) */
     .air-table tbody tr.chem-alt-0 td { background: #fae8e8; }
-    .air-table tbody tr.chem-alt-0 td.col-frozen { background: #fae8e8; --frozen-bg: #fae8e8; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-0 td { background: #f0d6d6; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-0 td.col-frozen { background: #f0d6d6; --frozen-bg: #f0d6d6; }
-    /* Blue chemical group (chem-alt-1) */
+    .air-table tbody tr.chem-alt-0.sensor-alt-1 td { background: #f3dcdc; }
+    .air-table tbody tr.chem-alt-0 td[data-column-name="Device"] { background: #eacece; }
+    .air-table tbody tr.chem-alt-0.device-alt-1 td[data-column-name="Device"] { background: #e2c2c2; }
+    .air-table tbody tr.chem-alt-0 td.col-frozen { background: #d9b3b3; --frozen-bg: #d9b3b3; }
+    /* Blue chemical group (chem-alt-1) — three tiers: sensor (lightest) → device → target compound (darkest) */
     .air-table tbody tr.chem-alt-1 td { background: #e4ecf7; }
-    .air-table tbody tr.chem-alt-1 td.col-frozen { background: #e4ecf7; --frozen-bg: #e4ecf7; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-1 td { background: #d4dfee; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-1 td.col-frozen { background: #d4dfee; --frozen-bg: #d4dfee; }
+    .air-table tbody tr.chem-alt-1.sensor-alt-1 td { background: #dae4f2; }
+    .air-table tbody tr.chem-alt-1 td[data-column-name="Device"] { background: #cdd8ea; }
+    .air-table tbody tr.chem-alt-1.device-alt-1 td[data-column-name="Device"] { background: #c2cfe4; }
+    .air-table tbody tr.chem-alt-1 td.col-frozen { background: #b5c4dc; --frozen-bg: #b5c4dc; }
     .air-table tbody tr.highlight-chemical td,
     .air-table tbody tr.highlight-device td { background: #c5d4ed !important; }
     .air-table tbody tr.highlight-chemical td.col-frozen,
@@ -551,20 +553,25 @@
               deviceRowspan[i] = dcount;
             }
           }
-          var chemIndex = -1, sensorIndexInChem = 0;
+          var chemIndex = -1, deviceIndexInChem = 0, sensorIndexInDevice = 0;
           for (i = 0; i < rows.length; i++) {
             r = rows[i];
             if (firstInChemical[i]) {
               chemIndex++;
-              sensorIndexInChem = 0;
+              deviceIndexInChem = 0;
+              sensorIndexInDevice = 0;
+            } else if (firstInDevice[i]) {
+              deviceIndexInChem++;
+              sensorIndexInDevice = 0;
             } else {
-              sensorIndexInChem++;
+              sensorIndexInDevice++;
             }
             var chemAlt = chemIndex % 2;
-            var sensorAlt = sensorIndexInChem % 2;
+            var deviceAlt = deviceIndexInChem % 2;
+            var sensorAlt = sensorIndexInDevice % 2;
             var compound = r['Target Compound'] != null ? String(r['Target Compound']) : '';
             var device = r['Device'] != null ? String(r['Device']) : '';
-            html += '<tr class="chem-alt-' + chemAlt + ' sensor-alt-' + sensorAlt + '" data-chemical="' + escapeAttr(compound) + '" data-device="' + escapeAttr(device) + '" data-chem-group="' + chemIndex + '">';
+            html += '<tr class="chem-alt-' + chemAlt + ' device-alt-' + deviceAlt + ' sensor-alt-' + sensorAlt + '" data-chemical="' + escapeAttr(compound) + '" data-device="' + escapeAttr(device) + '" data-chem-group="' + chemIndex + '">';
             keys.forEach(function (k, colIndex) {
               var isFrozen = colIndex === 0;
               var cls = isFrozen ? ' class="col-frozen"' : '';
