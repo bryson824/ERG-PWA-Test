@@ -553,22 +553,22 @@
               deviceRowspan[i] = dcount;
             }
           }
-          var chemIndex = -1, deviceIndexInChem = 0, sensorIndexInDevice = 0;
+          var chemIndex = -1, deviceIndexInChem = 0, rowIndexInChem = 0;
           for (i = 0; i < rows.length; i++) {
             r = rows[i];
             if (firstInChemical[i]) {
               chemIndex++;
               deviceIndexInChem = 0;
-              sensorIndexInDevice = 0;
-            } else if (firstInDevice[i]) {
-              deviceIndexInChem++;
-              sensorIndexInDevice = 0;
+              rowIndexInChem = 0;
             } else {
-              sensorIndexInDevice++;
+              rowIndexInChem++;
+              if (firstInDevice[i]) {
+                deviceIndexInChem++;
+              }
             }
             var chemAlt = chemIndex % 2;
             var deviceAlt = deviceIndexInChem % 2;
-            var sensorAlt = sensorIndexInDevice % 2;
+            var sensorAlt = rowIndexInChem % 2;
             var compound = r['Target Compound'] != null ? String(r['Target Compound']) : '';
             var device = r['Device'] != null ? String(r['Device']) : '';
             html += '<tr class="chem-alt-' + chemAlt + ' device-alt-' + deviceAlt + ' sensor-alt-' + sensorAlt + '" data-chemical="' + escapeAttr(compound) + '" data-device="' + escapeAttr(device) + '" data-chem-group="' + chemIndex + '">';
