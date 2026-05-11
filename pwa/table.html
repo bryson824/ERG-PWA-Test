@@ -236,14 +236,16 @@
       border-radius: 2px;
     }
 
-    .air-table tbody tr.chem-alt-0 td { background: #fff; }
-    .air-table tbody tr.chem-alt-1 td { background: #d6e2ef; }
-    .air-table tbody tr.chem-alt-0 td.col-frozen { background: #fff; --frozen-bg: #fff; }
-    .air-table tbody tr.chem-alt-1 td.col-frozen { background: #d6e2ef; --frozen-bg: #d6e2ef; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-0 td { background: #e2eaf6; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-0 td.col-frozen { background: #e2eaf6; --frozen-bg: #e2eaf6; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-1 td { background: #c8d6e8; }
-    .air-table tbody tr.sensor-alt-1.chem-alt-1 td.col-frozen { background: #c8d6e8; --frozen-bg: #c8d6e8; }
+    /* Red chemical group (chem-alt-0) */
+    .air-table tbody tr.chem-alt-0 td { background: #fae8e8; }
+    .air-table tbody tr.chem-alt-0 td.col-frozen { background: #fae8e8; --frozen-bg: #fae8e8; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-0 td { background: #f0d6d6; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-0 td.col-frozen { background: #f0d6d6; --frozen-bg: #f0d6d6; }
+    /* Blue chemical group (chem-alt-1) */
+    .air-table tbody tr.chem-alt-1 td { background: #e4ecf7; }
+    .air-table tbody tr.chem-alt-1 td.col-frozen { background: #e4ecf7; --frozen-bg: #e4ecf7; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-1 td { background: #d4dfee; }
+    .air-table tbody tr.sensor-alt-1.chem-alt-1 td.col-frozen { background: #d4dfee; --frozen-bg: #d4dfee; }
     .air-table tbody tr.highlight-chemical td,
     .air-table tbody tr.highlight-device td { background: #c5d4ed !important; }
     .air-table tbody tr.highlight-chemical td.col-frozen,
@@ -347,12 +349,18 @@
       let allRows = [];
       const ONCE_PER_CHEMICAL = [
         'Target Compound', 'Ionization Potential (eV)', 'PEL', 'REL', 'TLV', 'IDLH', 'PAC-1', 'PAC-2', 'PAC-3',
-        'method_id', 'sample_volume', 'flow_rate', 'media_type', 'hold_time', 'Air Sampling Method'
+        'method_id', 'sample_volume', 'flow_rate', 'media_type', 'hold_time'
       ];
       const ONCE_PER_DEVICE = ['Device'];
-      const METHOD_COLUMNS = ['method_id', 'sample_volume', 'flow_rate', 'media_type', 'hold_time', 'Air Sampling Method'];
-      /** Present in JSON for sensor pages; not shown as a table column here. */
-      const TABLE_INTERNAL_KEYS = { Technology: true };
+      const METHOD_COLUMNS = ['method_id', 'sample_volume', 'flow_rate', 'media_type', 'hold_time'];
+      const TABLE_INTERNAL_KEYS = { Technology: true, 'Air Sampling Method': true };
+      const COLUMN_DISPLAY_NAMES = {
+        'method_id': 'Method ID',
+        'sample_volume': 'Sample Volume',
+        'flow_rate': 'Flow Rate',
+        'media_type': 'Media Type',
+        'hold_time': 'Hold Time'
+      };
 
       function escapeAttr(s) {
         if (s == null) return '';
@@ -516,7 +524,8 @@
         var html = '<table class="air-table" aria-label="Air monitoring reference"><thead><tr>';
         keys.forEach(function (k, i) {
           var cls = i === 0 ? ' class="col-frozen"' : '';
-          html += '<th scope="col"' + cls + '>' + escapeHtml(k) + '</th>';
+          var displayName = COLUMN_DISPLAY_NAMES[k] || k;
+          html += '<th scope="col"' + cls + '>' + escapeHtml(displayName) + '</th>';
         });
         html += '</tr></thead><tbody>';
 
